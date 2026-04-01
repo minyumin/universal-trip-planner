@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>高雄小旅行行程管理 3.1</title>
+<title>高雄小旅行行程管理</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -16,21 +16,22 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .header{background:#fff;border-bottom:1px solid var(--border);padding:12px;position:sticky;top:0;z-index:200;text-align:center;}
 .main{max-width:500px;margin:0 auto;padding:14px;}
 
-/* 工具列 */
-.toolbar{margin-bottom:16px;}
-.filter-tabs{display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none;}
-.filter-tabs::-webkit-scrollbar{display:none;}
-.tab{flex-shrink:0; padding:6px 14px; border-radius:20px; border:1px solid var(--border); background:#fff; font-size:13px; cursor:pointer;}
-.tab.active{background:var(--text); color:#fff; border-color:var(--text);}
-
-.map-gen-btn{width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:var(--rs); font-weight:700; margin-bottom:16px; cursor:pointer;}
-
 /* 表單卡片 */
-.card{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);}
+.card{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:24px; box-shadow:0 4px 12px rgba(0,0,0,0.03);}
 .field{margin-bottom:12px;}
 .field label{display:block; font-size:11px; color:var(--muted); margin-bottom:5px; font-weight:700;}
 .finp,.fsel{width:100%; padding:10px; border:1px solid var(--border); border-radius:var(--rs); font-size:14px; background:#faf8f5; outline:none; border:1px solid transparent;}
 .finp:focus{border-color:var(--accent); background:#fff;}
+
+/* 工具列 (移至清單上方) */
+.toolbar{background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:12px; margin-bottom:12px;}
+.filter-tabs{display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none;}
+.filter-tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0; padding:6px 14px; border-radius:20px; border:1px solid var(--border); background:#fff; font-size:12px; cursor:pointer;}
+.tab.active{background:var(--text); color:#fff; border-color:var(--text);}
+.sort-row{display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding-top:8px; border-top:1px solid var(--bg); font-size:12px;}
+
+.map-gen-btn{width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:var(--rs); font-weight:700; margin-bottom:16px; cursor:pointer;}
 
 /* Chips */
 .chip-row{display:flex; gap:6px; flex-wrap:wrap;}
@@ -44,7 +45,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .item-info{flex:1; min-width:0;}
 .item-type{font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase;}
 .item-name{font-size:16px; font-weight:700; margin:2px 0;}
-.item-row{font-size:12px; color:var(--muted); margin-bottom:2px;}
+.item-meta{font-size:12px; color:var(--muted); margin-bottom:2px;}
 .item-who{display:flex; gap:4px; margin-top:8px; flex-wrap:wrap;}
 .pill{font-size:10px; background:var(--bg); padding:2px 8px; border-radius:8px; color:var(--muted);}
 .item-note{font-size:12px; color:var(--accent); background:#fff9f5; padding:6px; border-radius:6px; margin-top:8px; border-left:3px solid var(--accent);}
@@ -57,23 +58,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 </head>
 <body>
 
-<div class="header"><h1>🌴 高雄行程規劃</h1></div>
+<div class="header"><h1>🌴 高雄小旅行</h1></div>
 
 <div class="main">
-  <button class="map-gen-btn" onclick="openMultiMap()">🗺️ 生成地圖行程 (自動串接地點)</button>
-
-  <div class="toolbar">
-    <div class="filter-tabs" id="filter-bar"></div>
-    <div style="font-size:12px; margin-top:10px;">
-      排序：
-      <select id="sort-select" onchange="renderList()" style="border:none; background:none; color:var(--accent); font-weight:700; outline:none;">
-        <option value="ts">最新加入</option>
-        <option value="area">依地區 (行程優化)</option>
-        <option value="day">依日期</option>
-      </select>
-    </div>
-  </div>
-
   <div class="card" id="form-container">
     <div class="field" style="background:var(--bg); padding:10px; border-radius:var(--rs);">
       <label>Google Maps 連結自動填入</label>
@@ -81,7 +68,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     </div>
 
     <div class="field">
-      <label>類型</label>
+      <label>地點類型</label>
       <div class="chip-row" id="type-chips"></div>
     </div>
 
@@ -95,12 +82,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
       <div class="field"><label>時段</label><select id="inp-time" class="fsel"><option value="">未定</option><option value="上午">🌤 上午</option><option value="中午">☀️ 中午</option><option value="下午">🌇 下午</option><option value="晚上">🌙 晚上</option></select></div>
     </div>
 
-    <div class="field">
-      <label>新增者</label>
-      <select id="inp-by" class="fsel">
-        <option value="Pei">Pei</option><option value="Lulu">Lulu</option><option value="Melanie">Melanie</option><option value="Yoyo">Yoyo</option><option value="Min">Min</option>
-      </select>
-    </div>
+    <div class="field"><label>新增者</label><select id="inp-by" class="fsel"><option value="Pei">Pei</option><option value="Lulu">Lulu</option><option value="Melanie">Melanie</option><option value="Yoyo">Yoyo</option><option value="Min">Min</option></select></div>
 
     <div class="field">
       <label>參與者</label>
@@ -114,12 +96,29 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 
     <div class="field">
       <label>備註</label>
-      <input id="inp-note" class="finp" placeholder="推薦菜色、預約編號等..."/>
+      <input id="inp-note" class="finp" placeholder="推薦菜色、注意事項..."/>
     </div>
 
     <input type="hidden" id="edit-key" value=""/>
-    <button id="submit-btn" class="btn-main" onclick="submitForm()">加入行程清單</button>
+    <button id="submit-btn" class="btn-main" onclick="submitForm()">加入清單</button>
     <button id="cancel-btn" style="display:none; width:100%; margin-top:8px; border:none; background:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消修改</button>
+  </div>
+
+  <button class="map-gen-btn" onclick="openMultiMap()">🗺️ 生成地圖行程 (串接下方地點)</button>
+
+  <div class="toolbar">
+    <div class="filter-tabs" id="filter-bar"></div>
+    <div class="sort-row">
+      <span style="color:var(--muted); font-weight:700;">清單管理</span>
+      <div>
+        排序：
+        <select id="sort-select" onchange="renderList()" style="border:none; background:none; color:var(--accent); font-weight:700; outline:none;">
+          <option value="ts">最新加入</option>
+          <option value="area">依地區</option>
+          <option value="day">依日期</option>
+        </select>
+      </div>
+    </div>
   </div>
 
   <div id="list-container"></div>
@@ -143,26 +142,23 @@ const typesRef = ref(db, 'kaohsiung-trip/types');
 
 const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 let selectedType = '景點';
-let selectedWho = [...PARTICIPANTS]; // 預設 All
+let selectedWho = [...PARTICIPANTS];
 let currentFilter = '全部';
 let allItems = [];
 let customTypes = ['景點','小吃','咖啡廳','購物'];
 
-// --- 類型與參與者 UI ---
+// --- 類型與參與者 UI 渲染 ---
 onValue(typesRef, snap => { if(snap.exists()) customTypes = snap.val(); renderFormUI(); });
 
 function renderFormUI() {
-  // 類型 Chips
   document.getElementById('type-chips').innerHTML = customTypes.map(t => 
     `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`
   ).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
 
-  // 參與者 Chips
   const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">All</div>`];
   PARTICIPANTS.forEach(p => whoHtml.push(`<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
   document.getElementById('participant-chips').innerHTML = whoHtml.join('');
 
-  // 頂部 Tabs
   document.getElementById('filter-bar').innerHTML = ['全部', ...customTypes].map(t => 
     `<button class="tab ${currentFilter===t?'active':''}" onclick="setFilter('${t}')">${t}</button>`
   ).join('');
@@ -170,7 +166,7 @@ function renderFormUI() {
 
 window.selectType = (t) => { selectedType = t; renderFormUI(); };
 window.addType = () => {
-  const nt = prompt("請輸入新類型：");
+  const nt = prompt("新增類型名稱：");
   if(nt && !customTypes.includes(nt)) { customTypes.push(nt); set(typesRef, customTypes); }
 };
 window.toggleWho = (p) => {
@@ -184,10 +180,10 @@ window.toggleAllWho = () => {
 };
 window.setFilter = (t) => { currentFilter = t; renderFormUI(); renderList(); };
 
-// --- 地圖與解析 ---
+// --- 功能邏輯 ---
 window.openMultiMap = () => {
   let list = currentFilter === '全部' ? allItems : allItems.filter(i => i.type === currentFilter);
-  if(!list.length) return alert("清單為空");
+  if(!list.length) return alert("目前清單沒有地點");
   list.sort((a,b) => (a.area||'').localeCompare(b.area||''));
   const url = "https://www.google.com/maps/dir/" + list.map(i => encodeURIComponent(i.name)).join('/');
   window.open(url, '_blank');
@@ -202,11 +198,10 @@ window.parseUrl = () => {
   areas.forEach(a => { if(decoded.includes(a)) document.getElementById('inp-area').value = a + '區'; });
 };
 
-// --- CRUD ---
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
   const editKey = document.getElementById('edit-key').value;
-  if(!name) return alert("請輸入地點名稱");
+  if(!name) return alert("地點名稱為必填");
 
   const data = {
     type: selectedType, name, day: document.getElementById('inp-day').value,
@@ -223,7 +218,7 @@ window.submitForm = () => {
 
 window.resetForm = () => {
   ['inp-name','inp-area','inp-url','inp-op-time','inp-note','edit-key'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('submit-btn').innerText = "加入行程清單";
+  document.getElementById('submit-btn').innerText = "加入清單";
   document.getElementById('cancel-btn').style.display = 'none';
   selectedWho = [...PARTICIPANTS]; renderFormUI();
 };
@@ -245,9 +240,9 @@ window.editItem = (key, item) => {
   window.scrollTo({top:0, behavior:'smooth'});
 };
 
-window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
+window.delItem = (key) => { if(confirm("確定刪除此地點？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
 
-// --- 渲染清單 ---
+// --- 列表渲染 ---
 onValue(itemsRef, snap => {
   const data = snap.val() || {};
   allItems = Object.entries(data).map(([key, val]) => ({ key, ...val }));
@@ -269,8 +264,8 @@ window.renderList = () => {
       <div class="item-info">
         <div class="item-type">${item.type}</div>
         <div class="item-name">${item.name}</div>
-        <div class="item-row">📅 ${item.day||'未定'} ${item.time||''} | 📍 ${item.area||'高雄'}</div>
-        <div class="item-row" style="color:var(--accent)">🕒 營業：${item.opTime||'不詳'} | 新增：${item.by}</div>
+        <div class="item-meta">📅 ${item.day||'未定'} ${item.time||''} | 📍 ${item.area||'高雄'}</div>
+        <div class="item-meta" style="color:var(--accent)">🕒 營業：${item.opTime||'不詳'} | 新增：${item.by}</div>
         <div class="item-who">${(item.who||[]).map(w => `<span class="pill">${w}</span>`).join('')}</div>
         ${item.note ? `<div class="item-note">💡 ${item.note}</div>` : ''}
       </div>
