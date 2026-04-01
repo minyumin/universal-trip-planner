@@ -3,215 +3,154 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>高雄小旅行</title>
+<title>高雄小旅行行程管理</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#f5f2ed;--surface:#fff;--surface2:#faf8f5;--border:#e8e3db;
-  --text:#1a1612;--muted:#8a7f72;--faint:#c5bdb0;
-  --accent:#c85a2a;--accent-light:#f5ede7;
-  --blue:#2a6cbf;--blue-l:#e8f0fb;
-  --green:#2a7a4a;--green-l:#e8f5ee;
-  --amber:#b87a1a;--amber-l:#fdf3e0;
-  --purple:#6a4abf;--purple-l:#f0ecfb;
-  --red:#bf2a2a;--red-l:#fbe8e8;
-  --teal:#1a8a7a;--teal-l:#e8f8f5;
-  --pink:#bf2a7a;--pink-l:#fbe8f3;
+  --bg:#f8f9fa;--surface:#fff;--border:#dee2e6;
+  --text:#212529;--muted:#6c757d;--accent:#d9480f;
+  --blue:#1971c2;--green:#2b8a3e;--amber:#e67e22;
   --r:12px;--rs:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;}
 
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 16px;position:sticky;top:0;z-index:200;}
-.header-inner{max-width:500px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
-.header h1{font-size:16px;font-weight:700;}
-.header-sub{font-size:11px;color:var(--muted);margin-top:1px;}
-.live{font-size:11px;color:var(--green);display:flex;align-items:center;gap:5px;}
-.dot{width:7px;height:7px;border-radius:50%;background:#4caf50;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.header{background:#fff;border-bottom:1px solid var(--border);padding:15px;position:sticky;top:0;z-index:100;text-align:center;}
+.header h1{font-size:18px;}
 
-.main{max-width:500px;margin:0 auto;padding:14px 14px 40px;}
+.main{max-width:500px;margin:0 auto;padding:15px;}
 
-/* Toolbar */
-.toolbar{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap;}
-.tab-scroll{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;padding-bottom:2px;}
-.tab-scroll::-webkit-scrollbar{display:none;}
-.tab{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid var(--border);font-size:13px;font-family:inherit;cursor:pointer;background:var(--surface);color:var(--muted);white-space:nowrap;transition:all .15s;}
-.tab.active{background:var(--text);color:#fff;border-color:var(--text);}
-.cnt{font-size:10px;opacity:.6;margin-left:2px;}
+/* Form Style */
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
+.card-title{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:15px;border-left:4px solid var(--accent);padding-left:8px;}
 
-.sort-btn{flex-shrink:0;padding:6px 12px;border-radius:20px;border:1px solid var(--border);font-size:12px;font-family:inherit;cursor:pointer;background:var(--surface);color:var(--muted);white-space:nowrap;}
-.sort-btn.active{border-color:var(--accent);color:var(--accent);}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px;color:var(--text);}
+.finp,.fsel{width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--rs);font-size:14px;outline:none;background:#fdfdfd;}
+.finp:focus{border-color:var(--accent);}
 
-.map-all-btn{width:100%;padding:10px;background:var(--blue-l);color:var(--blue);border:1px solid #c5d8f5;border-radius:var(--rs);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;margin-bottom:14px;transition:background .15s;}
-.map-all-btn:active{background:#d5e6f8;}
+/* URL Group */
+.url-group{display:flex;gap:8px;margin-bottom:5px;}
+.url-group input{flex:1;}
+.parse-btn{padding:0 15px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-size:13px;}
 
-/* Add form */
-.add-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:16px;}
-.card-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;}
+/* Chips */
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:#fff;}
+.chip.sel{background:var(--text);color:#fff;border-color:var(--text);}
 
-.url-row{position:relative;margin-bottom:4px;}
-.url-row input{width:100%;padding:9px 64px 9px 11px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:inherit;background:var(--surface2);color:var(--text);outline:none;}
-.url-row input:focus{border-color:var(--accent);}
-.parse-btn{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:5px 11px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;}
-.url-hint{font-size:11px;color:var(--faint);margin-bottom:10px;}
-.parsed-ok{font-size:11px;color:var(--green);margin-bottom:10px;display:none;}
-.extracted-info{background:var(--green-l);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:12px;color:var(--green);display:none;line-height:1.6;}
+/* List Item */
+.item{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:10px;position:relative;}
+.item-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:5px;}
+.item-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+.item-row{display:flex;font-size:12px;color:var(--muted);gap:10px;margin-bottom:2px;}
+.item-op{color:var(--amber);font-weight:500;}
+.item-who{margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;}
+.pill{font-size:10px;background:#e9ecef;padding:2px 8px;border-radius:10px;color:#495057;}
 
-.sep{height:1px;background:var(--border);margin:10px 0;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
-.grid1{margin-bottom:8px;}
-.field label{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-bottom:3px;}
-.finp,.fsel{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:inherit;background:var(--surface2);color:var(--text);outline:none;}
+.actions{position:absolute;top:15px;right:15px;display:flex;gap:8px;}
+.btn-sm{padding:4px 8px;font-size:11px;border-radius:4px;cursor:pointer;border:1px solid var(--border);background:#fff;}
+.edit-btn{color:var(--blue);border-color:var(--blue);}
+.del-btn{color:#fa5252;}
+.map-link{display:inline-block;margin-top:8px;font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;}
 
-/* Type + participant chips in form */
-.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
-.fchip{padding:4px 12px;border-radius:14px;border:1px solid var(--border);font-size:12px;font-family:inherit;cursor:pointer;background:var(--surface2);color:var(--muted);}
-.fchip.sel{background:var(--text);color:#fff;border-color:var(--text);}
-
-/* Custom type input */
-.custom-type-row{display:none;margin-top:6px;}
-.custom-type-row input{padding:7px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:inherit;background:var(--surface2);color:var(--text);outline:none;width:100%;}
-
-.add-btn{width:100%;margin-top:12px;padding:11px;background:var(--text);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;}
-
-/* List */
-.day-group{margin-bottom:20px;}
-.group-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.group-label{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
-.group-line{flex:1;height:1px;background:var(--border);}
-
-.item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 13px;display:flex;gap:11px;margin-bottom:8px;}
-.item-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
-.item-body{flex:1;min-width:0;}
-.item-name{font-size:14px;font-weight:500;line-height:1.3;}
-.item-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;align-items:center;}
-.badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:500;}
-.item-meta{font-size:11px;color:var(--muted);margin-top:4px;}
-.item-op-time{font-size:11px;color:var(--amber);margin-top:3px;display:flex;align-items:center;gap:4px;}
-.item-time{font-size:11px;color:var(--blue);margin-top:3px;}
-.item-note{font-size:12px;color:var(--faint);margin-top:4px;line-height:1.5;}
-.item-who{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
-.who-pill{padding:2px 8px;border-radius:8px;font-size:10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);}
-.item-actions{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
-.map-btn{padding:4px 9px;background:var(--blue-l);color:var(--blue);border:1px solid #c5d8f5;border-radius:6px;font-size:11px;font-family:inherit;cursor:pointer;white-space:nowrap;text-decoration:none;}
-.del-btn{padding:3px 6px;background:none;border:none;color:var(--faint);font-size:16px;cursor:pointer;line-height:1;}
-
-.empty{text-align:center;padding:36px 20px;color:var(--faint);font-size:14px;}
+.btn-primary{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-weight:700;cursor:pointer;margin-top:10px;}
+.btn-update{background:var(--green);}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-inner">
-    <div>
-      <h1>🌴 高雄小旅行</h1>
-      <div class="header-sub" id="trip-sub">共同行程規劃</div>
-    </div>
-    <div class="live" id="live-badge"><span class="dot"></span>即時同步</div>
-  </div>
-</div>
+<div class="header"><h1>🌴 高雄行程管理員</h1></div>
 
 <div class="main">
-
-  <div class="toolbar">
-    <div class="tab-scroll" id="tabs">
-      <button class="tab active" onclick="setTab('全部')">全部 <span class="cnt" id="cnt-all"></span></button>
-    </div>
-    <button class="sort-btn" id="sort-time-btn" onclick="setSort('time')">⏰ 時間</button>
-    <button class="sort-btn" id="sort-area-btn" onclick="setSort('area')">📍 地區</button>
-  </div>
-
-  <button class="map-all-btn" onclick="openAllMaps()">🗺 在 Google Maps 查看所有地點</button>
-
-  <div class="add-card">
-    <div class="card-title">新增地點</div>
-
-    <div class="url-row">
-      <input id="inp-url" type="url" placeholder="貼上 Google Maps 連結（選填）" oninput="onUrlChange()"/>
-      <button class="parse-btn" onclick="parseUrl()">解析</button>
-    </div>
-    <div class="url-hint" id="url-hint">貼上連結後點「解析」，自動帶入名稱與地區</div>
-    <div class="parsed-ok" id="parsed-ok">✓ 已連結 Google Maps</div>
-    <div class="extracted-info" id="extracted-info"></div>
-
-    <div class="sep"></div>
-
-    <div class="grid1 field">
-      <label>地點名稱 *</label>
-      <input class="finp" id="inp-name" placeholder="例：旗津老街"/>
-    </div>
-
-    <div class="grid2">
-      <div class="field">
-        <label>地區</label>
-        <input class="finp" id="inp-area" placeholder="例：旗津"/>
+  <div class="card" id="form-container">
+    <div class="card-title" id="form-mode-text">新增地點</div>
+    
+    <div class="field">
+      <label>Google Maps 連結</label>
+      <div class="url-group">
+        <input id="inp-url" class="finp" placeholder="貼上連結以自動抓取名稱"/>
+        <button class="parse-btn" onclick="parseUrl()">解析</button>
       </div>
+    </div>
+
+    <div class="field">
+      <label>類型</label>
+      <div class="chip-row" id="type-chips"></div>
+    </div>
+
+    <div class="field">
+      <label>地點名稱 *</label>
+      <input id="inp-name" class="finp" placeholder="例如：駁二藝術特區"/>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div class="field">
         <label>營業時間</label>
-        <input class="finp" id="inp-op-time" placeholder="例：09:00-21:00"/>
+        <input id="inp-op-time" class="finp" placeholder="09:00-18:00"/>
+      </div>
+      <div class="field">
+        <label>地區</label>
+        <input id="inp-area" class="finp" placeholder="例如：鹽埕區"/>
       </div>
     </div>
 
-    <div class="grid2">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div class="field">
-        <label>時段（選填）</label>
-        <div class="chip-row" id="time-chips"></div>
-        <input class="finp" id="inp-exact-time" type="text" inputmode="numeric" placeholder="輸入時間，如 14:30" style="margin-top:6px;display:none;" onblur="formatTime(this)"/>
-      </div>
-      <div class="field">
-        <label>日期（選填）</label>
-        <select class="fsel" id="inp-day">
+        <label>日期</label>
+        <select id="inp-day" class="fsel">
           <option value="">未定</option>
-          <option value="4/3">4/3（四）</option>
-          <option value="4/4">4/4（五）</option>
-          <option value="4/5">4/5（六）</option>
+          <option value="4/3">4/3 (四)</option>
+          <option value="4/4">4/4 (五)</option>
+          <option value="4/5">4/5 (六)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>時段</label>
+        <select id="inp-time" class="fsel">
+          <option value="">未定</option>
+          <option value="上午">🌤 上午</option>
+          <option value="中午">☀️ 中午</option>
+          <option value="下午">🌇 下午</option>
+          <option value="晚上">🌙 晚上</option>
         </select>
       </div>
     </div>
 
-    <div class="grid2">
-      <div class="field">
-        <label>新增者</label>
-        <select class="fsel" id="inp-by">
-          <option value="">請選擇</option>
-          <option value="Pei">Pei</option>
-          <option value="Lulu">Lulu</option>
-          <option value="Melanie">Melanie</option>
-          <option value="Yoyo">Yoyo</option>
-          <option value="Min">Min</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>類型</label>
-        <div class="chip-row" id="type-chips"></div>
-      </div>
+    <div class="field">
+      <label>新增者</label>
+      <select id="inp-by" class="fsel">
+        <option value="Pei">Pei</option>
+        <option value="Lulu">Lulu</option>
+        <option value="Melanie">Melanie</option>
+        <option value="Yoyo">Yoyo</option>
+        <option value="Min">Min</option>
+      </select>
     </div>
 
-    <div class="field grid1" style="margin-top:8px;">
-      <label>參與者（可多選）</label>
+    <div class="field">
+      <label>參與者</label>
       <div class="chip-row" id="participant-chips"></div>
     </div>
 
-    <div class="grid1 field" style="margin-top:8px;">
+    <div class="field">
       <label>備註</label>
-      <input class="finp" id="inp-note" placeholder="推薦理由、費用…"/>
+      <input id="inp-note" class="finp" placeholder="想吃什麼、門票價格等"/>
     </div>
 
-    <button class="add-btn" onclick="addItem()">+ 加入清單</button>
+    <input type="hidden" id="edit-key" value=""/>
+    <button id="submit-btn" class="btn-primary" onclick="submitForm()">確認加入清單</button>
+    <button id="cancel-btn" style="display:none; width:100%; margin-top:5px; background:none; border:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消修改</button>
   </div>
 
-  <div id="list-container"><div class="empty">載入中…</div></div>
+  <div id="list-container"></div>
 </div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, push, remove, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import { getDatabase, ref, push, onValue, remove, update } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-// ====================================================
-// 🔧 Firebase 設定 (已統一變數名稱)
-// ====================================================
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDnDKwh2a9qVqDcgZtUjEjh8uCe07FHAzo",
   authDomain: "kaohsiung-trip.firebaseapp.com",
@@ -222,219 +161,147 @@ const FIREBASE_CONFIG = {
   appId: "1:17984792690:web:8a4e4734140eb099dffaeb"
 };
 
-const DEFAULT_PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
-const DEFAULT_TYPES = ['景點','小吃','咖啡廳','住宿','購物','其他'];
-const TYPE_COLORS = {
-  '景點':['#2a6cbf','#e8f0fb'],'小吃':['#b87a1a','#fdf3e0'],
-  '咖啡廳':['#2a7a4a','#e8f5ee'],'住宿':['#6a4abf','#f0ecfb'],
-  '購物':['#bf2a7a','#fbe8f3'],'其他':['#8a7f72','#f5f2ed']
-};
-const DAY_COLORS = {'4/3':'#6a4abf','4/4':'#2a7a4a','4/5':'#c85a2a','':`#8a7f72`};
-const DAY_ORDER = {'4/3':0,'4/4':1,'4/5':2,'':3};
-const TIME_SLOTS = ['上午','中午','下午','晚上'];
-const TIME_ORDER = {'上午':0,'中午':1,'下午':2,'晚上':3,'':4};
-const TIME_ICONS = {'上午':'🌤','中午':'☀️','下午':'🌇','晚上':'🌙'};
+const app = initializeApp(FIREBASE_CONFIG);
+const db = getDatabase(app);
+const itemsRef = ref(db, 'kaohsiung-trip/items');
 
-let db, itemsRef, typesRef;
-let allItems = {};
-let customTypes = [];
-let activeTab = '全部';
-let sortMode = 'time';
-let parsedUrl = '';
-let selectedParticipants = [];
+const TYPES = ['景點','小吃','咖啡廳','住宿','購物','交通'];
+const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 let selectedType = '景點';
-let selectedTime = '';
+let selectedWho = [...PARTICIPANTS]; // 預設全部
 
-// ---- Firebase init ----
-function initFirebase() {
-  try {
-    const app = initializeApp(FIREBASE_CONFIG);
-    db = getDatabase(app);
-    itemsRef = ref(db, 'kaohsiung-trip/items');
-    typesRef = ref(db, 'kaohsiung-trip/types');
-
-    onValue(itemsRef, snap => { allItems = snap.val() || {}; renderList(); updateTabs(); });
-    onValue(typesRef, snap => { customTypes = snap.val() || []; renderTypeChips(); });
-  } catch(e) {
-    console.error("Firebase 連線失敗:", e);
-    allItems = {}; renderList(); updateTabs();
-  }
-}
-
-// ---- UI Renders ----
-function renderParticipantChips() {
-  const el = document.getElementById('participant-chips');
-  el.innerHTML = DEFAULT_PARTICIPANTS.map(p =>
-    `<button class="fchip${selectedParticipants.includes(p)?' sel':''}" onclick="toggleParticipant('${p}')">${p}</button>`
+// 初始化 Chips
+function renderChips() {
+  document.getElementById('type-chips').innerHTML = TYPES.map(t => 
+    `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`
   ).join('');
+
+  const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">All</div>`];
+  PARTICIPANTS.forEach(p => {
+    whoHtml.push(`<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`);
+  });
+  document.getElementById('participant-chips').innerHTML = whoHtml.join('');
 }
-window.toggleParticipant = function(p) {
-  if(selectedParticipants.includes(p)) selectedParticipants = selectedParticipants.filter(x=>x!==p);
-  else selectedParticipants.push(p);
-  renderParticipantChips();
+
+window.selectType = (t) => { selectedType = t; renderChips(); };
+window.toggleWho = (p) => {
+  if(selectedWho.includes(p)) selectedWho = selectedWho.filter(x=>x!==p);
+  else selectedWho.push(p);
+  renderChips();
+};
+window.toggleAllWho = () => {
+  selectedWho = selectedWho.length === PARTICIPANTS.length ? [] : [...PARTICIPANTS];
+  renderChips();
 };
 
-function renderTimeChips() {
-  const el = document.getElementById('time-chips');
-  const isCustom = selectedTime === '自訂';
-  el.innerHTML = TIME_SLOTS.map(t => `<button class="fchip${selectedTime === t?' sel':''}" onclick="toggleTime('${t}')">${TIME_ICONS[t]} ${t}</button>`).join('') +
-  `<button class="fchip${isCustom?' sel':''}" onclick="toggleTime('自訂')">🕐 自訂</button>`;
-  document.getElementById('inp-exact-time').style.display = isCustom ? 'block' : 'none';
-}
-window.toggleTime = function(t) {
-  selectedTime = selectedTime === t ? '' : t;
-  renderTimeChips();
-};
-
-function renderTypeChips() {
-  const allTypes = [...DEFAULT_TYPES, ...customTypes];
-  const el = document.getElementById('type-chips');
-  el.innerHTML = allTypes.map(t => {
-    const isSel = selectedType===t;
-    return `<button class="fchip${isSel?' sel':''}" onclick="selectType('${t}')">${t}</button>`;
-  }).join('');
-}
-window.selectType = function(t) { selectedType = t; renderTypeChips(); };
-
-// ---- URL Parsing ----
-const AREA_KEYWORDS = ['鹽埕','旗津','苓雅','前金','三民','左營','鼓山','楠梓','鳳山','新興','岡山','橋頭','旗山','美濃'];
-
-window.parseUrl = async function() {
+// URL 解析
+const AREAS = ['鹽埕','旗津','苓雅','前金','三民','左營','鼓山','新興','鳳山'];
+window.parseUrl = () => {
   const url = document.getElementById('inp-url').value.trim();
   if(!url) return;
-  const btn = document.querySelector('.parse-btn');
-  btn.textContent = '...';
-
-  try {
-    const decoded = decodeURIComponent(url);
-    // 1. 抓取店名
-    let nameMatch = decoded.match(/\/place\/([^\/\?]+)/);
-    if(nameMatch) {
-      let name = nameMatch[1].replace(/\+/g, ' ');
-      document.getElementById('inp-name').value = name;
-    }
-    // 2. 抓取地區
-    for(const kw of AREA_KEYWORDS) {
-      if(decoded.includes(kw)) {
-        document.getElementById('inp-area').value = kw + '區';
-        break;
-      }
-    }
-    document.getElementById('parsed-ok').style.display = 'block';
-    document.getElementById('url-hint').style.display = 'none';
-  } catch(e) { console.error("解析失敗", e); }
-  btn.textContent = '解析';
+  const decoded = decodeURIComponent(url);
+  
+  // 抓取名稱
+  const nameMatch = decoded.match(/\/place\/([^\/\?]+)/);
+  if(nameMatch) document.getElementById('inp-name').value = nameMatch[1].replace(/\+/g, ' ');
+  
+  // 抓取地區
+  AREAS.forEach(a => { if(decoded.includes(a)) document.getElementById('inp-area').value = a + '區'; });
 };
 
-window.onUrlChange = function() {
-  if(!document.getElementById('inp-url').value) {
-    document.getElementById('parsed-ok').style.display = 'none';
-    document.getElementById('url-hint').style.display = 'block';
-  }
-};
-
-// ---- Add Item ----
-window.addItem = function() {
+// 提交表單 (新增或更新)
+window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
-  if(!name) return;
+  const editKey = document.getElementById('edit-key').value;
+  if(!name) return alert("請輸入名稱");
 
-  const item = {
-    name,
+  const data = {
     type: selectedType,
-    opTime: document.getElementById('inp-op-time').value.trim(),
+    name,
     day: document.getElementById('inp-day').value,
+    time: document.getElementById('inp-time').value,
+    opTime: document.getElementById('inp-op-time').value.trim(),
     area: document.getElementById('inp-area').value.trim(),
-    time: selectedTime === '自訂' ? document.getElementById('inp-exact-time').value : selectedTime,
-    exactTime: selectedTime === '自訂' ? document.getElementById('inp-exact-time').value : '',
-    by: document.getElementById('inp-by').value || '匿名',
-    note: document.getElementById('inp-note').value.trim(),
+    by: document.getElementById('inp-by').value,
+    who: selectedWho,
     url: document.getElementById('inp-url').value.trim(),
-    participants: selectedParticipants.length ? [...selectedParticipants] : DEFAULT_PARTICIPANTS,
+    note: document.getElementById('inp-note').value.trim(),
     ts: Date.now()
   };
 
-  if(db) push(itemsRef, item);
+  if(editKey) {
+    update(ref(db, `kaohsiung-trip/items/${editKey}`), data);
+  } else {
+    push(itemsRef, data);
+  }
+  resetForm();
+};
+
+window.resetForm = () => {
+  ['inp-name','inp-op-time','inp-area','inp-url','inp-note','edit-key'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('form-mode-text').innerText = "新增地點";
+  document.getElementById('submit-btn').innerText = "確認加入清單";
+  document.getElementById('submit-btn').classList.remove('btn-update');
+  document.getElementById('cancel-btn').style.display = 'none';
+  selectedWho = [...PARTICIPANTS];
+  renderChips();
+};
+
+// 進入編輯模式
+window.editItem = (key, data) => {
+  document.getElementById('edit-key').value = key;
+  document.getElementById('inp-name').value = data.name;
+  document.getElementById('inp-op-time').value = data.opTime || '';
+  document.getElementById('inp-area').value = data.area || '';
+  document.getElementById('inp-url').value = data.url || '';
+  document.getElementById('inp-note').value = data.note || '';
+  document.getElementById('inp-day').value = data.day || '';
+  document.getElementById('inp-time').value = data.time || '';
+  document.getElementById('inp-by').value = data.by || '';
+  selectedType = data.type;
+  selectedWho = data.who || [];
   
-  // Reset
-  ['inp-name','inp-op-time','inp-area','inp-note','inp-url','inp-exact-time'].forEach(id=>document.getElementById(id).value='');
-  selectedTime = ''; selectedParticipants = [];
-  renderTimeChips(); renderParticipantChips();
+  document.getElementById('form-mode-text').innerText = "正在修改：" + data.name;
+  document.getElementById('submit-btn').innerText = "更新資料";
+  document.getElementById('submit-btn').classList.add('btn-update');
+  document.getElementById('cancel-btn').style.display = 'block';
+  document.getElementById('form-container').scrollIntoView({behavior:'smooth'});
+  renderChips();
 };
 
-window.delItem = function(key) {
-  if(confirm('確定刪除？')) remove(ref(db, `kaohsiung-trip/items/${key}`));
-};
+window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
 
-// ---- Render List ----
-function renderList() {
-  let items = Object.entries(allItems).map(([k,v])=>({key:k,...v}));
-  if(activeTab!=='全部') items=items.filter(i=>i.type===activeTab);
+// 即時渲染清單
+onValue(itemsRef, snap => {
+  const data = snap.val() || {};
   const container = document.getElementById('list-container');
-  if(!items.length) { container.innerHTML='<div class="empty">還沒有地點</div>'; return; }
-
-  // Sort by Time (Default)
-  items.sort((a,b)=>{
-    const dd=(DAY_ORDER[a.day??'']??3)-(DAY_ORDER[b.day??'']??3);
-    if(dd!==0) return dd;
-    return (TIME_ORDER[a.time]??4)-(TIME_ORDER[b.time]??4);
-  });
-
-  const groups = {};
-  items.forEach(i => { const k = i.day || ''; if(!groups[k]) groups[k]=[]; groups[k].push(i); });
+  const sorted = Object.entries(data).sort((a,b) => b[1].ts - a[1].ts);
   
-  const DAY_LABEL={'4/3':'4/3（四）','4/4':'4/4（五）','4/5':'4/5（六）','':'日期未定'};
-  
-  container.innerHTML = Object.keys(groups).map(day => `
-    <div class="day-group">
-      <div class="group-header">
-        <div class="group-label" style="color:${DAY_COLORS[day]}">${DAY_LABEL[day]}</div>
-        <div class="group-line"></div>
+  container.innerHTML = sorted.map(([key, item]) => `
+    <div class="item">
+      <div class="item-type" style="background:#e7f5ff; color:#1971c2;">${item.type}</div>
+      <div class="actions">
+        <button class="btn-sm edit-btn" onclick='editItem("${key}", ${JSON.stringify(item)})'>編輯</button>
+        <button class="btn-sm del-btn" onclick='delItem("${key}")'>刪除</button>
       </div>
-      ${groups[day].map(item => itemHTML(item)).join('')}
+      <div class="item-name">${item.name}</div>
+      <div class="item-row">
+        <span>📅 ${item.day || '未定'}・${item.time || '未定'}</span>
+        <span>📍 ${item.area || '高雄'}</span>
+      </div>
+      ${item.opTime ? `<div class="item-row item-op">🕒 營業：${item.opTime}</div>` : ''}
+      <div class="item-row">👤 新增者：${item.by}</div>
+      <div class="item-who">
+        ${(item.who||[]).map(w => `<span class="pill">${w}</span>`).join('')}
+      </div>
+      ${item.note ? `<div style="font-size:11px; color:#adb5bd; margin-top:5px;">Note: ${item.note}</div>` : ''}
+      ${item.url ? `<a class="map-link" href="${item.url}" target="_blank">在 Google Maps 開啟 ↗</a>` : ''}
     </div>
   `).join('');
-}
-
-function itemHTML(item) {
-  const [fg,bg] = TYPE_COLORS[item.type] || ['#8a7f72','#f5f2ed'];
-  return `
-    <div class="item">
-      <div class="item-icon" style="background:${bg}">${iconFor(item.type)}</div>
-      <div class="item-body">
-        <div class="item-name">${item.name}</div>
-        <div class="item-badges">
-          <span class="badge" style="background:${bg};color:${fg}">${item.type}</span>
-          ${item.day?`<span class="badge" style="background:${DAY_COLORS[item.day]}22;color:${DAY_COLORS[item.day]}">${item.day}</span>`:''}
-        </div>
-        ${item.opTime ? `<div class="item-op-time">🕒 ${item.opTime}</div>` : ''}
-        <div class="item-meta">${item.area ? item.area + '・' : ''}由 ${item.by} 新增</div>
-        ${item.time ? `<div class="item-time">${TIME_ICONS[item.time]||'⏰'} ${item.time}</div>` : ''}
-        ${item.note ? `<div class="item-note">${item.note}</div>` : ''}
-        <div class="item-who">${item.participants.map(p=>`<span class="who-pill">${p}</span>`).join('')}</div>
-      </div>
-      <div class="item-actions">
-        <button class="del-btn" onclick="delItem('${item.key}')">×</button>
-        ${item.url ? `<a class="map-btn" href="${item.url}" target="_blank">地圖 ↗</a>` : ''}
-      </div>
-    </div>
-  `;
-}
-
-function iconFor(t){ 
-  const icons = {景點:'📍',小吃:'🍜',咖啡廳:'☕',住宿:'🏨',購物:'🛍️',其他:'📌'};
-  return icons[t] || '📌'; 
-}
-
-function updateTabs() {
-  const items = Object.values(allItems);
-  document.getElementById('cnt-all').textContent = items.length;
-}
-
-window.setTab = function(t) { activeTab = t; renderList(); };
-window.setSort = function(m) { sortMode = m; renderList(); };
+});
 
 // Boot
-renderParticipantChips(); renderTypeChips(); renderTimeChips(); initFirebase();
+renderChips();
 </script>
 </body>
 </html>
