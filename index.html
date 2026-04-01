@@ -3,114 +3,83 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>4/3-5 高雄小旅行</title>
+<title>我的旅遊萬用手冊</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#f5f2ed;--surface:#fff;--border:#e8e3db;
-  --text:#1a1612;--muted:#8a7f72;--accent:#c85a2a;
-  --blue:#2a6cbf;--r:14px;--rs:10px;
+  --bg:#f8f9fa;--surface:#fff;--border:#eef0f2;
+  --text:#2d3436;--muted:#636e72;--accent:#e67e22;
+  --blue:#0984e3;--r:16px;--rs:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:100px;font-size:14px;}
-.header{background:#fff;border-bottom:1px solid var(--border);padding:12px;position:sticky;top:0;z-index:200;text-align:center;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:120px;font-size:14px;line-height:1.5;}
+
+/* 頂部導覽：切換行程 */
+.trip-nav{background:#fff; border-bottom:1px solid var(--border); padding:10px; position:sticky; top:0; z-index:200; display:flex; align-items:center; gap:10px; box-shadow:0 2px 5px rgba(0,0,0,0.02);}
+.trip-select{flex:1; padding:8px; border:1px solid var(--border); border-radius:8px; font-weight:700; font-size:15px; color:var(--blue); outline:none;}
+.btn-new-trip{background:var(--blue); color:#fff; border:none; padding:8px 12px; border-radius:8px; font-weight:700; cursor:pointer;}
+
 .main{max-width:500px;margin:0 auto;padding:14px;}
+.card{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:18px; margin-bottom:20px; box-shadow:0 4px 15px rgba(0,0,0,0.05);}
+.field{margin-bottom:14px;}
+.field label{display:block; font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:700; text-transform:uppercase;}
+.finp,.fsel{width:100%; padding:11px; border:1px solid #edf2f7; border-radius:var(--rs); font-size:14px; background:#fcfdfe; outline:none;}
+.finp:focus{border-color:var(--blue);}
 
-/* 表單卡片 */
-.card{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:24px; box-shadow:0 4px 12px rgba(0,0,0,0.03);}
-.field{margin-bottom:12px;}
-.field label{display:block; font-size:11px; color:var(--muted); margin-bottom:5px; font-weight:700;}
-.finp,.fsel{width:100%; padding:10px; border:1px solid var(--border); border-radius:var(--rs); font-size:14px; background:#faf8f5; outline:none; border:1px solid transparent;}
-.finp:focus{border-color:var(--accent); background:#fff;}
-
-/* 按鈕樣式 */
-.btn-main{width:100%; padding:14px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; margin-top:10px;}
-.btn-main.update-mode { background: var(--accent); }
-.map-gen-fixed{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:90%; max-width:450px; padding:16px; background:var(--blue); color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; box-shadow:0 10px 20px rgba(42, 108, 191, 0.3); z-index:1000;}
-
-/* Chips */
-.chip-row{display:flex; gap:6px; flex-wrap:wrap;}
-.chip{padding:4px 12px; border-radius:15px; border:1px solid var(--border); font-size:12px; cursor:pointer; background:#fff; color:var(--muted);}
+.chip-row{display:flex; gap:8px; flex-wrap:wrap;}
+.chip{padding:6px 14px; border-radius:20px; border:1px solid #edf2f7; font-size:12px; cursor:pointer; background:#fff; color:var(--muted); font-weight:500;}
 .chip.sel{background:var(--text); color:#fff; border-color:var(--text);}
-.btn-add-type{width:26px; height:26px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; color:var(--muted); font-weight:700;}
 
-/* 清單項目 */
-.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; display:flex; align-items:flex-start; gap:12px; transition: 0.3s;}
-.item.editing { border: 2px solid var(--accent); background: #fffdfc; }
+.ctrl-bar{background:#fff; padding:12px; border-radius:var(--r); border:1px solid var(--border); margin-bottom:15px;}
+.date-group-hd { margin: 25px 0 10px 5px; font-weight: 700; font-size: 15px; color: var(--blue); display: flex; align-items: center; gap: 8px; }
+.date-group-hd::after { content:''; flex:1; height:1px; background: linear-gradient(to right, var(--border), transparent); }
+
+.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:12px; display:flex; align-items:flex-start; gap:12px;}
+.item.editing { border: 2px solid var(--accent); }
+.item-check{width:20px; height:20px; margin-top:16px; cursor:pointer; accent-color: var(--blue);}
 .item-info{flex:1; min-width:0;}
-.item-name{font-size:16px; font-weight:700; margin-bottom:4px;}
-.item-type{font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase;}
+.item-name{font-size:16px; font-weight:700; color:#2d3436; margin-bottom:4px;}
+.item-time-pill{display:inline-block; font-size:11px; padding:2px 8px; border-radius:4px; background:#e1f5fe; color:#0288d1; font-weight:700; margin-bottom:8px;}
 
-/* Checkbox */
-.item-check{width:20px; height:20px; margin-top:14px; cursor:pointer; accent-color: var(--blue);}
-
-.map-link-btn {
-  display: inline-flex;
-  align-items: center;
-  background: #eef4ff;
-  color: var(--blue);
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 11px;
-  text-decoration: none;
-  font-weight: 700;
-  margin-top: 8px;
-  border: 1px solid #d0e0ff;
-}
-
-.pill{font-size:10px; background:var(--bg); padding:1px 6px; border-radius:6px; color:var(--muted); margin-right:4px;}
-.item-note{font-size:12px; color:var(--accent); background:#fff9f5; padding:6px; border-radius:6px; margin-top:8px; border-left:3px solid var(--accent);}
-.btn-icon{width:32px; height:32px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; margin-bottom:5px;}
+.btn-main{width:100%; padding:14px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer;}
+.map-gen-fixed{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:90%; max-width:450px; padding:16px; background:var(--blue); color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(9, 132, 227, 0.4); z-index:1000; text-align:center;}
+.btn-icon{width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; margin-bottom:6px;}
 </style>
 </head>
 <body>
 
-<div class="header"><h1>🗓️ 4/3-5 高雄小旅行</h1></div>
+<div class="trip-nav">
+  <select id="current-trip-select" class="trip-select" onchange="switchTrip(this.value)"></select>
+  <button class="btn-new-trip" onclick="createNewTrip()">＋</button>
+</div>
 
 <div class="main">
   <div class="card" id="form-container">
-    <div class="field" style="background:var(--bg); padding:10px; border-radius:var(--rs);">
-      <label>Google Maps 連結自動解析</label>
-      <input id="inp-url" class="finp" placeholder="在此貼上地點連結" onpaste="setTimeout(parseUrl, 100)"/>
-    </div>
-    <div class="field"><label>類型</label><div class="chip-row" id="type-chips"></div></div>
-    <div class="field"><label>地點名稱 *</label><input id="inp-name" class="finp" placeholder="地點名稱"/></div>
+    <div class="field"><label>分類</label><div class="chip-row" id="type-chips"></div></div>
+    <div class="field"><label>行程名稱 *</label><input id="inp-name" class="finp" placeholder="例：駁二特區、丹丹漢堡"/></div>
+    <div class="field"><label>地址 (選填)</label><input id="inp-addr" class="finp" placeholder="地點地址"/></div>
     
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div class="field">
-        <label>日期</label>
-        <select id="inp-day" class="fsel">
-          <option value="">未定</option>
-          <option value="4/3">4/3 (五)</option>
-          <option value="4/4">4/4 (六)</option>
-          <option value="4/5">4/5 (日)</option>
-        </select>
-      </div>
+      <div class="field"><label>日期</label><select id="inp-day" class="fsel"></select></div>
       <div class="field">
         <label>時段</label>
-        <select id="inp-time-select" class="fsel" onchange="toggleTimeInput()">
-          <option value="">未定</option><option value="上午">🌤 上午</option><option value="中午">☀️ 中午</option><option value="下午">🌇 下午</option><option value="晚上">🌙 晚上</option><option value="custom">✍️ 自定義時間</option>
-        </select>
-        <input id="inp-time-custom" class="finp" style="display:none; margin-top:5px;" placeholder="例如：14:30"/>
+        <select id="inp-time-select" class="fsel"><option value="">未定</option><option value="早晨">🌅 早晨</option><option value="上午">🌤 上午</option><option value="午餐">🍴 午餐</option><option value="下午">🌇 下午</option><option value="晚餐">🥘 晚餐</option><option value="深夜">🌙 深夜</option></select>
       </div>
     </div>
-
+    
     <div class="field"><label>參與者</label><div class="chip-row" id="participant-chips"></div></div>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div class="field"><label>營業時間</label><input id="inp-op-time" class="finp" placeholder="例：10:00-20:00"/></div>
-      <div class="field"><label>公休日</label><input id="inp-off-day" class="finp" placeholder="例：週一"/></div>
-    </div>
-    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="備註..."/></div>
-
-    <button id="submit-btn" class="btn-main" onclick="submitForm()">加入行程清單</button>
-    <button id="cancel-btn" style="display:none; width:100%; margin-top:10px; border:none; background:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消修改</button>
+    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="資訊備註..."/></div>
+    <div class="field"><label>解析連結</label><input id="inp-url" class="finp" placeholder="貼上 Google Map 連結自動帶入店名" onpaste="setTimeout(parseUrl, 100)"/></div>
+    
+    <button id="submit-btn" class="btn-main" onclick="submitForm()">加入行程</button>
+    <button id="cancel-btn" style="display:none; width:100%; margin:10px 0; border:none; background:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消修改</button>
+    <button id="del-trip-btn" style="width:100%; margin-top:20px; border:none; color:#ff7675; background:none; font-size:11px; cursor:pointer;" onclick="deleteCurrentTrip()">🗑️ 刪除此整趟旅行</button>
   </div>
 
   <div id="list-container"></div>
 </div>
 
-<button id="map-btn" class="map-gen-fixed" onclick="openSelectedMap()">🗺️ 生成地圖行程 (已勾選地點)</button>
+<button id="map-btn" class="map-gen-fixed" onclick="openSelectedMap()">🗺️ 生成地圖路徑 (已勾選)</button>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -125,130 +94,179 @@ const FIREBASE_CONFIG = {
 
 const app = initializeApp(FIREBASE_CONFIG);
 const db = getDatabase(app);
-const itemsRef = ref(db, 'kaohsiung-trip/items');
-const typesRef = ref(db, 'kaohsiung-trip/types');
 
 const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
-let selectedType = '景點', selectedWho = [...PARTICIPANTS], allItems = [], editingKey = null;
-let customTypes = ['景點','小吃','咖啡廳','購物'];
+const TIME_ORDER = { "早晨":1, "上午": 2, "午餐": 3, "下午": 4, "晚餐": 5, "深夜": 6, "": 7 };
 
-const DAY_MAP = { "4/3": " (五)", "4/4": " (六)", "4/5": " (日)" };
+let trips = {}, currentTripID = '', allItems = [], editingKey = null;
+let selectedType = '景點', selectedWho = [...PARTICIPANTS];
+let customTypes = ['景點','小吃','餐廳','咖啡廳','住宿','交通'];
 
-onValue(typesRef, snap => { if(snap.exists()) customTypes = snap.val(); renderFormUI(); });
+// 監聽所有旅行清單
+onValue(ref(db, 'all-trips-meta'), snap => {
+  trips = snap.val() || {};
+  const select = document.getElementById('current-trip-select');
+  select.innerHTML = Object.entries(trips).map(([id, t]) => `<option value="${id}">${t.name}</option>`).join('');
+  
+  if(!currentTripID && Object.keys(trips).length > 0) {
+    switchTrip(Object.keys(trips)[0]);
+  } else if (Object.keys(trips).length === 0) {
+    createNewTrip(); // 若無資料則提示建立
+  }
+});
+
+window.switchTrip = (id) => {
+  currentTripID = id;
+  document.getElementById('current-trip-select').value = id;
+  const trip = trips[id];
+  
+  // 生成日期下拉選單
+  const days = getDatesBetween(trip.start, trip.end);
+  document.getElementById('inp-day').innerHTML = '<option value="">未定</option>' + days.map(d => `<option value="${d}">${d}</option>`).join('');
+  
+  // 監聽該行程的內容
+  onValue(ref(db, `all-trips-data/${id}/items`), snap => {
+    allItems = Object.entries(snap.val() || {}).map(([key, val]) => ({ key, ...val }));
+    renderList();
+  });
+};
+
+window.createNewTrip = () => {
+  const name = prompt("請輸入旅行名稱（例如：2026 東京之旅）");
+  if(!name) return;
+  const start = prompt("起始日期 (YYYY-MM-DD)", "2026-04-03");
+  const end = prompt("結束日期 (YYYY-MM-DD)", "2026-04-05");
+  if(name && start && end) {
+    const newRef = push(ref(db, 'all-trips-meta'));
+    set(newRef, { name, start, end });
+    switchTrip(newRef.key);
+  }
+};
+
+window.deleteCurrentTrip = () => {
+  if(confirm(`確定刪除整趟「${trips[currentTripID].name}」？此動作無法復原。`)) {
+    remove(ref(db, `all-trips-meta/${currentTripID}`));
+    remove(ref(db, `all-trips-data/${currentTripID}`));
+    location.reload();
+  }
+};
+
+// 工具：計算日期區間
+function getDatesBetween(start, end) {
+  const dates = [];
+  let curr = new Date(start);
+  const stop = new Date(end);
+  while(curr <= stop) {
+    const m = curr.getMonth() + 1;
+    const d = curr.getDate();
+    const w = ["(日)","(一)","(二)","(三)","(四)","(五)","(六)"][curr.getDay()];
+    dates.push(`${m}/${d} ${w}`);
+    curr.setDate(curr.getDate() + 1);
+  }
+  return dates;
+}
 
 window.renderFormUI = () => {
   document.getElementById('type-chips').innerHTML = customTypes.map(t => `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
-  const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">All</div>`].concat(PARTICIPANTS.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
+  const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">全員</div>`].concat(PARTICIPANTS.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
   document.getElementById('participant-chips').innerHTML = whoHtml.join('');
-};
-
-window.selectType = (t) => { selectedType = t; renderFormUI(); };
-window.addType = () => { const nt = prompt("新增類型名稱："); if(nt && !customTypes.includes(nt)) { customTypes.push(nt); set(typesRef, customTypes); } };
-window.toggleWho = (p) => { selectedWho = selectedWho.includes(p) ? selectedWho.filter(x=>x!==p) : [...selectedWho, p]; renderFormUI(); };
-window.toggleAllWho = () => { selectedWho = (selectedWho.length === PARTICIPANTS.length) ? [] : [...PARTICIPANTS]; renderFormUI(); };
-window.toggleTimeInput = () => { document.getElementById('inp-time-custom').style.display = (document.getElementById('inp-time-select').value === 'custom') ? 'block' : 'none'; };
-
-window.parseUrl = () => {
-  setTimeout(() => {
-    const input = document.getElementById('inp-url').value;
-    const decoded = decodeURIComponent(input);
-    const nameMatch = decoded.match(/\/place\/([^\/\?]+)/);
-    if(nameMatch) document.getElementById('inp-name').value = nameMatch[1].replace(/\+/g, ' ');
-  }, 100);
-};
-
-window.editItem = (key) => {
-  const item = allItems.find(i => i.key === key);
-  if(!item) return;
-  editingKey = key;
-  document.getElementById('inp-name').value = item.name || '';
-  document.getElementById('inp-url').value = item.url || '';
-  document.getElementById('inp-day').value = item.day || '';
-  const standardTimes = ['上午','中午','下午','晚上'];
-  const timeSelect = document.getElementById('inp-time-select');
-  const timeCustom = document.getElementById('inp-time-custom');
-  if (item.time && !standardTimes.includes(item.time)) { timeSelect.value = 'custom'; timeCustom.value = item.time; timeCustom.style.display = 'block'; }
-  else { timeSelect.value = item.time || ''; timeCustom.style.display = 'none'; }
-  selectedType = item.type || '景點';
-  selectedWho = item.who ? [...item.who] : [];
-  document.getElementById('inp-op-time').value = item.opTime || '';
-  document.getElementById('inp-off-day').value = item.offDay || '';
-  document.getElementById('inp-note').value = item.note || '';
-  const sb = document.getElementById('submit-btn');
-  sb.innerText = "更新行程清單"; sb.classList.add('update-mode');
-  document.getElementById('cancel-btn').style.display = 'block';
-  renderFormUI(); renderList(); window.scrollTo({top: 0, behavior: 'smooth'});
-};
-
-window.resetForm = () => {
-  editingKey = null;
-  ['inp-name','inp-url','inp-op-time','inp-off-day','inp-note','inp-time-custom'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('inp-day').value = ''; document.getElementById('inp-time-select').value = '';
-  document.getElementById('inp-time-custom').style.display = 'none';
-  const sb = document.getElementById('submit-btn');
-  sb.innerText = "加入行程清單"; sb.classList.remove('update-mode');
-  document.getElementById('cancel-btn').style.display = 'none';
-  selectedType = '景點'; selectedWho = [...PARTICIPANTS]; renderFormUI(); renderList();
 };
 
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
   if(!name) return alert("地點名稱為必填");
-  const timeVal = document.getElementById('inp-time-select').value === 'custom' ? document.getElementById('inp-time-custom').value : document.getElementById('inp-time-select').value;
   const data = {
-    type: selectedType, name, url: document.getElementById('inp-url').value || '',
-    day: document.getElementById('inp-day').value || '', time: timeVal || '',
-    opTime: document.getElementById('inp-op-time').value || '',
-    offDay: document.getElementById('inp-off-day').value || '',
+    type: selectedType, name, addr: document.getElementById('inp-addr').value.trim(),
+    url: document.getElementById('inp-url').value || '',
+    day: document.getElementById('inp-day').value || '',
+    time: document.getElementById('inp-time-select').value || '',
     who: selectedWho, note: document.getElementById('inp-note').value || '', ts: Date.now()
   };
-  if(editingKey) update(ref(db, `kaohsiung-trip/items/${editingKey}`), data);
-  else push(itemsRef, data);
+  if(editingKey) update(ref(db, `all-trips-data/${currentTripID}/items/${editingKey}`), data);
+  else push(ref(db, `all-trips-data/${currentTripID}/items`), data);
   resetForm();
 };
 
-window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
-
-window.openSelectedMap = () => {
-  const checkedBoxes = document.querySelectorAll('.item-check:checked');
-  if(checkedBoxes.length === 0) return alert("請先勾選想去的地點");
-  const selectedNames = Array.from(checkedBoxes).map(cb => encodeURIComponent(cb.getAttribute('data-name')));
-  window.open("https://www.google.com/maps/dir/" + selectedNames.join('/'), '_blank');
-};
-
-onValue(itemsRef, snap => {
-  allItems = Object.entries(snap.val() || {}).map(([key, val]) => ({ key, ...val }));
-  renderList();
-});
-
 window.renderList = () => {
-  const sorted = [...allItems].sort((a,b) => b.ts - a.ts);
-  document.getElementById('list-container').innerHTML = sorted.map(item => {
-    // 關鍵修正：清單顯示 4/3 (五)
-    const displayDay = item.day ? (item.day + (DAY_MAP[item.day] || "")) : "未定";
-    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(item.name)}`;
+  let list = [...allItems].sort((a,b) => {
+    if(a.day !== b.day) return (a.day || '9/9') > (b.day || '9/9') ? 1 : -1;
+    return (TIME_ORDER[a.time] || 99) - (TIME_ORDER[b.time] || 99);
+  });
+
+  let html = '', lastDay = '';
+  list.forEach(item => {
+    if(item.day !== lastDay) {
+      html += `<div class="date-group-hd">${item.day || "日期未定"}</div>`;
+      lastDay = item.day;
+    }
+    const searchPrefix = trips[currentTripID].name.replace(/之旅|旅行/g, '');
+    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(searchPrefix + " " + item.name)}`;
     
-    return `
+    html += `
     <div class="item ${editingKey === item.key ? 'editing' : ''}">
       <input type="checkbox" class="item-check" data-name="${item.name}" checked>
       <div class="item-info">
         <div class="item-type">${item.type}</div>
         <div class="item-name">${item.name}</div>
-        <a href="${mapUrl}" target="_blank" class="map-link-btn">🗺️ Google Map</a>
-        <div style="font-size:12px; color:var(--muted); margin: 10px 0 2px 0;">📅 ${displayDay} ${item.time || ''}</div>
-        <div style="font-size:12px; color:var(--accent);">🕘 營業：${item.opTime || '未知'} | 🚫 公休：${item.offDay || '未知'}</div>
-        <div style="margin-top:6px;">
-          <span style="font-size:11px; font-weight:700;">👥 參與者：</span>
-          ${(item.who || []).map(w => `<span class="pill">${w}</span>`).join('')}
-        </div>
+        ${item.addr ? `<div class="item-addr">📍 ${item.addr}</div>` : ''}
+        ${item.time ? `<div class="item-time-pill">⏰ ${item.time}</div>` : ''}
+        <div style="margin-bottom:8px;"><a href="${mapUrl}" target="_blank" style="color:var(--blue); font-size:12px; font-weight:700; text-decoration:none;">🗺️ 查看地圖 / 導航</a></div>
+        <div>${(item.who || []).map(w => `<span class="pill">${w}</span>`).join('')}</div>
         ${item.note ? `<div class="item-note">💡 ${item.note}</div>` : ''}
       </div>
-      <div style="display:flex; flex-direction:column; gap:8px;">
+      <div style="display:flex; flex-direction:column;">
         <button class="btn-icon" onclick="editItem('${item.key}')">✏️</button>
         <button class="btn-icon" onclick="delItem('${item.key}')">🗑️</button>
       </div>
     </div>`;
-  }).join('');
+  });
+  document.getElementById('list-container').innerHTML = html || '<div style="text-align:center; padding:40px; color:var(--muted);">尚無行程</div>';
+};
+
+window.editItem = (key) => {
+  const item = allItems.find(i => i.key === key);
+  editingKey = key;
+  document.getElementById('inp-name').value = item.name;
+  document.getElementById('inp-addr').value = item.addr || '';
+  document.getElementById('inp-day').value = item.day || '';
+  document.getElementById('inp-time-select').value = item.time || '';
+  document.getElementById('inp-note').value = item.note || '';
+  document.getElementById('inp-url').value = item.url || '';
+  selectedType = item.type; selectedWho = item.who || [];
+  document.getElementById('submit-btn').innerText = "更新行程";
+  document.getElementById('cancel-btn').style.display = 'block';
+  renderFormUI(); window.scrollTo({top:0, behavior:'smooth'});
+};
+
+window.resetForm = () => {
+  editingKey = null;
+  ['inp-name','inp-addr','inp-url','inp-note'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('inp-day').value = ''; document.getElementById('inp-time-select').value = '';
+  document.getElementById('submit-btn').innerText = "加入行程";
+  document.getElementById('cancel-btn').style.display = 'none';
+  selectedType = '景點'; selectedWho = [...PARTICIPANTS]; renderFormUI();
+};
+
+window.delItem = (key) => { if(confirm("刪除？")) remove(ref(db, `all-trips-data/${currentTripID}/items/${key}`)); };
+
+window.openSelectedMap = () => {
+  const checked = document.querySelectorAll('.item-check:checked');
+  if(!checked.length) return alert("請勾選地點");
+  const prefix = trips[currentTripID].name.replace(/之旅|旅行/g, '');
+  const names = Array.from(checked).map(cb => encodeURIComponent(prefix + " " + cb.getAttribute('data-name')));
+  window.open("https://www.google.com/maps/dir/" + names.join('/'), '_blank');
+};
+
+window.selectType = (t) => { selectedType = t; renderFormUI(); };
+window.addType = () => { const nt = prompt("新增類型："); if(nt) { customTypes.push(nt); renderFormUI(); } };
+window.toggleWho = (p) => { selectedWho = selectedWho.includes(p) ? selectedWho.filter(x=>x!==p) : [...selectedWho, p]; renderFormUI(); };
+window.toggleAllWho = () => { selectedWho = (selectedWho.length === PARTICIPANTS.length) ? [] : [...PARTICIPANTS]; renderFormUI(); };
+window.parseUrl = () => {
+  setTimeout(() => {
+    const input = document.getElementById('inp-url').value;
+    const nameMatch = decodeURIComponent(input).match(/\/place\/([^\/\?]+)/);
+    if(nameMatch) document.getElementById('inp-name').value = nameMatch[1].replace(/\+/g, ' ');
+  }, 100);
 };
 
 renderFormUI();
