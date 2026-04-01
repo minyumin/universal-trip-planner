@@ -33,12 +33,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 
 .main{max-width:500px;margin:0 auto;padding:14px 14px 40px;}
 
-/* Participant selector */
-.who-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
-.who-label{font-size:11px;color:var(--muted);font-weight:500;margin-right:2px;}
-.who-chip{padding:5px 13px;border-radius:20px;border:1px solid var(--border);font-size:13px;font-family:inherit;cursor:pointer;background:var(--surface);color:var(--muted);transition:all .15s;}
-.who-chip.on{background:var(--text);color:#fff;border-color:var(--text);}
-
 /* Toolbar */
 .toolbar{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap;}
 .tab-scroll{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;padding-bottom:2px;}
@@ -127,19 +121,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 
 <div class="main">
 
-  <!-- Who am I -->
-  <div class="add-card" id="identity-card">
-    <div class="card-title">你是誰？</div>
-    <div class="chip-row" id="identity-chips"></div>
-  </div>
-
-  <!-- Filter by participant -->
-  <div class="who-bar">
-    <span class="who-label">顯示：</span>
-    <button class="who-chip on" id="filter-all" onclick="setParticipantFilter('全部')">全部</button>
-    <div id="filter-chips"></div>
-  </div>
-
   <!-- Tabs + sort -->
   <div class="toolbar">
     <div class="tab-scroll" id="tabs">
@@ -177,8 +158,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
         <input class="finp" id="inp-area" placeholder="例：旗津（自動抓取）"/>
       </div>
       <div class="field">
-        <label>預定時間（選填）</label>
-        <input class="finp" id="inp-time" type="time"/>
+        <label>時段（選填）</label>
+        <div class="chip-row" id="time-chips" style="margin-top:4px;"></div>
+        <input class="finp" id="inp-exact-time" type="text" inputmode="numeric" placeholder="輸入時間，如 14:30" style="margin-top:6px;font-size:13px;display:none;" onblur="formatTime(this)"/>
       </div>
     </div>
 
@@ -194,7 +176,14 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
       </div>
       <div class="field">
         <label>新增者</label>
-        <input class="finp" id="inp-by" placeholder="你的名字" readonly/>
+        <select class="fsel" id="inp-by">
+          <option value="">請選擇</option>
+          <option value="Pei">Pei</option>
+          <option value="Lulu">Lulu</option>
+          <option value="Melanie">Melanie</option>
+          <option value="Yoyo">Yoyo</option>
+          <option value="Min">Min</option>
+        </select>
       </div>
     </div>
 
@@ -250,16 +239,19 @@ const TYPE_COLORS = {
 const DAY_COLORS = {'4/3':'#6a4abf','4/4':'#2a7a4a','4/5':'#c85a2a','':`#8a7f72`};
 const DAY_ORDER = {'4/3':0,'4/4':1,'4/5':2,'':3};
 
+const TIME_SLOTS = ['上午','中午','下午','晚上'];
+const TIME_ORDER = {'上午':0,'中午':1,'下午':2,'晚上':3,'':4};
+const TIME_ICONS = {'上午':'🌤','中午':'☀️','下午':'🌇','晚上':'🌙'};
+
 let db, itemsRef, typesRef;
 let allItems = {};
 let customTypes = [];
 let activeTab = '全部';
 let sortMode = 'time';
-let participantFilter = '全部';
 let parsedUrl = '';
-let currentUser = localStorage.getItem('kh-user') || '';
 let selectedParticipants = [];
 let selectedType = '景點';
+let selectedTime = '';
 
 function typeColor(t) {
   return TYPE_COLORS[t] || ['#8a7f72','#f5f2ed'];
@@ -278,53 +270,14 @@ function initFirebase() {
   } catch(e) {
     // Demo mode
     allItems = {
-      d1:{name:'旗津老街',type:'景點',day:'4/3',area:'旗津',note:'搭渡輪，黃昏最美',by:'Mia',url:'',time:'17:00',participants:['Pei','Lulu'],ts:1},
-      d2:{name:'六合夜市',type:'小吃',day:'4/3',area:'前金',note:'木瓜牛奶必喝',by:'Kevin',url:'',time:'19:30',participants:['Pei','Lulu','Melanie'],ts:2},
-      d3:{name:'阿嬤的三輪車',type:'咖啡廳',day:'4/4',area:'鹽埕',note:'老屋改建甜點超讚',by:'Mia',url:'',time:'14:00',participants:['Yoyo','Min'],ts:3},
-      d4:{name:'棧貳庫',type:'景點',day:'4/5',area:'鹽埕',note:'港邊市集打卡',by:'Kevin',url:'',time:'',participants:['Pei','Melanie','Yoyo'],ts:4},
+      d1:{name:'旗津老街',type:'景點',day:'4/3',area:'旗津區',note:'搭渡輪，黃昏最美',by:'Pei',url:'',time:'17:00',participants:['Pei','Lulu'],ts:1},
+      d2:{name:'六合夜市',type:'小吃',day:'4/3',area:'前金區',note:'木瓜牛奶必喝',by:'Lulu',url:'',time:'19:30',participants:['Pei','Lulu','Melanie'],ts:2},
+      d3:{name:'阿嬤的三輪車',type:'咖啡廳',day:'4/4',area:'鹽埕區',note:'老屋改建甜點超讚',by:'Yoyo',url:'',time:'14:00',participants:['Yoyo','Min'],ts:3},
+      d4:{name:'棧貳庫',type:'景點',day:'4/5',area:'鹽埕區',note:'港邊市集打卡',by:'Min',url:'',time:'',participants:['Pei','Melanie','Yoyo'],ts:4},
     };
-    document.getElementById('live-badge').innerHTML = '⚡ 示範模式';
     renderList(); updateTabs();
   }
 }
-
-// ---- Identity ----
-function renderIdentityChips() {
-  const el = document.getElementById('identity-chips');
-  el.innerHTML = DEFAULT_PARTICIPANTS.map(p =>
-    `<button class="fchip${currentUser===p?' sel':''}" onclick="selectMe('${p}')">${p}</button>`
-  ).join('');
-  if(currentUser) {
-    document.getElementById('inp-by').value = currentUser;
-    selectedParticipants = [currentUser];
-    renderParticipantChips();
-    document.getElementById('identity-card').style.display = 'none';
-  }
-}
-
-window.selectMe = function(name) {
-  currentUser = name;
-  localStorage.setItem('kh-user', name);
-  document.getElementById('inp-by').value = name;
-  selectedParticipants = [name];
-  document.getElementById('identity-card').style.display = 'none';
-  renderFilterChips();
-  renderParticipantChips();
-};
-
-// ---- Participant filter ----
-function renderFilterChips() {
-  const el = document.getElementById('filter-chips');
-  el.innerHTML = DEFAULT_PARTICIPANTS.map(p =>
-    `<button class="who-chip${participantFilter===p?' on':''}" onclick="setParticipantFilter('${p}')">${p}</button>`
-  ).join('');
-}
-window.setParticipantFilter = function(p) {
-  participantFilter = p;
-  document.getElementById('filter-all').classList.toggle('on', p==='全部');
-  renderFilterChips();
-  renderList();
-};
 
 // ---- Participant chips in form ----
 function renderParticipantChips() {
@@ -339,7 +292,24 @@ window.toggleParticipant = function(p) {
   renderParticipantChips();
 };
 
-// ---- Type chips ----
+// ---- Time slot chips ----
+function renderTimeChips() {
+  const el = document.getElementById('time-chips');
+  const isCustom = selectedTime === '自訂';
+  el.innerHTML = TIME_SLOTS.map(t => {
+    const isSel = selectedTime === t;
+    return `<button class="fchip${isSel?' sel':''}" onclick="toggleTime('${t}')">${TIME_ICONS[t]} ${t}</button>`;
+  }).join('') +
+  `<button class="fchip${isCustom?' sel':''}" onclick="toggleTime('自訂')">🕐 自訂</button>`;
+  const exactEl = document.getElementById('inp-exact-time');
+  exactEl.style.display = isCustom ? 'block' : 'none';
+  if(isCustom) setTimeout(()=>exactEl.focus(), 50);
+}
+window.toggleTime = function(t) {
+  selectedTime = selectedTime === t ? '' : t;
+  if(selectedTime !== '自訂') document.getElementById('inp-exact-time').value = '';
+  renderTimeChips();
+};
 function renderTypeChips() {
   const allTypes = [...DEFAULT_TYPES, ...customTypes];
   const el = document.getElementById('type-chips');
@@ -405,37 +375,118 @@ window.onUrlChange = function() {
   if(!v){ parsedUrl=''; document.getElementById('parsed-ok').style.display='none'; document.getElementById('url-hint').style.display='block'; document.getElementById('extracted-info').style.display='none'; }
 };
 
-window.parseUrl = function() {
-  const url = document.getElementById('inp-url').value.trim();
-  if(!url){alert('請先貼上 Google Maps 連結');return;}
-  if(!/google\.(com|com\.tw)\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/.test(url)){alert('請貼上有效的 Google Maps 連結');return;}
+const AREA_KEYWORDS = ['鹽埕','旗津','苓雅','前金','三民','左營','鼓山','楠梓','鳳山','大寮','仁武','橋頭','小港','新興','岡山','湖內','茄萣','永安','彌陀','梓官','路竹','阿蓮','田寮','燕巢','旗山','美濃','六龜','甲仙','杉林','內門','那瑪夏','茂林','桃源'];
 
-  parsedUrl = url;
+function extractFromUrl(url) {
+  const decoded = decodeURIComponent(url);
+  const extracted = {};
+
+  // 1. /maps/place/NAME/  ← most reliable for full URLs
+  let m = decoded.match(/\/maps\/place\/([^\/\?@\+]+)/);
+  if(m) {
+    extracted.name = m[1].replace(/\+/g,' ').replace(/_/g,' ').trim();
+  }
+
+  // 2. ?q=NAME  or  &q=NAME
+  if(!extracted.name) {
+    m = decoded.match(/[?&]q=([^&@\/]+)/);
+    if(m) extracted.name = m[1].replace(/\+/g,' ').trim();
+  }
+
+  // 3. search/NAME  (google.com/maps/search/NAME)
+  if(!extracted.name) {
+    m = decoded.match(/\/maps\/search\/([^\/\?@]+)/);
+    if(m) extracted.name = m[1].replace(/\+/g,' ').trim();
+  }
+
+  // Clean up common suffixes Google appends
+  if(extracted.name) {
+    extracted.name = extracted.name
+      .replace(/,\s*(台灣|Taiwan|高雄市?|Kaohsiung).*/i,'')
+      .replace(/\+/g,' ').trim();
+  }
+
+  // Area keywords
+  for(const kw of AREA_KEYWORDS){
+    if(decoded.includes(kw)){ extracted.area = kw+'區'; break; }
+  }
+
+  return extracted;
+}
+
+window.parseUrl = async function() {
+  const rawUrl = document.getElementById('inp-url').value.trim();
+  if(!rawUrl){alert('請先貼上 Google Maps 連結');return;}
+  if(!/google\.(com|com\.tw)\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/.test(rawUrl)){alert('請貼上有效的 Google Maps 連結');return;}
+
+  const btn = document.querySelector('.parse-btn');
+  btn.textContent = '…';
+  btn.disabled = true;
+
+  parsedUrl = rawUrl;
+
+  // For short URLs (maps.app.goo.gl), try to follow redirect via fetch
+  let resolvedUrl = rawUrl;
+  if(/maps\.app\.goo\.gl|goo\.gl\/maps/.test(rawUrl)) {
+    try {
+      // Use a CORS proxy approach — fetch the page and look for redirect
+      const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(rawUrl)}`, {signal: AbortSignal.timeout(5000)});
+      const text = await res.text();
+      // Look for the expanded URL in the page content
+      const m = text.match(/https:\/\/www\.google\.com\/maps\/place\/[^\s"'<]+/);
+      if(m) resolvedUrl = m[0];
+    } catch(e) { /* fallback to raw */ }
+  }
+
+  const extracted = extractFromUrl(resolvedUrl !== rawUrl ? resolvedUrl : rawUrl);
+
+  btn.textContent = '解析';
+  btn.disabled = false;
   document.getElementById('parsed-ok').style.display='block';
   document.getElementById('url-hint').style.display='none';
 
-  const extracted = {};
+  const infoEl = document.getElementById('extracted-info');
+  infoEl.style.background = 'var(--green-l)';
+  infoEl.style.color = 'var(--green)';
+  const lines = [];
 
-  // Name from /maps/place/NAME/
-  let m = url.match(/maps\/place\/([^\/\?@+]+)/);
-  if(m) extracted.name = decodeURIComponent(m[1]).replace(/\+/g,' ');
-
-  // Area / district heuristics from URL
-  const areaKeywords = ['鹽埕','旗津','苓雅','前金','三民','左營','鼓山','楠梓','鳳山','大寮','仁武','橋頭','小港','那瑪夏','茂林','桃源'];
-  const urlDecoded = decodeURIComponent(url);
-  for(const kw of areaKeywords){
-    if(urlDecoded.includes(kw)){ extracted.area = kw+'區'; break; }
+  if(extracted.name){
+    lines.push(`名稱：${extracted.name}`);
+    if(!document.getElementById('inp-name').value)
+      document.getElementById('inp-name').value = extracted.name;
+  }
+  if(extracted.area){
+    lines.push(`地區：${extracted.area}`);
+    if(!document.getElementById('inp-area').value)
+      document.getElementById('inp-area').value = extracted.area;
   }
 
-  const infoEl = document.getElementById('extracted-info');
-  if(extracted.name || extracted.area){
-    let lines = [];
-    if(extracted.name){ lines.push(`名稱：${extracted.name}`); if(!document.getElementById('inp-name').value) document.getElementById('inp-name').value=extracted.name; }
-    if(extracted.area){ lines.push(`地區：${extracted.area}`); if(!document.getElementById('inp-area').value) document.getElementById('inp-area').value=extracted.area; }
-    infoEl.style.display='block';
-    infoEl.textContent = '✓ 已從連結抓取 — '+lines.join('・');
+  infoEl.style.display='block';
+  if(lines.length){
+    infoEl.textContent = '✓ 已自動帶入 — '+lines.join('・');
   } else {
-    infoEl.style.display='none';
+    infoEl.style.background='var(--amber-l)';
+    infoEl.style.color='var(--amber)';
+    infoEl.textContent = '連結已儲存，請手動輸入地點名稱';
+  }
+};
+
+// ---- Format time input ----
+window.formatTime = function(el) {
+  let v = el.value.trim().replace(/[^\d:]/g,'');
+  if(!v) return;
+  // Accept 1430 → 14:30
+  if(/^\d{3,4}$/.test(v)) {
+    v = v.length===3 ? '0'+v[0]+':'+v.slice(1) : v.slice(0,2)+':'+v.slice(2);
+  }
+  // Validate HH:MM
+  const m = v.match(/^(\d{1,2}):(\d{2})$/);
+  if(m) {
+    const h = String(parseInt(m[1])).padStart(2,'0');
+    const min = m[2];
+    el.value = `${h}:${min}`;
+  } else {
+    el.value = v; // leave as-is, user can fix
   }
 };
 
@@ -457,8 +508,9 @@ window.addItem = function() {
     type,
     day: document.getElementById('inp-day').value,
     area: document.getElementById('inp-area').value.trim() || '',
-    time: document.getElementById('inp-time').value || '',
-    by: currentUser || document.getElementById('inp-by').value.trim() || '匿名',
+    time: selectedTime === '自訂' ? (document.getElementById('inp-exact-time').value || '自訂') : selectedTime,
+    exactTime: selectedTime === '自訂' ? document.getElementById('inp-exact-time').value : '',
+    by: document.getElementById('inp-by').value || '匿名',
     note: document.getElementById('inp-note').value.trim(),
     url: parsedUrl,
     participants: selectedParticipants.length ? [...selectedParticipants] : DEFAULT_PARTICIPANTS,
@@ -469,15 +521,18 @@ window.addItem = function() {
   else { allItems['local'+Date.now()]=item; renderList(); updateTabs(); }
 
   // reset
-  ['inp-name','inp-note','inp-area','inp-url','inp-time','inp-custom-type'].forEach(id=>document.getElementById(id).value='');
+  ['inp-name','inp-note','inp-area','inp-url','inp-custom-type','inp-exact-time'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('inp-day').value='';
   parsedUrl='';
-  selectedParticipants = currentUser?[currentUser]:[];
+  selectedTime='';
+  document.getElementById('inp-exact-time').style.display='none';
+  selectedParticipants = [];
   document.getElementById('parsed-ok').style.display='none';
   document.getElementById('url-hint').style.display='block';
   document.getElementById('extracted-info').style.display='none';
   document.getElementById('custom-type-row').style.display='none';
   renderParticipantChips();
+  renderTimeChips();
 };
 
 window.delItem = function(key) {
@@ -505,9 +560,6 @@ window.openAllMaps = function() {
 function renderList() {
   let items = Object.entries(allItems).map(([k,v])=>({key:k,...v}));
 
-  // Participant filter
-  if(participantFilter!=='全部') items=items.filter(i=>(i.participants||[]).includes(participantFilter));
-
   // Tab filter
   if(activeTab!=='全部') items=items.filter(i=>i.type===activeTab);
 
@@ -532,7 +584,12 @@ function renderList() {
     items.sort((a,b)=>{
       const dd=(DAY_ORDER[a.day??'']??3)-(DAY_ORDER[b.day??'']??3);
       if(dd!==0)return dd;
-      if(a.time&&b.time)return a.time.localeCompare(b.time);
+      // Sort by exactTime first, then slot order, then insertion
+      const aExact = a.exactTime || '';
+      const bExact = b.exactTime || '';
+      if(aExact && bExact) return aExact.localeCompare(bExact);
+      if(aExact) return -1; if(bExact) return 1;
+      if(a.time&&b.time) return (TIME_ORDER[a.time]??4)-(TIME_ORDER[b.time]??4);
       if(a.time)return -1; if(b.time)return 1;
       return (a.ts||0)-(b.ts||0);
     });
@@ -555,7 +612,9 @@ function itemHTML(item) {
   const [fg,bg] = typeColor(item.type);
   const mapBtn = item.url ? `<button class="map-btn" onclick="window.open('${item.url.replace(/'/g,"\\'")}','_blank')">地圖 ↗</button>` : '';
   const whoHtml = item.participants?.length ? `<div class="item-who">${item.participants.map(p=>`<span class="who-pill">${p}</span>`).join('')}</div>` : '';
-  const timeHtml = item.time ? `<div class="item-time">⏰ ${item.time}</div>` : '';
+  const slotIcon = item.time ? (TIME_ICONS[item.time]||'⏰') : '';
+  const exactStr = item.exactTime ? ` ${item.exactTime}` : '';
+  const timeHtml = (item.time || item.exactTime) ? `<div class="item-time">${slotIcon}${item.time||''}${exactStr}</div>` : '';
   const areaText = item.area ? `${item.area}・` : '';
   return `<div class="item">
     <div class="item-icon" style="background:${bg}">
@@ -583,10 +642,9 @@ const ICON_MAP={景點:'📍',小吃:'🍜',咖啡廳:'☕',住宿:'🏨',購物
 function iconFor(t){ return ICON_MAP[t]||'📌'; }
 
 // ---- Boot ----
-renderIdentityChips();
 renderParticipantChips();
 renderTypeChips();
-renderFilterChips();
+renderTimeChips();
 setSort('time');
 initFirebase();
 </script>
