@@ -105,19 +105,16 @@ const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 let selectedType = '景點', selectedWho = [...PARTICIPANTS], allItems = [], editingKey = null;
 let customTypes = ['景點','小吃','咖啡廳','購物'];
 
-// 監聽自定義類型
 onValue(typesRef, snap => {
   if(snap.exists()) customTypes = snap.val();
   renderFormUI();
 });
 
 window.renderFormUI = () => {
-  // 類型 Chips
   document.getElementById('type-chips').innerHTML = customTypes.map(t => 
     `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`
   ).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
   
-  // 參與者 Chips
   const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">All</div>`]
     .concat(PARTICIPANTS.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
   document.getElementById('participant-chips').innerHTML = whoHtml.join('');
