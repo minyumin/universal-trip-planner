@@ -150,18 +150,32 @@ window.switchTrip = (id) => {
   renderFormUI();
 };
 
-// 3. 建立新旅行
-window.createNewTrip = () => {
+// 3. 建立新旅行 (強化版：確保順序正確)
+window.createNewTrip = async () => {
   const name = prompt("旅行名稱 (如：東京 5 日遊)");
-  if(!name) return;
+  if (!name) return;
   const start = prompt("開始日期 (YYYY-MM-DD)", "2026-04-03");
   const end = prompt("結束日期 (YYYY-MM-DD)", "2026-04-05");
-  if(start && end) {
-    const newRef = push(ref(db, `${DB_PATH}/meta`));
-    set(newRef, { name, start, end }).then(() => {
-        // 建立後立即強制切換，解決「沒反應」問題
-        switchTrip(newRef.key);
-    });
+
+  if (start && end) {
+    try {
+      const newRef = push(ref(db, `${DB_PATH}/meta`));
+      const newId = newRef.key; // 先拿到新的 ID
+      
+      // 使用 set 寫入資料
+      await set(newRef, { name, start, end });
+      
+      // 關鍵：手動更新本地的 trips 物件，避免 onValue 延遲
+      trips[newId] = { name, start, end };
+      
+      // 立即切換到該 ID
+      switchTrip(newId);
+      
+      alert(`已建立旅行：${name}`);
+    } catch (error) {
+      console.error("建立失敗:", error);
+      alert("建立失敗，請檢查網路或 Firebase 規則設定。");
+    }
   }
 };
 
