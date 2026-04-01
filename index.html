@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>4/3-5 高雄小旅行</title>
+<title>4/3-5 高雄小旅行Ａ</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -41,7 +41,22 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .item-name-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
 .item-name{font-size:16px; font-weight:700;}
 .item-type{font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase;}
-.btn-link{display:inline-flex; align-items:center; background:var(--blue); color:#fff; padding:2px 8px; border-radius:6px; font-size:11px; text-decoration:none; font-weight:700;}
+
+/* 關鍵修正：地圖連結樣式 */
+.map-link-tag { 
+  display: inline-flex; 
+  align-items: center; 
+  background: #eef4ff; 
+  color: var(--blue); 
+  padding: 4px 10px; 
+  border-radius: 6px; 
+  font-size: 11px; 
+  text-decoration: none; 
+  font-weight: 700;
+  margin-top: 5px;
+  border: 1px solid #d0e0ff;
+}
+
 .pill{font-size:10px; background:var(--bg); padding:1px 6px; border-radius:6px; color:var(--muted); margin-right:4px;}
 .item-note{font-size:12px; color:var(--accent); background:#fff9f5; padding:6px; border-radius:6px; margin-top:8px; border-left:3px solid var(--accent);}
 .btn-icon{width:32px; height:32px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; margin-bottom:5px;}
@@ -59,6 +74,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     </div>
     <div class="field"><label>類型</label><div class="chip-row" id="type-chips"></div></div>
     <div class="field"><label>地點名稱 *</label><input id="inp-name" class="finp" placeholder="地點名稱"/></div>
+    
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div class="field"><label>日期</label><select id="inp-day" class="fsel"><option value="">未定</option><option value="4/3">4/3 (四)</option><option value="4/4">4/4 (五)</option><option value="4/5">4/5 (六)</option></select></div>
       <div class="field">
@@ -69,7 +85,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
         <input id="inp-time-custom" class="finp" style="display:none; margin-top:5px;" placeholder="例如：14:30 或 整天"/>
       </div>
     </div>
+
     <div class="field"><label>參與者</label><div class="chip-row" id="participant-chips"></div></div>
+
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div class="field"><label>營業時間</label><input id="inp-op-time" class="finp" placeholder="例：10:00-20:00"/></div>
       <div class="field"><label>公休日</label><input id="inp-off-day" class="finp" placeholder="例：週一、無"/></div>
@@ -206,8 +224,8 @@ window.submitForm = () => {
     : document.getElementById('inp-time-select').value;
 
   const data = {
-    type: selectedType, name, url: document.getElementById('inp-url').value,
-    day: document.getElementById('inp-day').value, time: timeVal,
+    type: selectedType, name, url: document.getElementById('inp-url').value || '',
+    day: document.getElementById('inp-day').value || '', time: timeVal || '',
     opTime: document.getElementById('inp-op-time').value || '',
     offDay: document.getElementById('inp-off-day').value || '',
     who: selectedWho, note: document.getElementById('inp-note').value || '',
@@ -240,9 +258,11 @@ window.renderList = () => {
         <div class="item-type">${item.type}</div>
         <div class="item-name-row">
           <div class="item-name">${item.name}</div>
-          ${item.url ? `<a href="${item.url}" target="_blank" class="btn-link">🗺️ 地圖</a>` : ''}
         </div>
-        <div style="font-size:12px; color:var(--muted); margin: 2px 0;">📅 ${item.day || '未定'} ${item.time || ''}</div>
+        
+        ${item.url ? `<a href="${item.url}" target="_blank" class="map-link-tag">📍 查看 Google Map</a>` : ''}
+
+        <div style="font-size:12px; color:var(--muted); margin: 8px 0 2px 0;">📅 ${item.day || '未定'} ${item.time || ''}</div>
         <div style="font-size:12px; color:var(--accent);">🕘 營業：${item.opTime || '未知'} | 🚫 公休：${item.offDay || '未知'}</div>
         <div style="margin-top:6px;">
           <span style="font-size:11px; font-weight:700;">👥 參與者：</span>
