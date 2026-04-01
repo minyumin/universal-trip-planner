@@ -41,7 +41,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .item-name{font-size:16px; font-weight:700;}
 .item-type{font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase;}
 
-/* 地圖連結按鈕 */
+/* 地圖連結按鈕 - 藍色底更醒目 */
 .map-link-btn {
   display: inline-flex;
   align-items: center;
@@ -68,11 +68,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 <div class="main">
   <div class="card" id="form-container">
     <div class="field" style="background:var(--bg); padding:10px; border-radius:var(--rs);">
-      <label>Google Maps 連結 (貼上後自動帶入店名)</label>
-      <div style="display:flex; gap:8px;">
-        <input id="inp-url" class="finp" placeholder="在此貼上連結" onpaste="setTimeout(parseUrl, 100)"/>
-        <button onclick="parseUrl()" style="padding:0 10px; background:var(--muted); color:#fff; border:none; border-radius:8px; font-size:10px; cursor:pointer;">手動解析</button>
-      </div>
+      <label>Google Maps 連結自動解析</label>
+      <input id="inp-url" class="finp" placeholder="在此貼上地點連結" onpaste="setTimeout(parseUrl, 100)"/>
     </div>
     <div class="field"><label>類型</label><div class="chip-row" id="type-chips"></div></div>
     <div class="field"><label>地點名稱 *</label><input id="inp-name" class="finp" placeholder="地點名稱"/></div>
@@ -156,14 +153,16 @@ window.toggleTimeInput = () => {
 };
 
 window.parseUrl = () => {
-  const input = document.getElementById('inp-url').value;
-  if(!input) return;
-  const decoded = decodeURIComponent(input);
-  const nameMatch = decoded.match(/\/place\/([^\/\?]+)/);
-  if(nameMatch) {
-    const rawName = nameMatch[1].replace(/\+/g, ' ');
-    document.getElementById('inp-name').value = rawName;
-  }
+  setTimeout(() => {
+    const input = document.getElementById('inp-url').value;
+    if(!input) return;
+    const decoded = decodeURIComponent(input);
+    const nameMatch = decoded.match(/\/place\/([^\/\?]+)/);
+    if(nameMatch) {
+      const rawName = nameMatch[1].replace(/\+/g, ' ');
+      document.getElementById('inp-name').value = rawName;
+    }
+  }, 100);
 };
 
 window.editItem = (key) => {
@@ -221,7 +220,6 @@ window.resetForm = () => {
 
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
-  const url = document.getElementById('inp-url').value.trim();
   if(!name) return alert("地點名稱為必填");
   
   const timeVal = document.getElementById('inp-time-select').value === 'custom' 
@@ -229,7 +227,7 @@ window.submitForm = () => {
     : document.getElementById('inp-time-select').value;
 
   const data = {
-    type: selectedType, name, url,
+    type: selectedType, name, url: document.getElementById('inp-url').value || '',
     day: document.getElementById('inp-day').value || '', time: timeVal || '',
     opTime: document.getElementById('inp-op-time').value || '',
     offDay: document.getElementById('inp-off-day').value || '',
@@ -256,14 +254,18 @@ onValue(itemsRef, snap => {
 
 window.renderList = () => {
   const sorted = [...allItems].sort((a,b) => b.ts - a.ts);
-  document.getElementById('list-container').innerHTML = sorted.map(item => `
+  document.getElementById('list-container').innerHTML = sorted.map(item => {
+    // 關鍵修正：如果 url 為空，自動生成一個基於店名的搜尋連結
+    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(item.name)}`;
+    
+    return `
     <div class="item ${editingKey === item.key ? 'editing' : ''}">
       <div style="margin-top:12px;">📍</div>
       <div class="item-info">
         <div class="item-type">${item.type}</div>
         <div class="item-name">${item.name}</div>
         
-        ${item.url ? `<a href="${item.url}" target="_blank" class="map-link-btn">🗺️ 查看 Google Map</a>` : ''}
+        <a href="${mapUrl}" target="_blank" class="map-link-btn">🗺️ 查看 Google Map</a>
 
         <div style="font-size:12px; color:var(--muted); margin: 10px 0 2px 0;">📅 ${item.day || '未定'} ${item.time || ''}</div>
         <div style="font-size:12px; color:var(--accent);">🕘 營業：${item.opTime || '未知'} | 🚫 公休：${item.offDay || '未知'}</div>
@@ -278,7 +280,7 @@ window.renderList = () => {
         <button class="btn-icon" onclick="delItem('${item.key}')">🗑️</button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 };
 
 renderFormUI();
