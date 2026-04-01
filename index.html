@@ -3,109 +3,114 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>高雄小旅行 4/3–5</title>
+<title>高雄小旅行</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg: #f5f2ed;
-  --surface: #ffffff;
-  --surface2: #faf8f5;
-  --border: #e8e3db;
-  --text: #1a1612;
-  --text-muted: #8a7f72;
-  --text-faint: #bdb5a8;
-  --accent: #c85a2a;
-  --accent-light: #f5ede7;
-  --blue: #2a6cbf;
-  --blue-light: #e8f0fb;
-  --green: #2a7a4a;
-  --green-light: #e8f5ee;
-  --amber: #b87a1a;
-  --amber-light: #fdf3e0;
-  --purple: #6a4abf;
-  --purple-light: #f0ecfb;
-  --radius: 12px;
-  --radius-sm: 8px;
+:root{
+  --bg:#f5f2ed;--surface:#fff;--surface2:#faf8f5;--border:#e8e3db;
+  --text:#1a1612;--muted:#8a7f72;--faint:#c5bdb0;
+  --accent:#c85a2a;--accent-light:#f5ede7;
+  --blue:#2a6cbf;--blue-l:#e8f0fb;
+  --green:#2a7a4a;--green-l:#e8f5ee;
+  --amber:#b87a1a;--amber-l:#fdf3e0;
+  --purple:#6a4abf;--purple-l:#f0ecfb;
+  --red:#bf2a2a;--red-l:#fbe8e8;
+  --teal:#1a8a7a;--teal-l:#e8f8f5;
+  --pink:#bf2a7a;--pink-l:#fbe8f3;
+  --r:12px;--rs:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
 
-/* Header */
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px;position:sticky;top:0;z-index:100;}
-.header-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
-.header h1{font-size:17px;font-weight:700;letter-spacing:-0.3px;}
-.header-dates{font-size:12px;color:var(--text-muted);margin-top:2px;}
-.status-dot{width:8px;height:8px;border-radius:50%;background:#4caf50;display:inline-block;margin-right:6px;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
-.live-badge{font-size:11px;color:var(--green);display:flex;align-items:center;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 16px;position:sticky;top:0;z-index:200;}
+.header-inner{max-width:500px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.header h1{font-size:16px;font-weight:700;}
+.header-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.live{font-size:11px;color:var(--green);display:flex;align-items:center;gap:5px;}
+.dot{width:7px;height:7px;border-radius:50%;background:#4caf50;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* Main */
-.main{max-width:480px;margin:0 auto;padding:16px;}
+.main{max-width:500px;margin:0 auto;padding:14px 14px 40px;}
 
-/* Tabs */
-.tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{flex-shrink:0;padding:7px 16px;border-radius:20px;border:1px solid var(--border);font-size:13px;font-family:inherit;cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all 0.15s;white-space:nowrap;}
-.tab.active{background:var(--text);color:white;border-color:var(--text);}
-.tab .count{font-size:11px;opacity:0.6;margin-left:3px;}
+/* Participant selector */
+.who-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+.who-label{font-size:11px;color:var(--muted);font-weight:500;margin-right:2px;}
+.who-chip{padding:5px 13px;border-radius:20px;border:1px solid var(--border);font-size:13px;font-family:inherit;cursor:pointer;background:var(--surface);color:var(--muted);transition:all .15s;}
+.who-chip.on{background:var(--text);color:#fff;border-color:var(--text);}
+
+/* Toolbar */
+.toolbar{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap;}
+.tab-scroll{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;padding-bottom:2px;}
+.tab-scroll::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid var(--border);font-size:13px;font-family:inherit;cursor:pointer;background:var(--surface);color:var(--muted);white-space:nowrap;transition:all .15s;}
+.tab.active{background:var(--text);color:#fff;border-color:var(--text);}
+.cnt{font-size:10px;opacity:.6;margin-left:2px;}
+
+.sort-btn{flex-shrink:0;padding:6px 12px;border-radius:20px;border:1px solid var(--border);font-size:12px;font-family:inherit;cursor:pointer;background:var(--surface);color:var(--muted);white-space:nowrap;}
+.sort-btn.active{border-color:var(--accent);color:var(--accent);}
+
+.map-all-btn{width:100%;padding:10px;background:var(--blue-l);color:var(--blue);border:1px solid #c5d8f5;border-radius:var(--rs);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;margin-bottom:14px;transition:background .15s;}
+.map-all-btn:active{background:#d5e6f8;}
 
 /* Add form */
-.add-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
-.add-card h3{font-size:13px;font-weight:500;color:var(--text-muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;}
+.add-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:16px;}
+.card-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;}
+
 .url-row{position:relative;margin-bottom:4px;}
-.url-row input{width:100%;padding:10px 70px 10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;background:var(--surface2);color:var(--text);outline:none;transition:border-color 0.15s;}
+.url-row input{width:100%;padding:9px 64px 9px 11px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:inherit;background:var(--surface2);color:var(--text);outline:none;}
 .url-row input:focus{border-color:var(--accent);}
-.parse-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);padding:5px 12px;background:var(--accent);color:white;border:none;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;}
-.url-hint{font-size:11px;color:var(--text-faint);margin-bottom:12px;}
-.parsed-ok{font-size:11px;color:var(--green);margin-bottom:12px;display:none;}
-.sep{height:1px;background:var(--border);margin:12px 0;}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
-.field{display:flex;flex-direction:column;gap:4px;}
-.field label{font-size:11px;color:var(--text-muted);font-weight:500;}
-input.field-inp,select.field-inp{padding:9px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;background:var(--surface2);color:var(--text);outline:none;width:100%;}
-input.field-inp:focus,select.field-inp:focus{border-color:var(--accent);}
-.add-btn{width:100%;margin-top:12px;padding:12px;background:var(--text);color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:opacity 0.15s;}
-.add-btn:active{opacity:0.8;}
+.parse-btn{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:5px 11px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;}
+.url-hint{font-size:11px;color:var(--faint);margin-bottom:10px;}
+.parsed-ok{font-size:11px;color:var(--green);margin-bottom:10px;display:none;}
+.extracted-info{background:var(--green-l);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:12px;color:var(--green);display:none;line-height:1.6;}
+
+.sep{height:1px;background:var(--border);margin:10px 0;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.grid1{margin-bottom:8px;}
+.field label{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-bottom:3px;}
+.finp,.fsel{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:inherit;background:var(--surface2);color:var(--text);outline:none;}
+.finp:focus,.fsel:focus{border-color:var(--accent);}
+
+/* Type + participant chips in form */
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+.fchip{padding:4px 12px;border-radius:14px;border:1px solid var(--border);font-size:12px;font-family:inherit;cursor:pointer;background:var(--surface2);color:var(--muted);}
+.fchip.sel{background:var(--text);color:#fff;border-color:var(--text);}
+.type-fchip.sel{border-color:transparent;}
+
+/* Custom type input */
+.custom-type-row{display:none;margin-top:6px;}
+.custom-type-row input{padding:7px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:inherit;background:var(--surface2);color:var(--text);outline:none;width:100%;}
+
+.add-btn{width:100%;margin-top:12px;padding:11px;background:var(--text);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;}
+.add-btn:active{opacity:.85;}
 
 /* List */
 .day-group{margin-bottom:20px;}
-.day-label{font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
-.day-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.group-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.group-label{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.group-line{flex:1;height:1px;background:var(--border);}
 
-.item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;display:flex;gap:12px;align-items:flex-start;margin-bottom:8px;position:relative;}
-.item-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-.icon-景點{background:var(--blue-light);}
-.icon-小吃{background:var(--amber-light);}
-.icon-咖啡廳{background:var(--green-light);}
+.item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 13px;display:flex;gap:11px;margin-bottom:8px;}
+.item-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
 .item-body{flex:1;min-width:0;}
-.item-name{font-size:15px;font-weight:500;color:var(--text);line-height:1.3;}
-.item-meta{font-size:12px;color:var(--text-muted);margin-top:3px;}
-.item-note{font-size:12px;color:var(--text-faint);margin-top:5px;line-height:1.5;}
-.item-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
-.map-link-btn{padding:5px 10px;background:var(--blue-light);color:var(--blue);border:none;border-radius:6px;font-size:11px;font-family:inherit;cursor:pointer;font-weight:500;white-space:nowrap;}
-.del-btn{padding:4px 6px;background:none;border:none;color:var(--text-faint);font-size:17px;cursor:pointer;line-height:1;}
+.item-name{font-size:14px;font-weight:500;line-height:1.3;}
+.item-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;align-items:center;}
+.badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:500;}
+.item-meta{font-size:11px;color:var(--muted);margin-top:4px;}
+.item-time{font-size:11px;color:var(--blue);margin-top:3px;}
+.item-note{font-size:12px;color:var(--faint);margin-top:4px;line-height:1.5;}
+.item-who{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.who-pill{padding:2px 8px;border-radius:8px;font-size:10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);}
+.item-actions{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.map-btn{padding:4px 9px;background:var(--blue-l);color:var(--blue);border:1px solid #c5d8f5;border-radius:6px;font-size:11px;font-family:inherit;cursor:pointer;white-space:nowrap;}
+.del-btn{padding:3px 6px;background:none;border:none;color:var(--faint);font-size:16px;cursor:pointer;line-height:1;}
 .del-btn:hover{color:var(--accent);}
 
-/* Type badge */
-.type-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;margin-left:6px;vertical-align:middle;}
-.badge-景點{background:var(--blue-light);color:var(--blue);}
-.badge-小吃{background:var(--amber-light);color:var(--amber);}
-.badge-咖啡廳{background:var(--green-light);color:var(--green);}
+.empty{text-align:center;padding:36px 20px;color:var(--faint);font-size:14px;}
 
-/* Day colors */
-.day-43{color:var(--purple);}
-.day-44{color:var(--green);}
-.day-45{color:var(--accent);}
-
-.empty{text-align:center;padding:40px 20px;color:var(--text-faint);font-size:14px;}
-.loading{text-align:center;padding:40px;color:var(--text-muted);font-size:14px;}
-
-/* Firebase config notice */
-.config-notice{background:#fff8e8;border:1px solid #f0d890;border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;}
-.config-notice h4{font-size:13px;font-weight:700;color:#8a6800;margin-bottom:6px;}
-.config-notice p{font-size:12px;color:#a07800;line-height:1.6;}
-.config-notice code{background:#fef3c7;padding:1px 5px;border-radius:4px;font-size:11px;font-family:monospace;}
+/* Color map for types */
+/* will be generated dynamically */
 </style>
 </head>
 <body>
@@ -114,247 +119,476 @@ input.field-inp:focus,select.field-inp:focus{border-color:var(--accent);}
   <div class="header-inner">
     <div>
       <h1>🌴 高雄小旅行</h1>
-      <div class="header-dates">4月3日 – 5日・共 4 人</div>
+      <div class="header-sub" id="trip-sub">共同行程規劃</div>
     </div>
-    <div class="live-badge" id="live-status">
-      <span class="status-dot"></span>即時同步
-    </div>
+    <div class="live" id="live-badge"><span class="dot"></span>即時同步</div>
   </div>
 </div>
 
 <div class="main">
 
-  <div class="tabs" id="tabs">
-    <button class="tab active" onclick="setTab('全部')">全部 <span class="count" id="cnt-all"></span></button>
-    <button class="tab" onclick="setTab('景點')">📍 景點 <span class="count" id="cnt-景點"></span></button>
-    <button class="tab" onclick="setTab('小吃')">🍜 小吃 <span class="count" id="cnt-小吃"></span></button>
-    <button class="tab" onclick="setTab('咖啡廳')">☕ 咖啡廳 <span class="count" id="cnt-咖啡廳"></span></button>
+  <!-- Who am I -->
+  <div class="add-card" id="identity-card">
+    <div class="card-title">你是誰？</div>
+    <div class="chip-row" id="identity-chips"></div>
   </div>
 
+  <!-- Filter by participant -->
+  <div class="who-bar">
+    <span class="who-label">顯示：</span>
+    <button class="who-chip on" id="filter-all" onclick="setParticipantFilter('全部')">全部</button>
+    <div id="filter-chips"></div>
+  </div>
+
+  <!-- Tabs + sort -->
+  <div class="toolbar">
+    <div class="tab-scroll" id="tabs">
+      <button class="tab active" onclick="setTab('全部')">全部 <span class="cnt" id="cnt-all"></span></button>
+    </div>
+    <button class="sort-btn" id="sort-time-btn" onclick="setSort('time')">⏰ 時間</button>
+    <button class="sort-btn" id="sort-area-btn" onclick="setSort('area')">📍 地區</button>
+  </div>
+
+  <!-- Open all in maps -->
+  <button class="map-all-btn" onclick="openAllMaps()">🗺 在 Google Maps 查看所有地點</button>
+
+  <!-- Add form -->
   <div class="add-card">
-    <h3>新增地點</h3>
+    <div class="card-title">新增地點</div>
+
     <div class="url-row">
-      <input id="inp-url" type="url" placeholder="貼上 Google Maps 連結（選填）" oninput="onUrlInput()"/>
+      <input id="inp-url" type="url" placeholder="貼上 Google Maps 連結（選填）" oninput="onUrlChange()"/>
       <button class="parse-btn" onclick="parseUrl()">解析</button>
     </div>
-    <div class="url-hint" id="url-hint">貼上連結後點「解析」，自動帶入名稱</div>
+    <div class="url-hint" id="url-hint">貼上連結後點「解析」，自動帶入名稱與地區</div>
     <div class="parsed-ok" id="parsed-ok">✓ 已連結 Google Maps</div>
+    <div class="extracted-info" id="extracted-info"></div>
 
     <div class="sep"></div>
 
-    <div class="row2">
-      <div class="field" style="grid-column:1/-1;">
-        <label>地點名稱 *</label>
-        <input class="field-inp" id="inp-name" placeholder="例：旗津老街"/>
+    <div class="grid1 field">
+      <label>地點名稱 *</label>
+      <input class="finp" id="inp-name" placeholder="例：旗津老街"/>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>地區</label>
+        <input class="finp" id="inp-area" placeholder="例：旗津（自動抓取）"/>
+      </div>
+      <div class="field">
+        <label>預定時間（選填）</label>
+        <input class="finp" id="inp-time" type="time"/>
       </div>
     </div>
-    <div class="row2">
+
+    <div class="grid2">
       <div class="field">
-        <label>類型</label>
-        <select class="field-inp" id="inp-type">
-          <option value="景點">📍 景點</option>
-          <option value="小吃">🍜 小吃</option>
-          <option value="咖啡廳">☕ 咖啡廳</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>日期</label>
-        <select class="field-inp" id="inp-day">
+        <label>日期（選填）</label>
+        <select class="fsel" id="inp-day">
+          <option value="">未定</option>
           <option value="4/3">4/3（四）</option>
           <option value="4/4">4/4（五）</option>
           <option value="4/5">4/5（六）</option>
         </select>
       </div>
-    </div>
-    <div class="row2">
-      <div class="field">
-        <label>區域</label>
-        <input class="field-inp" id="inp-area" placeholder="例：鹽埕區"/>
-      </div>
       <div class="field">
         <label>新增者</label>
-        <input class="field-inp" id="inp-by" placeholder="你的名字"/>
+        <input class="finp" id="inp-by" placeholder="你的名字" readonly/>
       </div>
     </div>
-    <div class="field">
-      <label>備註</label>
-      <input class="field-inp" id="inp-note" placeholder="推薦理由、開放時間…"/>
+
+    <div class="field grid1">
+      <label>類型</label>
+      <div class="chip-row" id="type-chips"></div>
+      <div class="custom-type-row" id="custom-type-row">
+        <input id="inp-custom-type" placeholder="輸入自訂類型名稱…" onkeydown="if(event.key==='Enter')confirmCustomType()"/>
+      </div>
     </div>
+
+    <div class="field grid1" style="margin-top:8px;">
+      <label>參與者（可多選）</label>
+      <div class="chip-row" id="participant-chips"></div>
+    </div>
+
+    <div class="grid1 field" style="margin-top:8px;">
+      <label>備註</label>
+      <input class="finp" id="inp-note" placeholder="推薦理由、開放時間、費用…"/>
+    </div>
+
     <button class="add-btn" onclick="addItem()">+ 加入清單</button>
   </div>
 
-  <div id="list-container"><div class="loading">連接中…</div></div>
+  <div id="list-container"><div class="empty">載入中…</div></div>
 </div>
 
-<!-- Firebase SDK -->
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getDatabase, ref, push, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, push, remove, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-  // ====================================================
-  // 🔧 替換成你的 Firebase 設定
-  // ====================================================
-  const firebaseConfig = {
-    apiKey: "AIzaSyDnDKwh2a9qVqDcgZtUjEjh8uCe07FHAzo",
-    authDomain: "kaohsiung-trip.firebaseapp.com",
-    databaseURL: "https://kaohsiung-trip-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "kaohsiung-trip",
-    storageBucket: "kaohsiung-trip.firebasestorage.app",
-    messagingSenderId: "17984792690",
-    appId: "1:17984792690:web:8a4e4734140eb099dffaeb"
-  };
+// ====================================================
+// 🔧 替換成你的 Firebase 設定
+// ====================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDnDKwh2a9qVqDcgZtUjEjh8uCe07FHAzo",
+  authDomain: "kaohsiung-trip.firebaseapp.com",
+  databaseURL: "https://kaohsiung-trip-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "kaohsiung-trip",
+  storageBucket: "kaohsiung-trip.firebasestorage.app",
+  messagingSenderId: "17984792690",
+  appId: "1:17984792690:web:8a4e4734140eb099dffaeb"
+};
+// ====================================================
 
-  // ====================================================
+const DEFAULT_PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
+const DEFAULT_TYPES = ['景點','小吃','咖啡廳','住宿','購物','其他'];
+const TYPE_COLORS = {
+  '景點':['#2a6cbf','#e8f0fb'],'小吃':['#b87a1a','#fdf3e0'],
+  '咖啡廳':['#2a7a4a','#e8f5ee'],'住宿':['#6a4abf','#f0ecfb'],
+  '購物':['#bf2a7a','#fbe8f3'],'其他':['#8a7f72','#f5f2ed']
+};
+const DAY_COLORS = {'4/3':'#6a4abf','4/4':'#2a7a4a','4/5':'#c85a2a','':`#8a7f72`};
+const DAY_ORDER = {'4/3':0,'4/4':1,'4/5':2,'':3};
 
-  let db, itemsRef;
-  let allItems = {};
-  let activeTab = '全部';
-  let parsedUrl = '';
+let db, itemsRef, typesRef;
+let allItems = {};
+let customTypes = [];
+let activeTab = '全部';
+let sortMode = 'time';
+let participantFilter = '全部';
+let parsedUrl = '';
+let currentUser = localStorage.getItem('kh-user') || '';
+let selectedParticipants = [];
+let selectedType = '景點';
 
-  function initFirebase() {
-    try {
-      const app = initializeApp(FIREBASE_CONFIG);
-      db = getDatabase(app);
-      itemsRef = ref(db, 'kaohsiung-trip/items');
+function typeColor(t) {
+  return TYPE_COLORS[t] || ['#8a7f72','#f5f2ed'];
+}
 
-      // 即時監聽
-      onValue(itemsRef, (snapshot) => {
-        allItems = snapshot.val() || {};
-        render();
-      });
+// ---- Firebase init ----
+function initFirebase() {
+  try {
+    const app = initializeApp(FIREBASE_CONFIG);
+    db = getDatabase(app);
+    itemsRef = ref(db, 'kaohsiung-trip/items');
+    typesRef = ref(db, 'kaohsiung-trip/types');
 
-      document.getElementById('config-notice').style.display = 'none';
-    } catch(e) {
-      // Demo mode — no Firebase
-      allItems = {
-        demo1: {name:'旗津老街',type:'景點',day:'4/3',area:'旗津',note:'搭渡輪前往，黃昏最美',by:'Mia',url:'',ts:Date.now()-5000},
-        demo2: {name:'六合夜市',type:'小吃',day:'4/3',area:'前金',note:'必吃木瓜牛奶',by:'Kevin',url:'',ts:Date.now()-4000},
-        demo3: {name:'阿嬤的三輪車',type:'咖啡廳',day:'4/4',area:'鹽埕',note:'老屋改建，甜點超讚',by:'Mia',url:'',ts:Date.now()-3000},
-        demo4: {name:'棧貳庫',type:'景點',day:'4/5',area:'鹽埕',note:'港邊市集，打卡聖地',by:'Kevin',url:'',ts:Date.now()-2000},
-      };
-      document.getElementById('live-status').innerHTML = '⚠️ 示範模式';
-      render();
-    }
-  }
-
-  window.addItem = function() {
-    const name = document.getElementById('inp-name').value.trim();
-    if(!name) { document.getElementById('inp-name').focus(); return; }
-
-    const item = {
-      name,
-      type: document.getElementById('inp-type').value,
-      day: document.getElementById('inp-day').value,
-      area: document.getElementById('inp-area').value.trim() || '市區',
-      by: document.getElementById('inp-by').value.trim() || '匿名',
-      note: document.getElementById('inp-note').value.trim(),
-      url: parsedUrl,
-      ts: Date.now()
+    onValue(itemsRef, snap => { allItems = snap.val() || {}; renderList(); updateTabs(); });
+    onValue(typesRef, snap => { customTypes = snap.val() || []; renderTypeChips(); });
+  } catch(e) {
+    // Demo mode
+    allItems = {
+      d1:{name:'旗津老街',type:'景點',day:'4/3',area:'旗津',note:'搭渡輪，黃昏最美',by:'Mia',url:'',time:'17:00',participants:['Pei','Lulu'],ts:1},
+      d2:{name:'六合夜市',type:'小吃',day:'4/3',area:'前金',note:'木瓜牛奶必喝',by:'Kevin',url:'',time:'19:30',participants:['Pei','Lulu','Melanie'],ts:2},
+      d3:{name:'阿嬤的三輪車',type:'咖啡廳',day:'4/4',area:'鹽埕',note:'老屋改建甜點超讚',by:'Mia',url:'',time:'14:00',participants:['Yoyo','Min'],ts:3},
+      d4:{name:'棧貳庫',type:'景點',day:'4/5',area:'鹽埕',note:'港邊市集打卡',by:'Kevin',url:'',time:'',participants:['Pei','Melanie','Yoyo'],ts:4},
     };
+    document.getElementById('live-badge').innerHTML = '⚡ 示範模式';
+    renderList(); updateTabs();
+  }
+}
 
-    if(db) {
-      push(itemsRef, item);
-    } else {
-      allItems['demo' + Date.now()] = item;
-      render();
-    }
+// ---- Identity ----
+function renderIdentityChips() {
+  const el = document.getElementById('identity-chips');
+  el.innerHTML = DEFAULT_PARTICIPANTS.map(p =>
+    `<button class="fchip${currentUser===p?' sel':''}" onclick="selectMe('${p}')">${p}</button>`
+  ).join('');
+  if(currentUser) {
+    document.getElementById('inp-by').value = currentUser;
+    selectedParticipants = [currentUser];
+    renderParticipantChips();
+    document.getElementById('identity-card').style.display = 'none';
+  }
+}
 
-    // Reset
-    ['inp-name','inp-note','inp-area','inp-url'].forEach(id => document.getElementById(id).value = '');
-    parsedUrl = '';
-    document.getElementById('parsed-ok').style.display = 'none';
-    document.getElementById('url-hint').style.display = 'block';
-  };
+window.selectMe = function(name) {
+  currentUser = name;
+  localStorage.setItem('kh-user', name);
+  document.getElementById('inp-by').value = name;
+  selectedParticipants = [name];
+  document.getElementById('identity-card').style.display = 'none';
+  renderFilterChips();
+  renderParticipantChips();
+};
 
-  window.delItem = function(key) {
-    if(db) {
-      remove(ref(db, 'kaohsiung-trip/items/' + key));
-    } else {
-      delete allItems[key];
-      render();
-    }
-  };
+// ---- Participant filter ----
+function renderFilterChips() {
+  const el = document.getElementById('filter-chips');
+  el.innerHTML = DEFAULT_PARTICIPANTS.map(p =>
+    `<button class="who-chip${participantFilter===p?' on':''}" onclick="setParticipantFilter('${p}')">${p}</button>`
+  ).join('');
+}
+window.setParticipantFilter = function(p) {
+  participantFilter = p;
+  document.getElementById('filter-all').classList.toggle('on', p==='全部');
+  renderFilterChips();
+  renderList();
+};
 
-  window.onUrlInput = function() {
-    const val = document.getElementById('inp-url').value.trim();
-    if(!val) { parsedUrl = ''; document.getElementById('parsed-ok').style.display='none'; document.getElementById('url-hint').style.display='block'; }
-  };
+// ---- Participant chips in form ----
+function renderParticipantChips() {
+  const el = document.getElementById('participant-chips');
+  el.innerHTML = DEFAULT_PARTICIPANTS.map(p =>
+    `<button class="fchip${selectedParticipants.includes(p)?' sel':''}" onclick="toggleParticipant('${p}')">${p}</button>`
+  ).join('');
+}
+window.toggleParticipant = function(p) {
+  if(selectedParticipants.includes(p)) selectedParticipants = selectedParticipants.filter(x=>x!==p);
+  else selectedParticipants.push(p);
+  renderParticipantChips();
+};
 
-  window.parseUrl = function() {
-    const url = document.getElementById('inp-url').value.trim();
-    if(!url) { alert('請先貼上 Google Maps 連結'); return; }
-    if(!/google\.(com|com\.tw)\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/.test(url)) { alert('請貼上有效的 Google Maps 連結'); return; }
+// ---- Type chips ----
+function renderTypeChips() {
+  const allTypes = [...DEFAULT_TYPES, ...customTypes];
+  const el = document.getElementById('type-chips');
+  el.innerHTML = allTypes.map(t => {
+    const [fg,bg] = typeColor(t);
+    const isSel = selectedType===t;
+    return `<button class="fchip type-fchip${isSel?' sel':''}" style="${isSel?`background:${bg};color:${fg};border-color:${fg};`:''}" onclick="selectType('${t}')">${t}</button>`;
+  }).join('') +
+  `<button class="fchip" onclick="showCustomType()">＋ 自訂</button>`;
+}
+window.selectType = function(t) {
+  selectedType = t;
+  document.getElementById('custom-type-row').style.display='none';
+  renderTypeChips();
+};
+window.showCustomType = function() {
+  document.getElementById('custom-type-row').style.display='block';
+  document.getElementById('inp-custom-type').focus();
+};
+window.confirmCustomType = function() {
+  const val = document.getElementById('inp-custom-type').value.trim();
+  if(!val) return;
+  if(!customTypes.includes(val)) {
+    customTypes.push(val);
+    if(db) set(typesRef, customTypes);
+  }
+  selectedType = val;
+  document.getElementById('inp-custom-type').value='';
+  document.getElementById('custom-type-row').style.display='none';
+  renderTypeChips();
+};
 
-    parsedUrl = url;
-    document.getElementById('parsed-ok').style.display = 'block';
-    document.getElementById('url-hint').style.display = 'none';
+// ---- Tabs ----
+function updateTabs() {
+  const items = Object.values(allItems);
+  const types = [...new Set(items.map(i=>i.type).filter(Boolean))];
+  const builtIn = DEFAULT_TYPES.filter(t => types.includes(t));
+  const extra = types.filter(t => !DEFAULT_TYPES.includes(t));
+  const allT = [...builtIn, ...extra];
 
-    // Try to extract name
-    let m = url.match(/maps\/place\/([^\/\?@]+)/);
-    if(m && !document.getElementById('inp-name').value) {
-      document.getElementById('inp-name').value = decodeURIComponent(m[1]).replace(/\+/g,' ');
-    }
-  };
-
-  window.setTab = function(t) {
-    activeTab = t;
-    document.querySelectorAll('.tab').forEach(b => {
-      const label = b.textContent.replace(/\s*\d+\s*$/, '').trim();
-      b.classList.toggle('active', label.includes(t) || (t==='全部' && label.includes('全部')));
-    });
-    render();
-  };
-
-  const ICONS = {景點:'📍',小吃:'🍜',咖啡廳:'☕'};
-  const DAY_LABEL = {'4/3':'4月3日（四）','4/4':'4月4日（五）','4/5':'4月5日（六）'};
-  const DAY_CLASS = {'4/3':'day-43','4/4':'day-44','4/5':'day-45'};
-  const DAY_ORDER = {'4/3':0,'4/4':1,'4/5':2};
-
-  function render() {
-    const items = Object.entries(allItems).map(([k,v]) => ({key:k,...v}));
-    const filtered = activeTab === '全部' ? items : items.filter(i => i.type === activeTab);
-    filtered.sort((a,b) => (DAY_ORDER[a.day]||0) - (DAY_ORDER[b.day]||0) || (a.ts||0) - (b.ts||0));
-
-    // Update counts
-    document.getElementById('cnt-all').textContent = items.length || '';
-    ['景點','小吃','咖啡廳'].forEach(t => {
+  const el = document.getElementById('tabs');
+  el.innerHTML = `<button class="tab${activeTab==='全部'?' active':''}" onclick="setTab('全部')">全部 <span class="cnt">${items.length||''}</span></button>` +
+    allT.map(t => {
       const n = items.filter(i=>i.type===t).length;
-      document.getElementById('cnt-'+t).textContent = n || '';
-    });
+      return `<button class="tab${activeTab===t?' active':''}" onclick="setTab('${t}')">${t} <span class="cnt">${n||''}</span></button>`;
+    }).join('');
+}
+window.setTab = function(t) {
+  activeTab = t; updateTabs(); renderList();
+};
 
-    const container = document.getElementById('list-container');
-    if(!filtered.length) { container.innerHTML = '<div class="empty">還沒有地點，快來新增吧！</div>'; return; }
+// ---- Sort ----
+window.setSort = function(mode) {
+  sortMode = mode;
+  document.getElementById('sort-time-btn').classList.toggle('active', mode==='time');
+  document.getElementById('sort-area-btn').classList.toggle('active', mode==='area');
+  renderList();
+};
 
-    // Group by day
-    const groups = {};
-    filtered.forEach(item => {
-      const d = item.day || '4/3';
-      if(!groups[d]) groups[d] = [];
-      groups[d].push(item);
-    });
+// ---- URL parsing ----
+window.onUrlChange = function() {
+  const v = document.getElementById('inp-url').value.trim();
+  if(!v){ parsedUrl=''; document.getElementById('parsed-ok').style.display='none'; document.getElementById('url-hint').style.display='block'; document.getElementById('extracted-info').style.display='none'; }
+};
 
-    container.innerHTML = ['4/3','4/4','4/5'].filter(d => groups[d]).map(day => `
-      <div class="day-group">
-        <div class="day-label ${DAY_CLASS[day]}">${DAY_LABEL[day]}</div>
-        ${groups[day].map(item => `
-          <div class="item">
-            <div class="item-icon icon-${item.type}">${ICONS[item.type]||'📌'}</div>
-            <div class="item-body">
-              <div class="item-name">${item.name}<span class="type-badge badge-${item.type}">${item.type}</span></div>
-              <div class="item-meta">${item.area}・由 ${item.by} 新增</div>
-              ${item.note ? `<div class="item-note">${item.note}</div>` : ''}
-            </div>
-            <div class="item-actions">
-              <button class="del-btn" onclick="delItem('${item.key}')">×</button>
-              ${item.url ? `<button class="map-link-btn" onclick="window.open('${item.url.replace(/'/g,"\\'")}','_blank')">地圖 ↗</button>` : ''}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    `).join('');
+window.parseUrl = function() {
+  const url = document.getElementById('inp-url').value.trim();
+  if(!url){alert('請先貼上 Google Maps 連結');return;}
+  if(!/google\.(com|com\.tw)\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/.test(url)){alert('請貼上有效的 Google Maps 連結');return;}
+
+  parsedUrl = url;
+  document.getElementById('parsed-ok').style.display='block';
+  document.getElementById('url-hint').style.display='none';
+
+  const extracted = {};
+
+  // Name from /maps/place/NAME/
+  let m = url.match(/maps\/place\/([^\/\?@+]+)/);
+  if(m) extracted.name = decodeURIComponent(m[1]).replace(/\+/g,' ');
+
+  // Area / district heuristics from URL
+  const areaKeywords = ['鹽埕','旗津','苓雅','前金','三民','左營','鼓山','楠梓','鳳山','大寮','仁武','橋頭','小港','那瑪夏','茂林','桃源'];
+  const urlDecoded = decodeURIComponent(url);
+  for(const kw of areaKeywords){
+    if(urlDecoded.includes(kw)){ extracted.area = kw+'區'; break; }
   }
 
-  initFirebase();
+  const infoEl = document.getElementById('extracted-info');
+  if(extracted.name || extracted.area){
+    let lines = [];
+    if(extracted.name){ lines.push(`名稱：${extracted.name}`); if(!document.getElementById('inp-name').value) document.getElementById('inp-name').value=extracted.name; }
+    if(extracted.area){ lines.push(`地區：${extracted.area}`); if(!document.getElementById('inp-area').value) document.getElementById('inp-area').value=extracted.area; }
+    infoEl.style.display='block';
+    infoEl.textContent = '✓ 已從連結抓取 — '+lines.join('・');
+  } else {
+    infoEl.style.display='none';
+  }
+};
+
+// ---- Add item ----
+window.addItem = function() {
+  const name = document.getElementById('inp-name').value.trim();
+  if(!name){document.getElementById('inp-name').focus();return;}
+
+  const customT = document.getElementById('inp-custom-type').value.trim();
+  const type = customT || selectedType;
+
+  if(customT && !customTypes.includes(customT)){
+    customTypes.push(customT);
+    if(db) set(typesRef, customTypes);
+  }
+
+  const item = {
+    name,
+    type,
+    day: document.getElementById('inp-day').value,
+    area: document.getElementById('inp-area').value.trim() || '',
+    time: document.getElementById('inp-time').value || '',
+    by: currentUser || document.getElementById('inp-by').value.trim() || '匿名',
+    note: document.getElementById('inp-note').value.trim(),
+    url: parsedUrl,
+    participants: selectedParticipants.length ? [...selectedParticipants] : DEFAULT_PARTICIPANTS,
+    ts: Date.now()
+  };
+
+  if(db) push(itemsRef, item);
+  else { allItems['local'+Date.now()]=item; renderList(); updateTabs(); }
+
+  // reset
+  ['inp-name','inp-note','inp-area','inp-url','inp-time','inp-custom-type'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('inp-day').value='';
+  parsedUrl='';
+  selectedParticipants = currentUser?[currentUser]:[];
+  document.getElementById('parsed-ok').style.display='none';
+  document.getElementById('url-hint').style.display='block';
+  document.getElementById('extracted-info').style.display='none';
+  document.getElementById('custom-type-row').style.display='none';
+  renderParticipantChips();
+};
+
+window.delItem = function(key) {
+  if(!confirm('確定刪除這個地點？')) return;
+  if(db) remove(ref(db,'kaohsiung-trip/items/'+key));
+  else { delete allItems[key]; renderList(); updateTabs(); }
+};
+
+// ---- Open all in maps ----
+window.openAllMaps = function() {
+  const items = Object.values(allItems);
+  const withUrl = items.filter(i=>i.url);
+  if(!withUrl.length){
+    // fallback: search all names
+    const names = items.map(i=>i.name).join(' OR ');
+    window.open(`https://www.google.com/maps/search/${encodeURIComponent('高雄 '+names)}`, '_blank');
+    return;
+  }
+  // Open first one (browsers block multi-tab), inform user
+  window.open(withUrl[0].url,'_blank');
+  if(withUrl.length>1) alert(`共 ${withUrl.length} 個有 Maps 連結的地點，已開啟第一個。\n請逐一從清單點「地圖」開啟各地點，或將所有連結加入 Google Maps 我的地圖（My Maps）統一查看。`);
+};
+
+// ---- Render list ----
+function renderList() {
+  let items = Object.entries(allItems).map(([k,v])=>({key:k,...v}));
+
+  // Participant filter
+  if(participantFilter!=='全部') items=items.filter(i=>(i.participants||[]).includes(participantFilter));
+
+  // Tab filter
+  if(activeTab!=='全部') items=items.filter(i=>i.type===activeTab);
+
+  const container = document.getElementById('list-container');
+  if(!items.length){container.innerHTML='<div class="empty">還沒有地點，快來新增吧！</div>';return;}
+
+  if(sortMode==='area'){
+    // Group by area
+    items.sort((a,b)=>(a.area||'').localeCompare(b.area||'','zh-TW'));
+    const groups={};
+    items.forEach(i=>{const k=i.area||'未指定地區';if(!groups[k])groups[k]=[];groups[k].push(i);});
+    container.innerHTML = Object.entries(groups).map(([area,list])=>`
+      <div class="day-group">
+        <div class="group-header">
+          <div class="group-label" style="color:var(--teal,#1a8a7a)">📍 ${area}</div>
+          <div class="group-line"></div>
+        </div>
+        ${list.map(item=>itemHTML(item)).join('')}
+      </div>`).join('');
+  } else {
+    // Group by day, sort by time within
+    items.sort((a,b)=>{
+      const dd=(DAY_ORDER[a.day??'']??3)-(DAY_ORDER[b.day??'']??3);
+      if(dd!==0)return dd;
+      if(a.time&&b.time)return a.time.localeCompare(b.time);
+      if(a.time)return -1; if(b.time)return 1;
+      return (a.ts||0)-(b.ts||0);
+    });
+    const groups={};
+    items.forEach(i=>{const k=i.day||'';if(!groups[k])groups[k]=[];groups[k].push(i);});
+    const DAY_LABEL={'4/3':'4月3日（四）','4/4':'4月4日（五）','4/5':'4月5日（六）','':'日期未定'};
+    const orderedKeys=[...['4/3','4/4','4/5',''].filter(k=>groups[k])];
+    container.innerHTML = orderedKeys.map(day=>`
+      <div class="day-group">
+        <div class="group-header">
+          <div class="group-label" style="color:${DAY_COLORS[day]}">${DAY_LABEL[day]||day}</div>
+          <div class="group-line"></div>
+        </div>
+        ${groups[day].map(item=>itemHTML(item)).join('')}
+      </div>`).join('');
+  }
+}
+
+function itemHTML(item) {
+  const [fg,bg] = typeColor(item.type);
+  const mapBtn = item.url ? `<button class="map-btn" onclick="window.open('${item.url.replace(/'/g,"\\'")}','_blank')">地圖 ↗</button>` : '';
+  const whoHtml = item.participants?.length ? `<div class="item-who">${item.participants.map(p=>`<span class="who-pill">${p}</span>`).join('')}</div>` : '';
+  const timeHtml = item.time ? `<div class="item-time">⏰ ${item.time}</div>` : '';
+  const areaText = item.area ? `${item.area}・` : '';
+  return `<div class="item">
+    <div class="item-icon" style="background:${bg}">
+      ${iconFor(item.type)}
+    </div>
+    <div class="item-body">
+      <div class="item-name">${item.name}</div>
+      <div class="item-badges">
+        <span class="badge" style="background:${bg};color:${fg}">${item.type}</span>
+        ${item.day?`<span class="badge" style="background:${DAY_COLORS[item.day]}22;color:${DAY_COLORS[item.day]}">${item.day}</span>`:''}
+      </div>
+      <div class="item-meta">${areaText}由 ${item.by} 新增</div>
+      ${timeHtml}
+      ${item.note?`<div class="item-note">${item.note}</div>`:''}
+      ${whoHtml}
+    </div>
+    <div class="item-actions">
+      <button class="del-btn" onclick="delItem('${item.key}')">×</button>
+      ${mapBtn}
+    </div>
+  </div>`;
+}
+
+const ICON_MAP={景點:'📍',小吃:'🍜',咖啡廳:'☕',住宿:'🏨',購物:'🛍️',其他:'📌'};
+function iconFor(t){ return ICON_MAP[t]||'📌'; }
+
+// ---- Boot ----
+renderIdentityChips();
+renderParticipantChips();
+renderTypeChips();
+renderFilterChips();
+setSort('time');
+initFirebase();
 </script>
 </body>
 </html>
