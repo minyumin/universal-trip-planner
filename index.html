@@ -316,14 +316,21 @@ window.openMultiMap = () => {
       return encodeURIComponent(prefix + " " + name);
   });
 
-function getDatesArray(s, e) {
-  let a = [], d = new Date(s), ed = new Date(e);
-  while(d <= ed) {
-    a.push(`${d.getMonth()+1}/${d.getDate()} ( ${["日","一","二","三","四","五","六"][d.getDay()]} )`);
-    d.setDate(d.getDate()+1);
+  // 判斷：如果只有一個點，直接搜尋；多個點則生成路線
+  let url = "";
+  if (locations.length === 1) {
+    url = `https://www.google.com/maps/search/?api=1&query=${locations[0]}`;
+  } else {
+    // 導航語法：origin = 起點, destination = 終點, waypoints = 中間點（用 | 隔開）
+    const origin = locations[0];
+    const destination = locations[locations.length - 1];
+    const waypoints = locations.slice(1, -1).join('|');
+    
+    url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=driving`;
   }
-  return a;
-}
+
+  window.open(url, '_blank');
+};
 
 window.parseUrl = () => {
   setTimeout(() => {
