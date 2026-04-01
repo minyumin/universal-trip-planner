@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>高雄小旅行行程管理 4.0</title>
+<title>高雄小旅行行程管理 4.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -23,9 +23,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .finp,.fsel{width:100%; padding:10px; border:1px solid var(--border); border-radius:var(--rs); font-size:14px; background:#faf8f5; outline:none; border:1px solid transparent;}
 .finp:focus{border-color:var(--accent); background:#fff;}
 
-/* 地圖生成按鈕 (更醒目) */
+/* 地圖生成按鈕 */
 .map-gen-btn{width:100%; padding:14px; background:var(--blue); color:#fff; border:none; border-radius:var(--rs); font-weight:700; margin-bottom:16px; cursor:pointer; box-shadow:0 4px 10px rgba(42, 108, 191, 0.3); transition: 0.2s;}
-.map-gen-btn:active{transform: scale(0.98);}
 
 /* 工具列 */
 .toolbar{background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:12px; margin-bottom:12px;}
@@ -43,14 +42,18 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 
 /* 清單項目 */
 .item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; display:flex; align-items:flex-start; gap:10px; position:relative;}
-.item-check{width:20px; height:20px; margin-top:12px; cursor:pointer; accent-color: var(--blue);}
+.item-check{width:20px; height:20px; margin-top:12px; cursor:pointer; accent-color: var(--blue); flex-shrink:0;}
 .item-badge{width:36px; height:36px; border-radius:8px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
 .item-info{flex:1; min-width:0;}
 .item-type{font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase;}
 .item-name{font-size:16px; font-weight:700; margin:2px 0;}
 .item-meta{font-size:12px; color:var(--muted); margin-bottom:2px;}
-.item-who{display:flex; gap:4px; margin-top:6px; flex-wrap:wrap;}
+
+/* 新增者與參與者同一列 */
+.item-who-line{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px;}
+.who-label{font-size:11px; font-weight:700; color:var(--text);}
 .pill{font-size:10px; background:var(--bg); padding:1px 6px; border-radius:6px; color:var(--muted);}
+
 .item-note{font-size:12px; color:var(--accent); background:#fff9f5; padding:6px; border-radius:6px; margin-top:8px; border-left:3px solid var(--accent);}
 
 .item-actions{display:flex; flex-direction:column; gap:8px;}
@@ -66,11 +69,11 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 <div class="main">
   <div class="card" id="form-container">
     <div class="field" style="background:var(--bg); padding:10px; border-radius:var(--rs);">
-      <label>Google Maps 連結自動填入</label>
-      <input id="inp-url" class="finp" placeholder="貼上網址即自動解析" onpaste="setTimeout(parseUrl, 100)"/>
+      <label>Google Maps 連結自動解析</label>
+      <input id="inp-url" class="finp" placeholder="在此貼上連結" onpaste="setTimeout(parseUrl, 100)"/>
     </div>
 
-    <div class="field"><label>地點類型</label><div class="chip-row" id="type-chips"></div></div>
+    <div class="field"><label>類型</label><div class="chip-row" id="type-chips"></div></div>
     <div class="field"><label>地點名稱 *</label><input id="inp-name" class="finp" placeholder="例如：駁二藝術特區"/></div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -86,10 +89,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
       <div class="field"><label>地區</label><input id="inp-area" class="finp" placeholder="例如：鹽埕區"/></div>
     </div>
 
-    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="注意事項..."/></div>
+    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="想吃的、注意事項..."/></div>
 
     <input type="hidden" id="edit-key" value=""/>
-    <button id="submit-btn" class="btn-main" onclick="submitForm()">加入清單</button>
+    <button id="submit-btn" class="btn-main" onclick="submitForm()">加入行程</button>
     <button id="cancel-btn" style="display:none; width:100%; margin-top:8px; border:none; background:none; color:var(--muted);" onclick="resetForm()">取消修改</button>
   </div>
 
@@ -98,7 +101,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
   <div class="toolbar">
     <div class="filter-tabs" id="filter-bar"></div>
     <div class="sort-row">
-      <span style="color:var(--muted); font-weight:700;">行程清單</span>
+      <span style="color:var(--muted); font-weight:700;">清單地點</span>
       <div>排序：
         <select id="sort-select" onchange="renderList()" style="border:none; background:none; color:var(--accent); font-weight:700;">
           <option value="ts">最新加入</option>
@@ -146,33 +149,17 @@ window.toggleWho = (p) => { selectedWho = selectedWho.includes(p) ? selectedWho.
 window.toggleAllWho = () => { selectedWho = selectedWho.length === PARTICIPANTS.length ? [] : [...PARTICIPANTS]; renderFormUI(); };
 window.setFilter = (t) => { currentFilter = t; selectedKeys.clear(); updateMapBtn(); renderFormUI(); renderList(); };
 
-// --- 勾選邏輯 ---
-window.toggleSelect = (key) => {
-  if(selectedKeys.has(key)) selectedKeys.delete(key);
-  else selectedKeys.add(key);
-  updateMapBtn();
-};
-
+window.toggleSelect = (key) => { selectedKeys.has(key) ? selectedKeys.delete(key) : selectedKeys.add(key); updateMapBtn(); };
 function updateMapBtn() {
   const btn = document.getElementById('map-btn');
   const count = selectedKeys.size;
-  if(count > 0) {
-    btn.innerText = `🗺️ 生成地圖行程 (已選 ${count} 項)`;
-    btn.style.background = "var(--accent)";
-  } else {
-    btn.innerText = `🗺️ 生成地圖行程 (${currentFilter === '全部' ? '全部' : currentFilter})`;
-    btn.style.background = "var(--blue)";
-  }
+  btn.innerText = count > 0 ? `🗺️ 生成地圖行程 (已選 ${count} 項)` : `🗺️ 生成地圖行程 (${currentFilter === '全部' ? '全部' : currentFilter})`;
+  btn.style.background = count > 0 ? "var(--accent)" : "var(--blue)";
 }
 
 window.openMultiMap = () => {
-  let list = [];
-  if(selectedKeys.size > 0) {
-    list = allItems.filter(i => selectedKeys.has(i.key));
-  } else {
-    list = currentFilter === '全部' ? allItems : allItems.filter(i => i.type === currentFilter);
-  }
-  if(!list.length) return alert("清單沒有地點");
+  let list = selectedKeys.size > 0 ? allItems.filter(i => selectedKeys.has(i.key)) : (currentFilter === '全部' ? allItems : allItems.filter(i => i.type === currentFilter));
+  if(!list.length) return alert("沒有地點");
   list.sort((a,b) => (a.area||'').localeCompare(b.area||''));
   window.open("https://www.google.com/maps/dir/" + list.map(i => encodeURIComponent(i.name)).join('/'), '_blank');
 };
@@ -193,7 +180,7 @@ window.submitForm = () => {
   resetForm();
 };
 
-window.resetForm = () => { ['inp-name','inp-area','inp-url','inp-op-time','inp-note','edit-key'].forEach(id => document.getElementById(id).value=''); document.getElementById('submit-btn').innerText = "加入清單"; document.getElementById('cancel-btn').style.display = 'none'; selectedWho = [...PARTICIPANTS]; renderFormUI(); };
+window.resetForm = () => { ['inp-name','inp-area','inp-url','inp-op-time','inp-note','edit-key'].forEach(id => document.getElementById(id).value=''); document.getElementById('submit-btn').innerText = "加入行程"; document.getElementById('cancel-btn').style.display = 'none'; selectedWho = [...PARTICIPANTS]; renderFormUI(); };
 
 window.editItem = (key, item) => {
   document.getElementById('edit-key').value = key;
@@ -220,8 +207,11 @@ window.renderList = () => {
         <div class="item-type">${item.type}</div>
         <div class="item-name">${item.name}</div>
         <div class="item-meta">📅 ${item.day||'未定'} ${item.time||''} | 📍 ${item.area||'高雄'}</div>
-        <div class="item-meta" style="color:var(--accent)">🕒 營業：${item.opTime||'不詳'} | 新增：${item.by}</div>
-        <div class="item-who">${(item.who||[]).map(w => `<span class="pill">${w}</span>`).join('')}</div>
+        <div class="item-meta" style="color:var(--accent)">🕒 營業：${item.opTime||'不詳'}</div>
+        <div class="item-who-line">
+          <span class="who-label">${item.by}：</span>
+          ${(item.who||[]).map(w => `<span class="pill">${w}</span>`).join('')}
+        </div>
         ${item.note ? `<div class="item-note">💡 ${item.note}</div>` : ''}
       </div>
       <div class="item-actions">
