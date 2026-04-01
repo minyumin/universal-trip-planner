@@ -38,10 +38,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; display:flex; align-items:flex-start; gap:10px; transition: 0.3s;}
 .item.editing { border: 2px solid var(--accent); background: #fffdfc; box-shadow: 0 0 12px rgba(200, 90, 42, 0.15); }
 .item-info{flex:1; min-width:0;}
-.item-name{font-size:16px; font-weight:700;}
+.item-name{font-size:16px; font-weight:700; margin-bottom:4px;}
 .item-type{font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase;}
 
-/* 地圖連結按鈕 - 藍色底更醒目 */
 .map-link-btn {
   display: inline-flex;
   align-items: center;
@@ -53,7 +52,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
   text-decoration: none;
   font-weight: 700;
   margin-top: 8px;
-  box-shadow: 0 2px 6px rgba(42, 108, 191, 0.2);
 }
 
 .pill{font-size:10px; background:var(--bg); padding:1px 6px; border-radius:6px; color:var(--muted); margin-right:4px;}
@@ -75,13 +73,21 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     <div class="field"><label>地點名稱 *</label><input id="inp-name" class="finp" placeholder="地點名稱"/></div>
     
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div class="field"><label>日期</label><select id="inp-day" class="fsel"><option value="">未定</option><option value="4/3">4/3 (四)</option><option value="4/4">4/4 (五)</option><option value="4/5">4/5 (六)</option></select></div>
+      <div class="field">
+        <label>日期 (修正為 2026)</label>
+        <select id="inp-day" class="fsel">
+          <option value="">未定</option>
+          <option value="4/3">4/3 (五)</option>
+          <option value="4/4">4/4 (六)</option>
+          <option value="4/5">4/5 (日)</option>
+        </select>
+      </div>
       <div class="field">
         <label>時段</label>
         <select id="inp-time-select" class="fsel" onchange="toggleTimeInput()">
           <option value="">未定</option><option value="上午">🌤 上午</option><option value="中午">☀️ 中午</option><option value="下午">🌇 下午</option><option value="晚上">🌙 晚上</option><option value="custom">✍️ 自定義時間</option>
         </select>
-        <input id="inp-time-custom" class="finp" style="display:none; margin-top:5px;" placeholder="例如：14:30 或 整天"/>
+        <input id="inp-time-custom" class="finp" style="display:none; margin-top:5px;" placeholder="例如：14:30"/>
       </div>
     </div>
 
@@ -89,16 +95,15 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div class="field"><label>營業時間</label><input id="inp-op-time" class="finp" placeholder="例：10:00-20:00"/></div>
-      <div class="field"><label>公休日</label><input id="inp-off-day" class="finp" placeholder="例：週一、無"/></div>
+      <div class="field"><label>公休日</label><input id="inp-off-day" class="finp" placeholder="例：週一"/></div>
     </div>
-    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="推薦菜色..."/></div>
+    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="備註..."/></div>
 
     <button id="submit-btn" class="btn-main" onclick="submitForm()">加入行程清單</button>
     <button id="cancel-btn" style="display:none; width:100%; margin-top:10px; border:none; background:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消修改</button>
   </div>
 
   <button id="map-btn" class="map-gen-btn" onclick="openMultiMap()">🗺️ 生成地圖行程 (全部地點)</button>
-
   <div id="list-container"></div>
 </div>
 
@@ -122,46 +127,26 @@ const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 let selectedType = '景點', selectedWho = [...PARTICIPANTS], allItems = [], editingKey = null;
 let customTypes = ['景點','小吃','咖啡廳','購物'];
 
-onValue(typesRef, snap => {
-  if(snap.exists()) customTypes = snap.val();
-  renderFormUI();
-});
+onValue(typesRef, snap => { if(snap.exists()) customTypes = snap.val(); renderFormUI(); });
 
 window.renderFormUI = () => {
-  document.getElementById('type-chips').innerHTML = customTypes.map(t => 
-    `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`
-  ).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
-  const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">All</div>`]
-    .concat(PARTICIPANTS.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
+  document.getElementById('type-chips').innerHTML = customTypes.map(t => `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
+  const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">All</div>`].concat(PARTICIPANTS.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
   document.getElementById('participant-chips').innerHTML = whoHtml.join('');
 };
 
 window.selectType = (t) => { selectedType = t; renderFormUI(); };
-window.addType = () => {
-  const nt = prompt("新增類型名稱：");
-  if(nt && !customTypes.includes(nt)) {
-    customTypes.push(nt);
-    set(typesRef, customTypes);
-  }
-};
-
+window.addType = () => { const nt = prompt("新增類型名稱："); if(nt && !customTypes.includes(nt)) { customTypes.push(nt); set(typesRef, customTypes); } };
 window.toggleWho = (p) => { selectedWho = selectedWho.includes(p) ? selectedWho.filter(x=>x!==p) : [...selectedWho, p]; renderFormUI(); };
 window.toggleAllWho = () => { selectedWho = (selectedWho.length === PARTICIPANTS.length) ? [] : [...PARTICIPANTS]; renderFormUI(); };
-window.toggleTimeInput = () => {
-  const sel = document.getElementById('inp-time-select').value;
-  document.getElementById('inp-time-custom').style.display = (sel === 'custom') ? 'block' : 'none';
-};
+window.toggleTimeInput = () => { document.getElementById('inp-time-custom').style.display = (document.getElementById('inp-time-select').value === 'custom') ? 'block' : 'none'; };
 
 window.parseUrl = () => {
   setTimeout(() => {
     const input = document.getElementById('inp-url').value;
-    if(!input) return;
     const decoded = decodeURIComponent(input);
     const nameMatch = decoded.match(/\/place\/([^\/\?]+)/);
-    if(nameMatch) {
-      const rawName = nameMatch[1].replace(/\+/g, ' ');
-      document.getElementById('inp-name').value = rawName;
-    }
+    if(nameMatch) document.getElementById('inp-name').value = nameMatch[1].replace(/\+/g, ' ');
   }, 100);
 };
 
@@ -169,70 +154,46 @@ window.editItem = (key) => {
   const item = allItems.find(i => i.key === key);
   if(!item) return;
   editingKey = key;
-  
   document.getElementById('inp-name').value = item.name || '';
   document.getElementById('inp-url').value = item.url || '';
   document.getElementById('inp-day').value = item.day || '';
   document.getElementById('inp-op-time').value = item.opTime || '';
   document.getElementById('inp-off-day').value = item.offDay || '';
   document.getElementById('inp-note').value = item.note || '';
-
   const standardTimes = ['上午','中午','下午','晚上'];
   const timeSelect = document.getElementById('inp-time-select');
   const timeCustom = document.getElementById('inp-time-custom');
-  if (item.time && !standardTimes.includes(item.time)) {
-    timeSelect.value = 'custom';
-    timeCustom.value = item.time;
-    timeCustom.style.display = 'block';
-  } else {
-    timeSelect.value = item.time || '';
-    timeCustom.style.display = 'none';
-  }
-
+  if (item.time && !standardTimes.includes(item.time)) { timeSelect.value = 'custom'; timeCustom.value = item.time; timeCustom.style.display = 'block'; }
+  else { timeSelect.value = item.time || ''; timeCustom.style.display = 'none'; }
   selectedType = item.type || '景點';
   selectedWho = item.who ? [...item.who] : [];
-  
-  const submitBtn = document.getElementById('submit-btn');
-  submitBtn.innerText = "更新行程清單";
-  submitBtn.classList.add('update-mode');
+  const sb = document.getElementById('submit-btn');
+  sb.innerText = "更新行程清單"; sb.classList.add('update-mode');
   document.getElementById('cancel-btn').style.display = 'block';
-
-  renderFormUI();
-  renderList();
-  window.scrollTo({top: 0, behavior: 'smooth'});
+  renderFormUI(); renderList(); window.scrollTo({top: 0, behavior: 'smooth'});
 };
 
 window.resetForm = () => {
   editingKey = null;
   ['inp-name','inp-url','inp-op-time','inp-off-day','inp-note','inp-time-custom'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('inp-day').value = '';
-  document.getElementById('inp-time-select').value = '';
+  document.getElementById('inp-day').value = ''; document.getElementById('inp-time-select').value = '';
   document.getElementById('inp-time-custom').style.display = 'none';
-  const submitBtn = document.getElementById('submit-btn');
-  submitBtn.innerText = "加入行程清單";
-  submitBtn.classList.remove('update-mode');
+  const sb = document.getElementById('submit-btn');
+  sb.innerText = "加入行程清單"; sb.classList.remove('update-mode');
   document.getElementById('cancel-btn').style.display = 'none';
-  selectedType = '景點';
-  selectedWho = [...PARTICIPANTS];
-  renderFormUI();
-  renderList();
+  selectedType = '景點'; selectedWho = [...PARTICIPANTS]; renderFormUI(); renderList();
 };
 
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
   if(!name) return alert("地點名稱為必填");
-  
-  const timeVal = document.getElementById('inp-time-select').value === 'custom' 
-    ? document.getElementById('inp-time-custom').value 
-    : document.getElementById('inp-time-select').value;
-
+  const timeVal = document.getElementById('inp-time-select').value === 'custom' ? document.getElementById('inp-time-custom').value : document.getElementById('inp-time-select').value;
   const data = {
     type: selectedType, name, url: document.getElementById('inp-url').value || '',
     day: document.getElementById('inp-day').value || '', time: timeVal || '',
     opTime: document.getElementById('inp-op-time').value || '',
     offDay: document.getElementById('inp-off-day').value || '',
-    who: selectedWho, note: document.getElementById('inp-note').value || '',
-    ts: Date.now()
+    who: selectedWho, note: document.getElementById('inp-note').value || '', ts: Date.now()
   };
   if(editingKey) update(ref(db, `kaohsiung-trip/items/${editingKey}`), data);
   else push(itemsRef, data);
@@ -243,8 +204,7 @@ window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `kaohs
 
 window.openMultiMap = () => {
   if(!allItems.length) return alert("清單沒有地點");
-  const destinations = allItems.map(i => encodeURIComponent(i.name)).join('/');
-  window.open("https://www.google.com/maps/dir/" + destinations, '_blank');
+  window.open("https://www.google.com/maps/dir/" + allItems.map(i => encodeURIComponent(i.name)).join('/'), '_blank');
 };
 
 onValue(itemsRef, snap => {
@@ -255,18 +215,14 @@ onValue(itemsRef, snap => {
 window.renderList = () => {
   const sorted = [...allItems].sort((a,b) => b.ts - a.ts);
   document.getElementById('list-container').innerHTML = sorted.map(item => {
-    // 關鍵修正：如果 url 為空，自動生成一個基於店名的搜尋連結
-    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(item.name)}`;
-    
+    const mapUrl = item.url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}`;
     return `
     <div class="item ${editingKey === item.key ? 'editing' : ''}">
       <div style="margin-top:12px;">📍</div>
       <div class="item-info">
         <div class="item-type">${item.type}</div>
         <div class="item-name">${item.name}</div>
-        
         <a href="${mapUrl}" target="_blank" class="map-link-btn">🗺️ 查看 Google Map</a>
-
         <div style="font-size:12px; color:var(--muted); margin: 10px 0 2px 0;">📅 ${item.day || '未定'} ${item.time || ''}</div>
         <div style="font-size:12px; color:var(--accent);">🕘 營業：${item.opTime || '未知'} | 🚫 公休：${item.offDay || '未知'}</div>
         <div style="margin-top:6px;">
@@ -279,8 +235,8 @@ window.renderList = () => {
         <button class="btn-icon" onclick="editItem('${item.key}')">✏️</button>
         <button class="btn-icon" onclick="delItem('${item.key}')">🗑️</button>
       </div>
-    </div>
-  `}).join('');
+    </div>`;
+  }).join('');
 };
 
 renderFormUI();
