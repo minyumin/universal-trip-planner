@@ -14,10 +14,10 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:120px;font-size:14px;}
 
-/* 頂部導覽：行程切換器 */
+/* 頂部導覽 */
 .trip-nav{background:#fff; border-bottom:1px solid var(--border); padding:10px 15px; position:sticky; top:0; z-index:200; display:flex; align-items:center; gap:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05);}
-.trip-select{flex:1; padding:10px; border:1px solid var(--border); border-radius:8px; font-weight:700; font-size:15px; color:var(--blue); background:#fcfdfe; outline:none;}
-.btn-new-trip{background:var(--blue); color:#fff; border:none; width:38px; height:38px; border-radius:8px; font-weight:700; cursor:pointer; font-size:20px;}
+.trip-select{flex:1; padding:10px; border:1px solid var(--border); border-radius:8px; font-weight:700; font-size:15px; color:var(--blue); background:#fcfdfe; outline:none; -webkit-appearance:none;}
+.btn-new-trip{background:var(--blue); color:#fff; border:none; width:38px; height:38px; border-radius:8px; font-weight:700; cursor:pointer; font-size:20px; display:flex; align-items:center; justify-content:center;}
 
 .main{max-width:500px; margin:0 auto; padding:15px;}
 .card{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:18px; margin-bottom:20px; box-shadow:0 4px 15px rgba(0,0,0,0.05);}
@@ -26,7 +26,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .finp,.fsel{width:100%; padding:12px; border:1px solid #edf2f7; border-radius:var(--rs); font-size:14px; background:#fcfdfe; outline:none; transition:0.2s;}
 .finp:focus{border-color:var(--blue); background:#fff;}
 
-.chip-row{display:flex; gap:8px; flex-wrap:wrap;}
+.chip-row{display:flex; gap:8px; flex-wrap:wrap; user-select:none;}
 .chip{padding:6px 14px; border-radius:20px; border:1px solid #edf2f7; font-size:12px; cursor:pointer; background:#fff; color:var(--muted); font-weight:500; transition:0.2s;}
 .chip.sel{background:var(--text); color:#fff; border-color:var(--text);}
 .btn-add-type{width:28px; height:28px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; color:var(--muted);}
@@ -34,12 +34,12 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .date-group-hd { margin: 25px 0 12px 5px; font-weight: 700; font-size: 15px; color: var(--blue); display: flex; align-items: center; gap: 10px; }
 .date-group-hd::after { content:''; flex:1; height:1px; background: linear-gradient(to right, var(--border), transparent); }
 
-.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:12px; display:flex; align-items:flex-start; gap:12px; transition:0.2s;}
+.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:12px; display:flex; align-items:flex-start; gap:12px;}
 .item.editing { border: 2px solid var(--accent); background:#fff9f5; }
 .item-check{width:22px; height:22px; margin-top:16px; cursor:pointer; accent-color: var(--blue);}
 .item-info{flex:1; min-width:0;}
 .item-name{font-size:16px; font-weight:700; color:#2d3436; margin-bottom:4px;}
-.item-addr{font-size:12px; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:4px;}
+.item-addr{font-size:12px; color:var(--muted); margin-bottom:8px;}
 .item-time-pill{display:inline-block; font-size:11px; padding:2px 8px; border-radius:4px; background:#e1f5fe; color:#0288d1; font-weight:700; margin-bottom:8px;}
 
 .btn-main{width:100%; padding:15px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; font-size:15px;}
@@ -72,13 +72,14 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     </div>
     
     <div class="field"><label>參與者</label><div class="chip-row" id="participant-chips"></div></div>
-    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="必買、必吃或重要提醒..."/></div>
+    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="重要提醒..."/></div>
     <div class="field"><label>Maps 連結 (自動解析)</label><input id="inp-url" class="finp" placeholder="貼上連結自動帶入店名" onpaste="setTimeout(parseUrl, 100)"/></div>
     
     <button id="submit-btn" class="btn-main" onclick="submitForm()">儲存行程</button>
     <button id="cancel-btn" style="display:none; width:100%; margin-top:12px; border:none; background:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消編輯</button>
     
-    <div style="margin-top:25px; border-top:1px dashed var(--border); padding-top:15px; text-align:center;">
+    <div style="margin-top:25px; border-top:1px dashed var(--border); padding-top:15px; text-align:center; display:flex; flex-direction:column; gap:10px;">
+        <button style="border:none; color:var(--blue); background:none; font-size:12px; cursor:pointer; font-weight:700;" onclick="exportTripData()">📥 匯出此行程備份 (JSON)</button>
         <button style="border:none; color:#ff7675; background:none; font-size:11px; cursor:pointer; font-weight:700;" onclick="deleteTrip()">🗑️ 刪除整趟旅行計畫</button>
     </div>
   </div>
@@ -92,7 +93,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, push, onValue, remove, update, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-// --- 配置區 (請替換為你的 Firebase 資訊) ---
+// --- 配置區 ---
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBBGZFrs0ISC9eTvOYDIaiI5734Q0J3iHw",
   authDomain: "universal-trip-planner-bf963.firebaseapp.com",
@@ -106,7 +107,7 @@ const app = initializeApp(FIREBASE_CONFIG);
 const db = getDatabase(app);
 const DB_PATH = 'universal_trip_planner';
 
-// --- 狀態區 ---
+// --- 狀態 ---
 const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 const TIME_ORDER = { "早晨":1, "上午": 2, "午餐": 3, "下午": 4, "晚餐": 5, "深夜": 6, "": 7 };
 let trips = {}, currentTripID = '', allItems = [], editingKey = null;
@@ -125,7 +126,6 @@ onValue(ref(db, `${DB_PATH}/meta`), snap => {
   }
   
   select.innerHTML = tripEntries.map(([id, t]) => `<option value="${id}">${t.name}</option>`).join('');
-  
   if(!currentTripID) switchTrip(tripEntries[0][0]);
 });
 
@@ -136,11 +136,9 @@ window.switchTrip = (id) => {
   document.getElementById('trip-selector').value = id;
   const trip = trips[id];
   
-  // 動態生成日期選單
   const dates = getDatesArray(trip.start, trip.end);
   document.getElementById('inp-day').innerHTML = '<option value="">未定</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
   
-  // 監聽該旅行的行程資料 (Data)
   onValue(ref(db, `${DB_PATH}/data/${id}/items`), snap => {
     allItems = Object.entries(snap.val() || {}).map(([key, val]) => ({ key, ...val }));
     renderList();
@@ -160,7 +158,7 @@ window.createNewTrip = () => {
   }
 };
 
-// 4. 行程表單操作
+// 4. 表單儲存
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
   if(!name) return alert("地點名稱為必填");
@@ -212,10 +210,10 @@ window.renderList = () => {
       </div>
     </div>`;
   });
-  document.getElementById('list-container').innerHTML = html || '<div style="text-align:center; padding:50px; color:var(--muted);">目前尚無行程計畫</div>';
+  document.getElementById('list-container').innerHTML = html || '<div style="text-align:center; padding:50px; color:var(--muted);">目前尚無行程</div>';
 };
 
-// --- 工具函式 ---
+// --- 工具 ---
 function getDatesArray(start, end) {
   const arr = [];
   let dt = new Date(start);
@@ -239,12 +237,9 @@ window.parseUrl = () => {
 window.editItem = (key) => {
   const item = allItems.find(i => i.key === key);
   editingKey = key;
-  document.getElementById('inp-name').value = item.name;
-  document.getElementById('inp-addr').value = item.addr || '';
-  document.getElementById('inp-day').value = item.day || '';
-  document.getElementById('inp-time').value = item.time || '';
-  document.getElementById('inp-note').value = item.note || '';
-  document.getElementById('inp-url').value = item.url || '';
+  ['inp-name','inp-addr','inp-day','inp-time','inp-note','inp-url'].forEach(id => {
+    document.getElementById(id).value = item[id.replace('inp-','')] || '';
+  });
   selectedType = item.type; selectedWho = item.who || [];
   document.getElementById('submit-btn').innerText = "儲存修改";
   document.getElementById('cancel-btn').style.display = 'block';
@@ -260,19 +255,30 @@ window.resetForm = () => {
   selectedType = '景點'; selectedWho = [...PARTICIPANTS]; renderFormUI();
 };
 
-window.delItem = (key) => { if(confirm("確定刪除此項行程？")) remove(ref(db, `${DB_PATH}/data/${currentTripID}/items/${key}`)); };
+window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `${DB_PATH}/data/${currentTripID}/items/${key}`)); };
 
 window.deleteTrip = () => {
-  if(confirm(`警告：將刪除「${trips[currentTripID].name}」的所有行程資料，確定嗎？`)) {
+  if(confirm(`警告：將刪除「${trips[currentTripID].name}」的所有行程，確定嗎？`)) {
     remove(ref(db, `${DB_PATH}/meta/${currentTripID}`));
     remove(ref(db, `${DB_PATH}/data/${currentTripID}`));
     location.reload();
   }
 };
 
+window.exportTripData = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+        tripName: trips[currentTripID].name,
+        items: allItems
+    }, null, 2));
+    const dlNode = document.createElement('a');
+    dlNode.setAttribute("href", dataStr);
+    dlNode.setAttribute("download", `${trips[currentTripID].name}.json`);
+    dlNode.click();
+};
+
 window.openMultiMap = () => {
   const checked = document.querySelectorAll('.item-check:checked');
-  if(!checked.length) return alert("請勾選要前往的地點");
+  if(!checked.length) return alert("請勾選地點");
   const prefix = trips[currentTripID].name.replace(/之旅|旅行/g, '');
   const names = Array.from(checked).map(cb => encodeURIComponent(prefix + " " + cb.getAttribute('data-name')));
   window.open("https://www.google.com/maps/dir/" + names.join('/'), '_blank');
