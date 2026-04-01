@@ -3,75 +3,106 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>高雄小旅行行程管理</title>
+<title>高雄小旅行行程規劃</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#f8f9fa;--surface:#fff;--border:#dee2e6;
-  --text:#212529;--muted:#6c757d;--accent:#d9480f;
-  --blue:#1971c2;--green:#2b8a3e;--amber:#e67e22;
-  --r:12px;--rs:8px;
+  --bg:#f5f2ed;--surface:#fff;--surface2:#faf8f5;--border:#e8e3db;
+  --text:#1a1612;--muted:#8a7f72;--faint:#c5bdb0;
+  --accent:#c85a2a;--accent-light:#f5ede7;
+  --blue:#2a6cbf;--blue-l:#e8f0fb;
+  --green:#2a7a4a;--green-l:#e8f5ee;
+  --r:14px;--rs:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;padding-bottom:50px;}
 
-.header{background:#fff;border-bottom:1px solid var(--border);padding:15px;position:sticky;top:0;z-index:100;text-align:center;}
-.header h1{font-size:18px;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 16px;position:sticky;top:0;z-index:200;}
+.header-inner{max-width:500px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.header h1{font-size:16px;font-weight:700;}
 
-.main{max-width:500px;margin:0 auto;padding:15px;}
+.main{max-width:500px;margin:0 auto;padding:14px;}
 
-/* Form Style */
-.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
-.card-title{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:15px;border-left:4px solid var(--accent);padding-left:8px;}
+/* 篩選與排序工具列 */
+.toolbar{display:flex; flex-direction:column; gap:10px; margin-bottom:16px;}
+.filter-tabs{display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px;}
+.filter-tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0; padding:6px 14px; border-radius:20px; border:1px solid var(--border); background:var(--surface); font-size:13px; cursor:pointer; color:var(--muted);}
+.tab.active{background:var(--text); color:#fff; border-color:var(--text);}
+.sort-row{display:flex; gap:8px; align-items:center; font-size:12px; color:var(--muted);}
+
+/* 表單卡片 */
+.card{background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);}
+.card-title{font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:15px; letter-spacing:0.05em;}
 
 .field{margin-bottom:12px;}
-.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px;color:var(--text);}
-.finp,.fsel{width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--rs);font-size:14px;outline:none;background:#fdfdfd;}
-.finp:focus{border-color:var(--accent);}
+.field label{display:block; font-size:11px; color:var(--muted); margin-bottom:4px; font-weight:700;}
+.finp,.fsel{width:100%; padding:10px; border:1px solid var(--border); border-radius:var(--rs); font-size:14px; background:var(--surface2); outline:none; font-family:inherit;}
+.finp:focus{border-color:var(--accent); background:#fff;}
 
-/* URL Group */
-.url-group{display:flex;gap:8px;margin-bottom:5px;}
-.url-group input{flex:1;}
-.parse-btn{padding:0 15px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-size:13px;}
+/* URL 解析區 */
+.url-zone{background:var(--accent-light); padding:12px; border-radius:var(--rs); margin-bottom:15px;}
+.url-row{display:flex; gap:8px;}
 
 /* Chips */
-.chip-row{display:flex;gap:6px;flex-wrap:wrap;}
-.chip{padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:#fff;}
-.chip.sel{background:var(--text);color:#fff;border-color:var(--text);}
+.chip-row{display:flex; gap:6px; flex-wrap:wrap;}
+.chip{padding:5px 12px; border-radius:18px; border:1px solid var(--border); font-size:12px; cursor:pointer; background:var(--surface2); color:var(--muted);}
+.chip.sel{background:var(--text); color:#fff; border-color:var(--text);}
 
-/* List Item */
-.item{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:10px;position:relative;}
-.item-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:5px;}
-.item-name{font-size:16px;font-weight:700;margin-bottom:4px;}
-.item-row{display:flex;font-size:12px;color:var(--muted);gap:10px;margin-bottom:2px;}
-.item-op{color:var(--amber);font-weight:500;}
-.item-who{margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;}
-.pill{font-size:10px;background:#e9ecef;padding:2px 8px;border-radius:10px;color:#495057;}
+/* 清單項目 */
+.item{background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; position:relative; display:flex; gap:12px;}
+.item-badge{width:40px; height:40px; border-radius:10px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;}
+.item-content{flex:1; min-width:0;}
+.item-type-label{font-size:10px; font-weight:700; color:var(--accent); margin-bottom:2px;}
+.item-name{font-size:16px; font-weight:700; margin-bottom:4px;}
+.item-meta{font-size:12px; color:var(--muted); margin-bottom:2px; display:flex; gap:8px; flex-wrap:wrap;}
+.item-op{color:var(--accent); font-weight:500; font-size:12px;}
+.item-who{display:flex; gap:4px; margin-top:8px; flex-wrap:wrap;}
+.who-dot{padding:2px 8px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; font-size:10px; color:var(--muted);}
 
-.actions{position:absolute;top:15px;right:15px;display:flex;gap:8px;}
-.btn-sm{padding:4px 8px;font-size:11px;border-radius:4px;cursor:pointer;border:1px solid var(--border);background:#fff;}
-.edit-btn{color:var(--blue);border-color:var(--blue);}
-.del-btn{color:#fa5252;}
-.map-link{display:inline-block;margin-top:8px;font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;}
+.item-actions{display:flex; flex-direction:column; gap:6px;}
+.btn-circle{width:30px; height:30px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px;}
 
-.btn-primary{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-weight:700;cursor:pointer;margin-top:10px;}
+.btn-main{width:100%; padding:14px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; margin-top:10px;}
 .btn-update{background:var(--green);}
 </style>
 </head>
 <body>
 
-<div class="header"><h1>🌴 高雄行程管理員</h1></div>
+<div class="header">
+  <div class="header-inner">
+    <h1>🌴 高雄小旅行</h1>
+  </div>
+</div>
 
 <div class="main">
+  <div class="toolbar">
+    <div class="filter-tabs" id="filter-bar">
+      <button class="tab active" onclick="setFilter('全部')">全部</button>
+      <button class="tab" onclick="setFilter('景點')">景點</button>
+      <button class="tab" onclick="setFilter('小吃')">小吃</button>
+      <button class="tab" onclick="setFilter('咖啡廳')">咖啡廳</button>
+      <button class="tab" onclick="setFilter('住宿')">住宿</button>
+    </div>
+    <div class="sort-row">
+      排序方式：
+      <select id="sort-select" onchange="renderList()" style="border:none; background:none; font-size:12px; color:var(--accent); font-weight:700; outline:none;">
+        <option value="ts">最新加入</option>
+        <option value="area">依地區</option>
+        <option value="day">依日期</option>
+      </select>
+    </div>
+  </div>
+
   <div class="card" id="form-container">
-    <div class="card-title" id="form-mode-text">新增地點</div>
+    <div class="card-title" id="form-title">新增行程地點</div>
     
-    <div class="field">
-      <label>Google Maps 連結</label>
-      <div class="url-group">
-        <input id="inp-url" class="finp" placeholder="貼上連結以自動抓取名稱"/>
-        <button class="parse-btn" onclick="parseUrl()">解析</button>
+    <div class="url-zone">
+      <label style="font-size:11px; color:var(--accent); font-weight:700; display:block; margin-bottom:6px;">Google Maps 連結自動填入：</label>
+      <div class="url-row">
+        <input id="inp-url" class="finp" placeholder="貼上連結..." onpaste="setTimeout(parseUrl, 100)"/>
+        <button onclick="parseUrl()" style="background:var(--accent); color:#fff; border:none; padding:0 12px; border-radius:8px; font-size:12px; cursor:pointer;">解析</button>
       </div>
     </div>
 
@@ -82,18 +113,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 
     <div class="field">
       <label>地點名稱 *</label>
-      <input id="inp-name" class="finp" placeholder="例如：駁二藝術特區"/>
-    </div>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div class="field">
-        <label>營業時間</label>
-        <input id="inp-op-time" class="finp" placeholder="09:00-18:00"/>
-      </div>
-      <div class="field">
-        <label>地區</label>
-        <input id="inp-area" class="finp" placeholder="例如：鹽埕區"/>
-      </div>
+      <input id="inp-name" class="finp" placeholder="解析連結後自動填入"/>
     </div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -134,14 +154,25 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
       <div class="chip-row" id="participant-chips"></div>
     </div>
 
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="field">
+        <label>營業時間</label>
+        <input id="inp-op-time" class="finp" placeholder="例：09:00-18:00"/>
+      </div>
+      <div class="field">
+        <label>地區</label>
+        <input id="inp-area" class="finp" placeholder="例：鹽埕區"/>
+      </div>
+    </div>
+
     <div class="field">
       <label>備註</label>
-      <input id="inp-note" class="finp" placeholder="想吃什麼、門票價格等"/>
+      <input id="inp-note" class="finp" placeholder="備註或想吃的東西..."/>
     </div>
 
     <input type="hidden" id="edit-key" value=""/>
-    <button id="submit-btn" class="btn-primary" onclick="submitForm()">確認加入清單</button>
-    <button id="cancel-btn" style="display:none; width:100%; margin-top:5px; background:none; border:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消修改</button>
+    <button id="submit-btn" class="btn-main" onclick="submitForm()">加入清單</button>
+    <button id="cancel-btn" style="display:none; width:100%; border:none; background:none; color:var(--muted); margin-top:10px; cursor:pointer;" onclick="resetForm()">取消修改</button>
   </div>
 
   <div id="list-container"></div>
@@ -165,143 +196,148 @@ const app = initializeApp(FIREBASE_CONFIG);
 const db = getDatabase(app);
 const itemsRef = ref(db, 'kaohsiung-trip/items');
 
-const TYPES = ['景點','小吃','咖啡廳','住宿','購物','交通'];
+const TYPES = ['景點','小吃','咖啡廳','住宿','購物'];
+const ICONS = { '景點':'📍','小吃':'🍜','咖啡廳':'☕','住宿':'🏨','購物':'🛍️' };
 const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 let selectedType = '景點';
-let selectedWho = [...PARTICIPANTS]; // 預設全部
+let selectedWho = [...PARTICIPANTS];
+let currentFilter = '全部';
+let allData = [];
 
-// 初始化 Chips
-function renderChips() {
+// --- UI Render ---
+function renderFormChips() {
   document.getElementById('type-chips').innerHTML = TYPES.map(t => 
     `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`
   ).join('');
 
   const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">All</div>`];
-  PARTICIPANTS.forEach(p => {
-    whoHtml.push(`<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`);
-  });
+  PARTICIPANTS.forEach(p => whoHtml.push(`<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
   document.getElementById('participant-chips').innerHTML = whoHtml.join('');
 }
-
-window.selectType = (t) => { selectedType = t; renderChips(); };
+window.selectType = (t) => { selectedType = t; renderFormChips(); };
 window.toggleWho = (p) => {
   if(selectedWho.includes(p)) selectedWho = selectedWho.filter(x=>x!==p);
   else selectedWho.push(p);
-  renderChips();
+  renderFormChips();
 };
 window.toggleAllWho = () => {
   selectedWho = selectedWho.length === PARTICIPANTS.length ? [] : [...PARTICIPANTS];
-  renderChips();
+  renderFormChips();
 };
 
-// URL 解析
-const AREAS = ['鹽埕','旗津','苓雅','前金','三民','左營','鼓山','新興','鳳山'];
+// --- 解析網址 ---
+const AREAS = ['鹽埕','旗津','苓雅','前金','三民','左營','鼓山','新興','前鎮','鳳山'];
 window.parseUrl = () => {
   const url = document.getElementById('inp-url').value.trim();
   if(!url) return;
   const decoded = decodeURIComponent(url);
-  
-  // 抓取名稱
   const nameMatch = decoded.match(/\/place\/([^\/\?]+)/);
   if(nameMatch) document.getElementById('inp-name').value = nameMatch[1].replace(/\+/g, ' ');
-  
-  // 抓取地區
   AREAS.forEach(a => { if(decoded.includes(a)) document.getElementById('inp-area').value = a + '區'; });
+  if(decoded.includes('restaurant') || decoded.includes('food')) { selectedType = '小吃'; renderFormChips(); }
 };
 
-// 提交表單 (新增或更新)
+// --- 資料操作 ---
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
   const editKey = document.getElementById('edit-key').value;
-  if(!name) return alert("請輸入名稱");
+  if(!name) return alert("請輸入地點名稱");
 
   const data = {
-    type: selectedType,
-    name,
-    day: document.getElementById('inp-day').value,
+    type: selectedType, name, day: document.getElementById('inp-day').value,
     time: document.getElementById('inp-time').value,
-    opTime: document.getElementById('inp-op-time').value.trim(),
-    area: document.getElementById('inp-area').value.trim(),
+    opTime: document.getElementById('inp-op-time').value,
+    area: document.getElementById('inp-area').value,
     by: document.getElementById('inp-by').value,
-    who: selectedWho,
-    url: document.getElementById('inp-url').value.trim(),
-    note: document.getElementById('inp-note').value.trim(),
-    ts: Date.now()
+    who: selectedWho, url: document.getElementById('inp-url').value,
+    note: document.getElementById('inp-note').value, ts: Date.now()
   };
 
-  if(editKey) {
-    update(ref(db, `kaohsiung-trip/items/${editKey}`), data);
-  } else {
-    push(itemsRef, data);
-  }
+  if(editKey) update(ref(db, `kaohsiung-trip/items/${editKey}`), data);
+  else push(itemsRef, data);
   resetForm();
 };
 
 window.resetForm = () => {
-  ['inp-name','inp-op-time','inp-area','inp-url','inp-note','edit-key'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('form-mode-text').innerText = "新增地點";
-  document.getElementById('submit-btn').innerText = "確認加入清單";
+  ['inp-name','inp-op-time','inp-area','inp-url','inp-note','edit-key'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('form-title').innerText = "新增行程地點";
+  document.getElementById('submit-btn').innerText = "加入清單";
   document.getElementById('submit-btn').classList.remove('btn-update');
   document.getElementById('cancel-btn').style.display = 'none';
-  selectedWho = [...PARTICIPANTS];
-  renderChips();
+  selectedWho = [...PARTICIPANTS]; renderFormChips();
 };
 
-// 進入編輯模式
-window.editItem = (key, data) => {
+window.editItem = (key, item) => {
   document.getElementById('edit-key').value = key;
-  document.getElementById('inp-name').value = data.name;
-  document.getElementById('inp-op-time').value = data.opTime || '';
-  document.getElementById('inp-area').value = data.area || '';
-  document.getElementById('inp-url').value = data.url || '';
-  document.getElementById('inp-note').value = data.note || '';
-  document.getElementById('inp-day').value = data.day || '';
-  document.getElementById('inp-time').value = data.time || '';
-  document.getElementById('inp-by').value = data.by || '';
-  selectedType = data.type;
-  selectedWho = data.who || [];
-  
-  document.getElementById('form-mode-text').innerText = "正在修改：" + data.name;
-  document.getElementById('submit-btn').innerText = "更新資料";
+  document.getElementById('inp-name').value = item.name;
+  document.getElementById('inp-op-time').value = item.opTime || '';
+  document.getElementById('inp-area').value = item.area || '';
+  document.getElementById('inp-url').value = item.url || '';
+  document.getElementById('inp-note').value = item.note || '';
+  document.getElementById('inp-day').value = item.day || '';
+  document.getElementById('inp-time').value = item.time || '';
+  document.getElementById('inp-by').value = item.by || '';
+  selectedType = item.type; selectedWho = item.who || [];
+  document.getElementById('form-title').innerText = "修改地點：" + item.name;
+  document.getElementById('submit-btn').innerText = "更新地點";
   document.getElementById('submit-btn').classList.add('btn-update');
   document.getElementById('cancel-btn').style.display = 'block';
-  document.getElementById('form-container').scrollIntoView({behavior:'smooth'});
-  renderChips();
+  renderFormChips();
+  window.scrollTo({top:0, behavior:'smooth'});
 };
 
 window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
 
-// 即時渲染清單
-onValue(itemsRef, snap => {
-  const data = snap.val() || {};
-  const container = document.getElementById('list-container');
-  const sorted = Object.entries(data).sort((a,b) => b[1].ts - a[1].ts);
+// --- 篩選與清單渲染 ---
+window.setFilter = (t) => {
+  currentFilter = t;
+  document.querySelectorAll('.tab').forEach(el => el.classList.toggle('active', el.innerText === t));
+  renderList();
+};
+
+window.renderList = () => {
+  let displayData = [...allData];
+  if(currentFilter !== '全部') displayData = displayData.filter(i => i.type === currentFilter);
   
-  container.innerHTML = sorted.map(([key, item]) => `
+  const sortVal = document.getElementById('sort-select').value;
+  displayData.sort((a,b) => {
+    if(sortVal === 'ts') return b.ts - a.ts;
+    return (a[sortVal] || '').localeCompare(b[sortVal] || '');
+  });
+
+  const container = document.getElementById('list-container');
+  container.innerHTML = displayData.map(item => `
     <div class="item">
-      <div class="item-type" style="background:#e7f5ff; color:#1971c2;">${item.type}</div>
-      <div class="actions">
-        <button class="btn-sm edit-btn" onclick='editItem("${key}", ${JSON.stringify(item)})'>編輯</button>
-        <button class="btn-sm del-btn" onclick='delItem("${key}")'>刪除</button>
+      <div class="item-badge">${ICONS[item.type] || '📌'}</div>
+      <div class="item-content">
+        <div class="item-type-label">${item.type}</div>
+        <div class="item-name">${item.name}</div>
+        <div class="item-meta">
+          <span>📅 ${item.day || '未定'}・${item.time || '未定'}</span>
+          <span>📍 ${item.area || '高雄'}</span>
+        </div>
+        ${item.opTime ? `<div class="item-op">🕒 ${item.opTime}</div>` : ''}
+        <div class="item-who">
+          <span style="font-size:10px; color:var(--faint); margin-right:4px;">新增：${item.by} | </span>
+          ${(item.who || []).map(w => `<span class="who-dot">${w}</span>`).join('')}
+        </div>
+        ${item.url ? `<a href="${item.url}" target="_blank" style="font-size:12px; color:var(--blue); text-decoration:none; margin-top:8px; display:block;">開啟地圖 ↗</a>` : ''}
       </div>
-      <div class="item-name">${item.name}</div>
-      <div class="item-row">
-        <span>📅 ${item.day || '未定'}・${item.time || '未定'}</span>
-        <span>📍 ${item.area || '高雄'}</span>
+      <div class="item-actions">
+        <button class="btn-circle" onclick='editItem("${item.key}", ${JSON.stringify(item)})'>✏️</button>
+        <button class="btn-circle" onclick='delItem("${item.key}")'>🗑️</button>
       </div>
-      ${item.opTime ? `<div class="item-row item-op">🕒 營業：${item.opTime}</div>` : ''}
-      <div class="item-row">👤 新增者：${item.by}</div>
-      <div class="item-who">
-        ${(item.who||[]).map(w => `<span class="pill">${w}</span>`).join('')}
-      </div>
-      ${item.note ? `<div style="font-size:11px; color:#adb5bd; margin-top:5px;">Note: ${item.note}</div>` : ''}
-      ${item.url ? `<a class="map-link" href="${item.url}" target="_blank">在 Google Maps 開啟 ↗</a>` : ''}
     </div>
   `).join('');
+};
+
+onValue(itemsRef, snap => {
+  const data = snap.val() || {};
+  allData = Object.entries(data).map(([key, val]) => ({ key, ...val }));
+  renderList();
 });
 
-// Boot
-renderChips();
+renderFormChips();
 </script>
 </body>
 </html>
