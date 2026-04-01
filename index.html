@@ -14,22 +14,20 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:120px;font-size:14px;}
 
-/* 頂部導覽 */
 .trip-nav{background:#fff; border-bottom:1px solid var(--border); padding:10px 15px; position:sticky; top:0; z-index:200; display:flex; align-items:center; gap:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05);}
-.trip-select{flex:1; padding:10px; border:1px solid var(--border); border-radius:8px; font-weight:700; font-size:15px; color:var(--blue); background:#fcfdfe; outline:none; -webkit-appearance:none;}
+.trip-select{flex:1; padding:10px; border:1px solid var(--border); border-radius:8px; font-weight:700; font-size:15px; color:var(--blue); background:#fcfdfe; outline:none;}
 .btn-new-trip{background:var(--blue); color:#fff; border:none; width:38px; height:38px; border-radius:8px; font-weight:700; cursor:pointer; font-size:20px; display:flex; align-items:center; justify-content:center;}
 
 .main{max-width:500px; margin:0 auto; padding:15px;}
 .card{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:18px; margin-bottom:20px; box-shadow:0 4px 15px rgba(0,0,0,0.05);}
 .field{margin-bottom:14px;}
 .field label{display:block; font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;}
-.finp,.fsel{width:100%; padding:12px; border:1px solid #edf2f7; border-radius:var(--rs); font-size:14px; background:#fcfdfe; outline:none; transition:0.2s;}
-.finp:focus{border-color:var(--blue); background:#fff;}
+.finp,.fsel{width:100%; padding:12px; border:1px solid #edf2f7; border-radius:var(--rs); font-size:14px; background:#fcfdfe; outline:none;}
 
 .chip-row{display:flex; gap:8px; flex-wrap:wrap; user-select:none;}
-.chip{padding:6px 14px; border-radius:20px; border:1px solid #edf2f7; font-size:12px; cursor:pointer; background:#fff; color:var(--muted); font-weight:500; transition:0.2s;}
+.chip{padding:6px 14px; border-radius:20px; border:1px solid #edf2f7; font-size:12px; cursor:pointer; background:#fff; color:var(--muted); font-weight:500;}
 .chip.sel{background:var(--text); color:#fff; border-color:var(--text);}
-.btn-add-type{width:28px; height:28px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; color:var(--muted);}
+.btn-add-sm{width:28px; height:28px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; color:var(--muted); font-size:16px;}
 
 .date-group-hd { margin: 25px 0 12px 5px; font-weight: 700; font-size: 15px; color: var(--blue); display: flex; align-items: center; gap: 10px; }
 .date-group-hd::after { content:''; flex:1; height:1px; background: linear-gradient(to right, var(--border), transparent); }
@@ -42,11 +40,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .item-addr{font-size:12px; color:var(--muted); margin-bottom:8px;}
 .item-time-pill{display:inline-block; font-size:11px; padding:2px 8px; border-radius:4px; background:#e1f5fe; color:#0288d1; font-weight:700; margin-bottom:8px;}
 
-.btn-main{width:100%; padding:15px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; font-size:15px;}
-.map-gen-fixed{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:92%; max-width:450px; padding:18px; background:var(--blue); color:#fff; border:none; border-radius:35px; font-weight:700; cursor:pointer; box-shadow:0 8px 25px rgba(9, 132, 227, 0.4); z-index:1000; text-align:center; font-size:15px;}
-.btn-icon{width:36px; height:36px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; margin-bottom:8px; display:flex; align-items:center; justify-content:center; font-size:16px;}
+.btn-main{width:100%; padding:15px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer;}
+.map-gen-fixed{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:92%; max-width:450px; padding:18px; background:var(--blue); color:#fff; border:none; border-radius:35px; font-weight:700; cursor:pointer; box-shadow:0 8px 25px rgba(9, 132, 227, 0.4); z-index:1000; text-align:center;}
+.btn-icon{width:36px; height:36px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; margin-bottom:8px; display:flex; align-items:center; justify-content:center;}
 
-.item-note{font-size:12px; color:#d35400; background:#fff5eb; padding:10px; border-radius:8px; margin-top:10px; border-left:4px solid var(--accent);}
 .pill{font-size:10px; background:#f1f2f6; padding:3px 8px; border-radius:6px; color:var(--muted); margin-right:4px; font-weight:500;}
 </style>
 </head>
@@ -93,7 +90,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, push, onValue, remove, update, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-// --- 配置區 ---
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBBGZFrs0ISC9eTvOYDIaiI5734Q0J3iHw",
   authDomain: "universal-trip-planner-bf963.firebaseapp.com",
@@ -107,26 +103,29 @@ const app = initializeApp(FIREBASE_CONFIG);
 const db = getDatabase(app);
 const DB_PATH = 'universal_trip_planner';
 
-// --- 狀態 ---
-const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
-const TIME_ORDER = { "早晨":1, "上午": 2, "午餐": 3, "下午": 4, "晚餐": 5, "深夜": 6, "": 7 };
-let trips = {}, currentTripID = '', allItems = [], editingKey = null;
-let selectedType = '景點', selectedWho = [...PARTICIPANTS];
+// --- 狀態控制 ---
+let participantsList = ['Pei','Lulu','Melanie','Yoyo','Min'];
 let customTypes = ['景點','小吃','餐廳','咖啡廳','住宿','交通'];
+const TIME_ORDER = { "早晨":1, "上午": 2, "午餐": 3, "下午": 4, "晚餐": 5, "深夜": 6, "": 7 };
 
-// 1. 初始化旅行清單 (Meta)
+let trips = {}, currentTripID = '', allItems = [], editingKey = null;
+let selectedType = '景點', selectedWho = [];
+
+// 1. 初始化
 onValue(ref(db, `${DB_PATH}/meta`), snap => {
   trips = snap.val() || {};
   const select = document.getElementById('trip-selector');
-  const tripEntries = Object.entries(trips);
+  const entries = Object.entries(trips);
   
-  if(tripEntries.length === 0) {
-    select.innerHTML = '<option value="">(尚未建立旅行)</option>';
+  if(entries.length === 0) {
+    select.innerHTML = '<option value="">(點擊右方 + 建立新旅行)</option>';
+    // 如果完全沒資料，主動彈出建立視窗
+    if(!currentTripID) setTimeout(createNewTrip, 500); 
     return;
   }
   
-  select.innerHTML = tripEntries.map(([id, t]) => `<option value="${id}">${t.name}</option>`).join('');
-  if(!currentTripID) switchTrip(tripEntries[0][0]);
+  select.innerHTML = entries.map(([id, t]) => `<option value="${id}">${t.name}</option>`).join('');
+  if(!currentTripID) switchTrip(entries[0][0]);
 });
 
 // 2. 切換旅行
@@ -136,31 +135,67 @@ window.switchTrip = (id) => {
   document.getElementById('trip-selector').value = id;
   const trip = trips[id];
   
+  // 生成日期
   const dates = getDatesArray(trip.start, trip.end);
   document.getElementById('inp-day').innerHTML = '<option value="">未定</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
   
+  // 抓取資料
   onValue(ref(db, `${DB_PATH}/data/${id}/items`), snap => {
     allItems = Object.entries(snap.val() || {}).map(([key, val]) => ({ key, ...val }));
     renderList();
   });
+  
+  // 重設表單參與者為全員
+  selectedWho = [...participantsList];
+  renderFormUI();
 };
 
 // 3. 建立新旅行
 window.createNewTrip = () => {
-  const name = prompt("旅行名稱 (如：2026 東京之旅)");
+  const name = prompt("旅行名稱 (如：東京 5 日遊)");
   if(!name) return;
   const start = prompt("開始日期 (YYYY-MM-DD)", "2026-04-03");
   const end = prompt("結束日期 (YYYY-MM-DD)", "2026-04-05");
   if(start && end) {
     const newRef = push(ref(db, `${DB_PATH}/meta`));
-    set(newRef, { name, start, end });
-    switchTrip(newRef.key);
+    set(newRef, { name, start, end }).then(() => {
+        // 建立後立即強制切換，解決「沒反應」問題
+        switchTrip(newRef.key);
+    });
   }
 };
 
-// 4. 表單儲存
+// 4. UI 渲染 (包含自訂參與者邏輯)
+window.renderFormUI = () => {
+  // 分類
+  document.getElementById('type-chips').innerHTML = customTypes.map(t => `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`).join('') + `<button class="btn-add-sm" onclick="addType()">+</button>`;
+  
+  // 參與者
+  const whoHtml = [`<div class="chip ${selectedWho.length===participantsList.length && participantsList.length>0?'sel':''}" onclick="toggleAllWho()">全員</div>`].concat(participantsList.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
+  document.getElementById('participant-chips').innerHTML = whoHtml.join('') + `<button class="btn-add-sm" onclick="addWho()">+</button>`;
+};
+
+window.addWho = () => {
+    const name = prompt("新增參與者姓名：");
+    if(name && !participantsList.includes(name)) {
+        participantsList.push(name);
+        selectedWho.push(name);
+        renderFormUI();
+    }
+};
+
+window.addType = () => {
+    const type = prompt("新增行程分類：");
+    if(type && !customTypes.includes(type)) {
+        customTypes.push(type);
+        selectedType = type;
+        renderFormUI();
+    }
+};
+
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
+  if(!currentTripID) return alert("請先建立或選擇一個旅行");
   if(!name) return alert("地點名稱為必填");
   
   const data = {
@@ -171,9 +206,9 @@ window.submitForm = () => {
     who: selectedWho, note: document.getElementById('inp-note').value || '', ts: Date.now()
   };
   
-  const targetPath = `${DB_PATH}/data/${currentTripID}/items`;
-  if(editingKey) update(ref(db, `${targetPath}/${editingKey}`), data);
-  else push(ref(db, targetPath), data);
+  const target = `${DB_PATH}/data/${currentTripID}/items`;
+  if(editingKey) update(ref(db, `${target}/${editingKey}`), data);
+  else push(ref(db, target), data);
   resetForm();
 };
 
@@ -190,17 +225,16 @@ window.renderList = () => {
       lastDay = item.day;
     }
     const cleanTripName = trips[currentTripID].name.replace(/之旅|旅行/g, '');
-    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(cleanTripName + " " + item.name)}`;
+    const mapUrl = item.url || `https://www.google.com/maps/search/$/${encodeURIComponent(cleanTripName + " " + item.name)}`;
     
     html += `
     <div class="item ${editingKey === item.key ? 'editing' : ''}">
       <input type="checkbox" class="item-check" data-name="${item.name}" checked>
       <div class="item-info">
-        <div class="item-type">${item.type}</div>
-        <div class="item-name">${item.name}</div>
+        <div class="item-name">${item.name} <span style="font-size:10px; color:var(--blue); border:1px solid; padding:1px 4px; border-radius:4px;">${item.type}</span></div>
         ${item.addr ? `<div class="item-addr">📍 ${item.addr}</div>` : ''}
         ${item.time ? `<div class="item-time-pill">⏰ ${item.time}</div>` : ''}
-        <div style="margin-bottom:8px;"><a href="${mapUrl}" target="_blank" style="color:var(--blue); font-size:12px; font-weight:700; text-decoration:none;">🗺️ 導航 / 地圖查看</a></div>
+        <div style="margin-bottom:8px;"><a href="${mapUrl}" target="_blank" style="color:var(--blue); font-size:12px; font-weight:700; text-decoration:none;">🗺️ 查看地圖</a></div>
         <div>${(item.who || []).map(w => `<span class="pill">${w}</span>`).join('')}</div>
         ${item.note ? `<div class="item-note">💡 ${item.note}</div>` : ''}
       </div>
@@ -213,7 +247,7 @@ window.renderList = () => {
   document.getElementById('list-container').innerHTML = html || '<div style="text-align:center; padding:50px; color:var(--muted);">目前尚無行程</div>';
 };
 
-// --- 工具 ---
+// 工具函式
 function getDatesArray(start, end) {
   const arr = [];
   let dt = new Date(start);
@@ -226,20 +260,15 @@ function getDatesArray(start, end) {
   return arr;
 }
 
-window.parseUrl = () => {
-  setTimeout(() => {
-    const input = document.getElementById('inp-url').value;
-    const match = decodeURIComponent(input).match(/\/place\/([^\/\?]+)/);
-    if(match) document.getElementById('inp-name').value = match[1].replace(/\+/g, ' ');
-  }, 100);
-};
-
 window.editItem = (key) => {
   const item = allItems.find(i => i.key === key);
   editingKey = key;
-  ['inp-name','inp-addr','inp-day','inp-time','inp-note','inp-url'].forEach(id => {
-    document.getElementById(id).value = item[id.replace('inp-','')] || '';
-  });
+  document.getElementById('inp-name').value = item.name;
+  document.getElementById('inp-addr').value = item.addr || '';
+  document.getElementById('inp-day').value = item.day || '';
+  document.getElementById('inp-time').value = item.time || '';
+  document.getElementById('inp-note').value = item.note || '';
+  document.getElementById('inp-url').value = item.url || '';
   selectedType = item.type; selectedWho = item.who || [];
   document.getElementById('submit-btn').innerText = "儲存修改";
   document.getElementById('cancel-btn').style.display = 'block';
@@ -249,10 +278,9 @@ window.editItem = (key) => {
 window.resetForm = () => {
   editingKey = null;
   ['inp-name','inp-addr','inp-url','inp-note'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('inp-day').value = ''; document.getElementById('inp-time').value = '';
   document.getElementById('submit-btn').innerText = "儲存行程";
   document.getElementById('cancel-btn').style.display = 'none';
-  selectedType = '景點'; selectedWho = [...PARTICIPANTS]; renderFormUI();
+  selectedType = '景點'; selectedWho = [...participantsList]; renderFormUI();
 };
 
 window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `${DB_PATH}/data/${currentTripID}/items/${key}`)); };
@@ -266,10 +294,7 @@ window.deleteTrip = () => {
 };
 
 window.exportTripData = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
-        tripName: trips[currentTripID].name,
-        items: allItems
-    }, null, 2));
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({tripName: trips[currentTripID].name, items: allItems}, null, 2));
     const dlNode = document.createElement('a');
     dlNode.setAttribute("href", dataStr);
     dlNode.setAttribute("download", `${trips[currentTripID].name}.json`);
@@ -281,19 +306,20 @@ window.openMultiMap = () => {
   if(!checked.length) return alert("請勾選地點");
   const prefix = trips[currentTripID].name.replace(/之旅|旅行/g, '');
   const names = Array.from(checked).map(cb => encodeURIComponent(prefix + " " + cb.getAttribute('data-name')));
-  window.open("https://www.google.com/maps/dir/" + names.join('/'), '_blank');
+  window.open("https://www.google.com/maps/dir//" + names.join('/'), '_blank');
 };
 
-window.renderFormUI = () => {
-  document.getElementById('type-chips').innerHTML = customTypes.map(t => `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
-  const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">全員</div>`].concat(PARTICIPANTS.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
-  document.getElementById('participant-chips').innerHTML = whoHtml.join('');
+window.parseUrl = () => {
+  setTimeout(() => {
+    const input = document.getElementById('inp-url').value;
+    const match = decodeURIComponent(input).match(/\/place\/([^\/\?]+)/);
+    if(match) document.getElementById('inp-name').value = match[1].replace(/\+/g, ' ');
+  }, 100);
 };
 
 window.selectType = (t) => { selectedType = t; renderFormUI(); };
-window.addType = () => { const nt = prompt("新增類型："); if(nt) { customTypes.push(nt); renderFormUI(); } };
 window.toggleWho = (p) => { selectedWho = selectedWho.includes(p) ? selectedWho.filter(x=>x!==p) : [...selectedWho, p]; renderFormUI(); };
-window.toggleAllWho = () => { selectedWho = (selectedWho.length === PARTICIPANTS.length) ? [] : [...PARTICIPANTS]; renderFormUI(); };
+window.toggleAllWho = () => { selectedWho = (selectedWho.length === participantsList.length) ? [] : [...participantsList]; renderFormUI(); };
 
 renderFormUI();
 </script>
