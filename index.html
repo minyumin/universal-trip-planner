@@ -74,7 +74,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div class="field">
-        <label>日期 (修正為 2026)</label>
+        <label>日期 (2026 星期修正)</label>
         <select id="inp-day" class="fsel">
           <option value="">未定</option>
           <option value="4/3">4/3 (五)</option>
@@ -126,6 +126,8 @@ const typesRef = ref(db, 'kaohsiung-trip/types');
 const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 let selectedType = '景點', selectedWho = [...PARTICIPANTS], allItems = [], editingKey = null;
 let customTypes = ['景點','小吃','咖啡廳','購物'];
+
+const DAY_MAP = { "4/3": " (五)", "4/4": " (六)", "4/5": " (日)" };
 
 onValue(typesRef, snap => { if(snap.exists()) customTypes = snap.val(); renderFormUI(); });
 
@@ -215,7 +217,11 @@ onValue(itemsRef, snap => {
 window.renderList = () => {
   const sorted = [...allItems].sort((a,b) => b.ts - a.ts);
   document.getElementById('list-container').innerHTML = sorted.map(item => {
-    const mapUrl = item.url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name)}`;
+    // 自動生成地圖連結
+    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(item.name)}`;
+    // 日期帶星期
+    const displayDay = item.day ? (item.day + (DAY_MAP[item.day] || "")) : "未定";
+    
     return `
     <div class="item ${editingKey === item.key ? 'editing' : ''}">
       <div style="margin-top:12px;">📍</div>
@@ -223,7 +229,7 @@ window.renderList = () => {
         <div class="item-type">${item.type}</div>
         <div class="item-name">${item.name}</div>
         <a href="${mapUrl}" target="_blank" class="map-link-btn">🗺️ 查看 Google Map</a>
-        <div style="font-size:12px; color:var(--muted); margin: 10px 0 2px 0;">📅 ${item.day || '未定'} ${item.time || ''}</div>
+        <div style="font-size:12px; color:var(--muted); margin: 10px 0 2px 0;">📅 ${displayDay} ${item.time || ''}</div>
         <div style="font-size:12px; color:var(--accent);">🕘 營業：${item.opTime || '未知'} | 🚫 公休：${item.offDay || '未知'}</div>
         <div style="margin-top:6px;">
           <span style="font-size:11px; font-weight:700;">👥 參與者：</span>
