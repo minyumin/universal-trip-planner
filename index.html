@@ -26,20 +26,22 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 /* 按鈕樣式 */
 .btn-main{width:100%; padding:14px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; margin-top:10px; transition: 0.3s;}
 .btn-main.update-mode { background: var(--accent); }
-.map-gen-btn{width:100%; padding:14px; background:var(--blue); color:#fff; border:none; border-radius:var(--rs); font-weight:700; margin-bottom:16px; cursor:pointer; box-shadow:0 4px 10px rgba(42, 108, 191, 0.3);}
+.map-gen-btn{width:100%; padding:14px; background:var(--blue); color:#fff; border:none; border-radius:var(--rs); font-weight:700; margin-bottom:16px; cursor:pointer;}
 
 /* Chips */
 .chip-row{display:flex; gap:6px; flex-wrap:wrap;}
 .chip{padding:4px 12px; border-radius:15px; border:1px solid var(--border); font-size:12px; cursor:pointer; background:#fff; color:var(--muted);}
 .chip.sel{background:var(--text); color:#fff; border-color:var(--text);}
+.btn-add-type{width:26px; height:26px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; color:var(--muted); font-weight:700;}
 
 /* 清單項目 */
 .item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; display:flex; align-items:flex-start; gap:10px; transition: 0.3s;}
 .item.editing { border: 2px solid var(--accent); background: #fffdfc; box-shadow: 0 0 12px rgba(200, 90, 42, 0.15); }
 .item-info{flex:1; min-width:0;}
-.item-name{font-size:16px; font-weight:700; margin:2px 0;}
+.item-name-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.item-name{font-size:16px; font-weight:700;}
 .item-type{font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase;}
-.btn-link{display:inline-flex; align-items:center; background:var(--blue); color:#fff; padding:2px 8px; border-radius:6px; font-size:11px; text-decoration:none;}
+.btn-link{display:inline-flex; align-items:center; background:var(--blue); color:#fff; padding:2px 8px; border-radius:6px; font-size:11px; text-decoration:none; font-weight:700;}
 .pill{font-size:10px; background:var(--bg); padding:1px 6px; border-radius:6px; color:var(--muted); margin-right:4px;}
 .item-note{font-size:12px; color:var(--accent); background:#fff9f5; padding:6px; border-radius:6px; margin-top:8px; border-left:3px solid var(--accent);}
 .btn-icon{width:32px; height:32px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; margin-bottom:5px;}
@@ -97,21 +99,39 @@ const FIREBASE_CONFIG = {
 const app = initializeApp(FIREBASE_CONFIG);
 const db = getDatabase(app);
 const itemsRef = ref(db, 'kaohsiung-trip/items');
+const typesRef = ref(db, 'kaohsiung-trip/types');
 
 const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 let selectedType = '景點', selectedWho = [...PARTICIPANTS], allItems = [], editingKey = null;
+let customTypes = ['景點','小吃','咖啡廳','購物'];
 
-// 表單 UI 渲染
+// 監聽自定義類型
+onValue(typesRef, snap => {
+  if(snap.exists()) customTypes = snap.val();
+  renderFormUI();
+});
+
 window.renderFormUI = () => {
-  const types = ['景點','小吃','咖啡廳','購物'];
-  document.getElementById('type-chips').innerHTML = types.map(t => `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`).join('');
+  // 類型 Chips
+  document.getElementById('type-chips').innerHTML = customTypes.map(t => 
+    `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`
+  ).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
   
+  // 參與者 Chips
   const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">All</div>`]
     .concat(PARTICIPANTS.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
   document.getElementById('participant-chips').innerHTML = whoHtml.join('');
 };
 
 window.selectType = (t) => { selectedType = t; renderFormUI(); };
+window.addType = () => {
+  const nt = prompt("新增類型名稱：");
+  if(nt && !customTypes.includes(nt)) {
+    customTypes.push(nt);
+    set(typesRef, customTypes);
+  }
+};
+
 window.toggleWho = (p) => { selectedWho = selectedWho.includes(p) ? selectedWho.filter(x=>x!==p) : [...selectedWho, p]; renderFormUI(); };
 window.toggleAllWho = () => { selectedWho = (selectedWho.length === PARTICIPANTS.length) ? [] : [...PARTICIPANTS]; renderFormUI(); };
 window.toggleTimeInput = () => {
@@ -119,14 +139,20 @@ window.toggleTimeInput = () => {
   document.getElementById('inp-time-custom').style.display = (sel === 'custom') ? 'block' : 'none';
 };
 
-// 編輯核心邏輯：從資料陣列中抓取，不透過 HTML 字串傳遞
+window.parseUrl = () => {
+  setTimeout(() => {
+    const input = document.getElementById('inp-url').value;
+    const decoded = decodeURIComponent(input);
+    const nameMatch = decoded.match(/\/place\/([^\/\?]+)/);
+    if(nameMatch) document.getElementById('inp-name').value = nameMatch[1].replace(/\+/g, ' ');
+  }, 100);
+};
+
 window.editItem = (key) => {
   const item = allItems.find(i => i.key === key);
   if(!item) return;
-
   editingKey = key;
   
-  // 填充基本文字
   document.getElementById('inp-name').value = item.name || '';
   document.getElementById('inp-url').value = item.url || '';
   document.getElementById('inp-day').value = item.day || '';
@@ -134,11 +160,9 @@ window.editItem = (key) => {
   document.getElementById('inp-off-day').value = item.offDay || '';
   document.getElementById('inp-note').value = item.note || '';
 
-  // 處理時間選擇
   const standardTimes = ['上午','中午','下午','晚上'];
   const timeSelect = document.getElementById('inp-time-select');
   const timeCustom = document.getElementById('inp-time-custom');
-  
   if (item.time && !standardTimes.includes(item.time)) {
     timeSelect.value = 'custom';
     timeCustom.value = item.time;
@@ -148,18 +172,16 @@ window.editItem = (key) => {
     timeCustom.style.display = 'none';
   }
 
-  // 重要：還原類型與參與者
   selectedType = item.type || '景點';
   selectedWho = item.who ? [...item.who] : [];
   
-  // UI 變更
   const submitBtn = document.getElementById('submit-btn');
   submitBtn.innerText = "更新行程清單";
   submitBtn.classList.add('update-mode');
   document.getElementById('cancel-btn').style.display = 'block';
 
   renderFormUI();
-  renderList(); // 更新清單以顯示 editing 樣式
+  renderList();
   window.scrollTo({top: 0, behavior: 'smooth'});
 };
 
@@ -169,12 +191,10 @@ window.resetForm = () => {
   document.getElementById('inp-day').value = '';
   document.getElementById('inp-time-select').value = '';
   document.getElementById('inp-time-custom').style.display = 'none';
-  
   const submitBtn = document.getElementById('submit-btn');
   submitBtn.innerText = "加入行程清單";
   submitBtn.classList.remove('update-mode');
   document.getElementById('cancel-btn').style.display = 'none';
-  
   selectedType = '景點';
   selectedWho = [...PARTICIPANTS];
   renderFormUI();
@@ -184,7 +204,6 @@ window.resetForm = () => {
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
   if(!name) return alert("地點名稱為必填");
-
   const timeVal = document.getElementById('inp-time-select').value === 'custom' 
     ? document.getElementById('inp-time-custom').value 
     : document.getElementById('inp-time-select').value;
@@ -192,21 +211,24 @@ window.submitForm = () => {
   const data = {
     type: selectedType, name, url: document.getElementById('inp-url').value,
     day: document.getElementById('inp-day').value, time: timeVal,
-    opTime: document.getElementById('inp-op-time').value,
-    offDay: document.getElementById('inp-off-day').value,
-    who: selectedWho, note: document.getElementById('inp-note').value,
+    opTime: document.getElementById('inp-op-time').value || '',
+    offDay: document.getElementById('inp-off-day').value || '',
+    who: selectedWho, note: document.getElementById('inp-note').value || '',
     ts: Date.now()
   };
-
   if(editingKey) update(ref(db, `kaohsiung-trip/items/${editingKey}`), data);
   else push(itemsRef, data);
-  
   resetForm();
 };
 
 window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
 
-// 資料同步與渲染
+window.openMultiMap = () => {
+  if(!allItems.length) return alert("清單沒有地點");
+  const destinations = allItems.map(i => encodeURIComponent(i.name)).join('/');
+  window.open("https://www.google.com/maps/dir/" + destinations, '_blank');
+};
+
 onValue(itemsRef, snap => {
   allItems = Object.entries(snap.val() || {}).map(([key, val]) => ({ key, ...val }));
   renderList();
@@ -219,8 +241,11 @@ window.renderList = () => {
       <div style="margin-top:12px;">📍</div>
       <div class="item-info">
         <div class="item-type">${item.type}</div>
-        <div class="item-name">${item.name} ${item.url ? `<a href="${item.url}" target="_blank" class="btn-link">🗺️ 地圖</a>` : ''}</div>
-        <div style="font-size:12px; color:var(--muted);">📅 ${item.day || '未定'} ${item.time || ''}</div>
+        <div class="item-name-row">
+          <div class="item-name">${item.name}</div>
+          ${item.url ? `<a href="${item.url}" target="_blank" class="btn-link">🗺️ 地圖</a>` : ''}
+        </div>
+        <div style="font-size:12px; color:var(--muted); margin: 2px 0;">📅 ${item.day || '未定'} ${item.time || ''}</div>
         <div style="font-size:12px; color:var(--accent);">🕘 營業：${item.opTime || '未知'} | 🚫 公休：${item.offDay || '未知'}</div>
         <div style="margin-top:6px;">
           <span style="font-size:11px; font-weight:700;">👥 參與者：</span>
@@ -228,7 +253,7 @@ window.renderList = () => {
         </div>
         ${item.note ? `<div class="item-note">💡 ${item.note}</div>` : ''}
       </div>
-      <div style="display:flex; flex-direction:column;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
         <button class="btn-icon" onclick="editItem('${item.key}')">✏️</button>
         <button class="btn-icon" onclick="delItem('${item.key}')">🗑️</button>
       </div>
@@ -236,13 +261,6 @@ window.renderList = () => {
   `).join('');
 };
 
-window.parseUrl = () => {
-  const decoded = decodeURIComponent(document.getElementById('inp-url').value);
-  const nameMatch = decoded.match(/\/place\/([^\/\?]+)/);
-  if(nameMatch) document.getElementById('inp-name').value = nameMatch[1].replace(/\+/g, ' ');
-};
-
-// 初始化
 renderFormUI();
 </script>
 </body>
