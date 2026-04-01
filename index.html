@@ -124,18 +124,6 @@ input.field-inp:focus,select.field-inp:focus{border-color:var(--accent);}
 
 <div class="main">
 
-  <!-- Firebase 設定提示（部署後可刪除） -->
-  <div class="config-notice" id="config-notice">
-    <h4>⚙️ 首次使用：請設定 Firebase</h4>
-    <p>
-      1. 前往 <a href="https://console.firebase.google.com" target="_blank">Firebase Console</a> 建立專案<br/>
-      2. 新增 Web App，複製 firebaseConfig<br/>
-      3. 啟用 <code>Realtime Database</code>（測試模式）<br/>
-      4. 將下方 <code>FIREBASE_CONFIG</code> 替換成你的設定<br/>
-      5. 把這個 HTML 上傳到 <a href="https://pages.github.com" target="_blank">GitHub Pages</a> 或 <a href="https://app.netlify.com/drop" target="_blank">Netlify Drop</a>，取得網址分享給朋友
-    </p>
-  </div>
-
   <div class="tabs" id="tabs">
     <button class="tab active" onclick="setTab('全部')">全部 <span class="count" id="cnt-all"></span></button>
     <button class="tab" onclick="setTab('景點')">📍 景點 <span class="count" id="cnt-景點"></span></button>
@@ -206,15 +194,16 @@ input.field-inp:focus,select.field-inp:focus{border-color:var(--accent);}
   // ====================================================
   // 🔧 替換成你的 Firebase 設定
   // ====================================================
-  const FIREBASE_CONFIG = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+  const firebaseConfig = {
+    apiKey: "AIzaSyDnDKwh2a9qVqDcgZtUjEjh8uCe07FHAzo",
+    authDomain: "kaohsiung-trip.firebaseapp.com",
+    databaseURL: "https://kaohsiung-trip-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "kaohsiung-trip",
+    storageBucket: "kaohsiung-trip.firebasestorage.app",
+    messagingSenderId: "17984792690",
+    appId: "1:17984792690:web:8a4e4734140eb099dffaeb"
   };
+
   // ====================================================
 
   let db, itemsRef;
