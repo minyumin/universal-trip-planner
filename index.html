@@ -41,7 +41,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .btn-add-type{width:26px; height:26px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; color:var(--muted);}
 
 /* 清單項目 */
-.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; display:flex; align-items:flex-start; gap:10px; transition: 0.3s;}
+.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; display:flex; align-items:flex-start; gap:10px; transition: 0.3s; border:1px solid var(--border);}
 .item-check{width:20px; height:20px; margin-top:12px; cursor:pointer; accent-color: var(--blue); flex-shrink:0;}
 .item-badge{width:36px; height:36px; border-radius:8px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
 .item-info{flex:1; min-width:0;}
@@ -224,6 +224,7 @@ window.resetForm = () => {
   submitBtn.classList.remove('update-mode');
   
   document.getElementById('cancel-btn').style.display = 'none'; 
+  selectedType = '景點';
   selectedWho = [...PARTICIPANTS]; 
   renderFormUI(); 
   renderList();
@@ -231,8 +232,10 @@ window.resetForm = () => {
 
 window.editItem = (key, item) => {
   editingKey = key;
+  // 1. 帶入基礎文字欄位
   ['name','offDay','url','day','opTime','note'].forEach(f => document.getElementById('inp-'+f).value = item[f] || '');
   
+  // 2. 帶入時段邏輯
   const timeSelect = document.getElementById('inp-time-select');
   const standardTimes = ['上午','中午','下午','晚上'];
   if(item.time && !standardTimes.includes(item.time)) {
@@ -244,19 +247,22 @@ window.editItem = (key, item) => {
     document.getElementById('inp-time-custom').style.display = 'none';
   }
 
-  selectedType = item.type; 
-  selectedWho = item.who || [];
+  // 3. 重要：帶入原有類型與參與者
+  selectedType = item.type || '景點'; 
+  selectedWho = item.who ? [...item.who] : []; // 確保複製一份陣列
   
+  // 4. 切換按鈕狀態
   const submitBtn = document.getElementById('submit-btn');
   submitBtn.innerText = "更新行程清單"; 
   submitBtn.classList.add('update-mode');
-  
   document.getElementById('cancel-btn').style.display = 'block';
+  
+  // 5. 重新渲染表單 UI (這步會更新 Chips 的選取狀態)
   renderFormUI(); 
   
-  // 捲動至頂部表單
+  // 6. 捲動至頂部表單並刷新清單狀態
   window.scrollTo({top: 0, behavior: 'smooth'});
-  renderList(); // 觸發重新渲染以顯示編輯中樣式
+  renderList(); 
 };
 
 window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
