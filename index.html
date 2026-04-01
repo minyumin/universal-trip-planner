@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>高雄小旅行行程管理 3.0</title>
+<title>高雄小旅行行程管理 3.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -12,58 +12,61 @@
   --blue:#2a6cbf;--r:14px;--rs:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:60px;}
-
-.header{background:#fff;border-bottom:1px solid var(--border);padding:14px;position:sticky;top:0;z-index:200;text-align:center;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:60px;font-size:14px;}
+.header{background:#fff;border-bottom:1px solid var(--border);padding:12px;position:sticky;top:0;z-index:200;text-align:center;}
 .main{max-width:500px;margin:0 auto;padding:14px;}
 
-/* 頂部工具列 */
+/* 工具列 */
 .toolbar{margin-bottom:16px;}
 .filter-tabs{display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none;}
 .filter-tabs::-webkit-scrollbar{display:none;}
 .tab{flex-shrink:0; padding:6px 14px; border-radius:20px; border:1px solid var(--border); background:#fff; font-size:13px; cursor:pointer;}
 .tab.active{background:var(--text); color:#fff; border-color:var(--text);}
 
-/* 功能按鈕 */
-.map-gen-btn{width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:var(--rs); font-weight:700; margin-bottom:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;}
+.map-gen-btn{width:100%; padding:12px; background:var(--blue); color:#fff; border:none; border-radius:var(--rs); font-weight:700; margin-bottom:16px; cursor:pointer;}
 
 /* 表單卡片 */
 .card{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);}
 .field{margin-bottom:12px;}
-.field label{display:block; font-size:11px; color:var(--muted); margin-bottom:4px; font-weight:700;}
-.finp,.fsel{width:100%; padding:10px; border:1px solid var(--border); border-radius:var(--rs); font-size:14px; background:#faf8f5; outline:none;}
+.field label{display:block; font-size:11px; color:var(--muted); margin-bottom:5px; font-weight:700;}
+.finp,.fsel{width:100%; padding:10px; border:1px solid var(--border); border-radius:var(--rs); font-size:14px; background:#faf8f5; outline:none; border:1px solid transparent;}
+.finp:focus{border-color:var(--accent); background:#fff;}
 
-/* 類型編輯區 */
-.type-manager{display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
-.btn-add-type{width:28px; height:28px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; font-size:16px; color:var(--muted);}
+/* Chips */
+.chip-row{display:flex; gap:6px; flex-wrap:wrap;}
+.chip{padding:4px 12px; border-radius:15px; border:1px solid var(--border); font-size:12px; cursor:pointer; background:#fff; color:var(--muted);}
+.chip.sel{background:var(--text); color:#fff; border-color:var(--text);}
+.btn-add-type{width:26px; height:26px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; color:var(--muted);}
 
 /* 清單項目 */
 .item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; display:flex; gap:12px; position:relative;}
-.item-badge{width:42px; height:42px; border-radius:12px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:20px;}
-.item-info{flex:1;}
-.item-type{font-size:10px; font-weight:700; color:var(--accent);}
+.item-badge{width:40px; height:40px; border-radius:10px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:18px;}
+.item-info{flex:1; min-width:0;}
+.item-type{font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase;}
 .item-name{font-size:16px; font-weight:700; margin:2px 0;}
-.item-meta{font-size:12px; color:var(--muted);}
-.item-actions{display:flex; flex-direction:column; gap:8px;}
-.btn-op{width:32px; height:32px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer;}
+.item-row{font-size:12px; color:var(--muted); margin-bottom:2px;}
+.item-who{display:flex; gap:4px; margin-top:8px; flex-wrap:wrap;}
+.pill{font-size:10px; background:var(--bg); padding:2px 8px; border-radius:8px; color:var(--muted);}
+.item-note{font-size:12px; color:var(--accent); background:#fff9f5; padding:6px; border-radius:6px; margin-top:8px; border-left:3px solid var(--accent);}
 
-.btn-submit{width:100%; padding:14px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; margin-top:10px;}
+.item-actions{display:flex; flex-direction:column; gap:8px;}
+.btn-icon{width:32px; height:32px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer;}
+
+.btn-main{width:100%; padding:14px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; margin-top:10px;}
 </style>
 </head>
 <body>
 
-<div class="header"><h1>🌴 高雄小旅行行程規劃</h1></div>
+<div class="header"><h1>🌴 高雄行程規劃</h1></div>
 
 <div class="main">
-  <button class="map-gen-btn" onclick="openMultiMap()">
-    🗺️ 生成行程地圖 (自動排列地點)
-  </button>
+  <button class="map-gen-btn" onclick="openMultiMap()">🗺️ 生成地圖行程 (自動串接地點)</button>
 
   <div class="toolbar">
     <div class="filter-tabs" id="filter-bar"></div>
-    <div style="font-size:12px; color:var(--muted); margin-top:10px;">
+    <div style="font-size:12px; margin-top:10px;">
       排序：
-      <select id="sort-select" onchange="renderList()" style="border:none; background:none; color:var(--accent); font-weight:700;">
+      <select id="sort-select" onchange="renderList()" style="border:none; background:none; color:var(--accent); font-weight:700; outline:none;">
         <option value="ts">最新加入</option>
         <option value="area">依地區 (行程優化)</option>
         <option value="day">依日期</option>
@@ -71,15 +74,15 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     </div>
   </div>
 
-  <div class="card">
-    <div class="field">
-      <label>Google Maps 連結 (貼上自動填入名稱與地區)</label>
-      <input id="inp-url" class="finp" placeholder="在此貼上連結..." onpaste="setTimeout(parseUrl, 100)"/>
+  <div class="card" id="form-container">
+    <div class="field" style="background:var(--bg); padding:10px; border-radius:var(--rs);">
+      <label>Google Maps 連結自動填入</label>
+      <input id="inp-url" class="finp" placeholder="貼上網址即自動解析" onpaste="setTimeout(parseUrl, 100)"/>
     </div>
 
     <div class="field">
-      <label>地點類型</label>
-      <div class="type-manager" id="type-chips"></div>
+      <label>類型</label>
+      <div class="chip-row" id="type-chips"></div>
     </div>
 
     <div class="field">
@@ -92,16 +95,31 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
       <div class="field"><label>時段</label><select id="inp-time" class="fsel"><option value="">未定</option><option value="上午">🌤 上午</option><option value="中午">☀️ 中午</option><option value="下午">🌇 下午</option><option value="晚上">🌙 晚上</option></select></div>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div class="field"><label>營業時間</label><input id="inp-op-time" class="finp" placeholder="例：10:00-20:00"/></div>
-      <div class="field"><label>地區</label><input id="inp-area" class="finp" placeholder="例：鹽埕區"/></div>
+    <div class="field">
+      <label>新增者</label>
+      <select id="inp-by" class="fsel">
+        <option value="Pei">Pei</option><option value="Lulu">Lulu</option><option value="Melanie">Melanie</option><option value="Yoyo">Yoyo</option><option value="Min">Min</option>
+      </select>
     </div>
 
-    <div class="field"><label>新增者</label><select id="inp-by" class="fsel"><option value="Pei">Pei</option><option value="Lulu">Lulu</option><option value="Melanie">Melanie</option><option value="Yoyo">Yoyo</option><option value="Min">Min</option></select></div>
+    <div class="field">
+      <label>參與者</label>
+      <div class="chip-row" id="participant-chips"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="field"><label>營業時間</label><input id="inp-op-time" class="finp" placeholder="10:00-20:00"/></div>
+      <div class="field"><label>地區</label><input id="inp-area" class="finp" placeholder="例如：鹽埕區"/></div>
+    </div>
+
+    <div class="field">
+      <label>備註</label>
+      <input id="inp-note" class="finp" placeholder="推薦菜色、預約編號等..."/>
+    </div>
 
     <input type="hidden" id="edit-key" value=""/>
-    <button id="submit-btn" class="btn-submit" onclick="submitForm()">加入行程清單</button>
-    <button id="cancel-btn" style="display:none; width:100%; margin-top:8px; border:none; background:none; color:var(--muted);" onclick="resetForm()">取消修改</button>
+    <button id="submit-btn" class="btn-main" onclick="submitForm()">加入行程清單</button>
+    <button id="cancel-btn" style="display:none; width:100%; margin-top:8px; border:none; background:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消修改</button>
   </div>
 
   <div id="list-container"></div>
@@ -123,54 +141,58 @@ const db = getDatabase(app);
 const itemsRef = ref(db, 'kaohsiung-trip/items');
 const typesRef = ref(db, 'kaohsiung-trip/types');
 
+const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 let selectedType = '景點';
+let selectedWho = [...PARTICIPANTS]; // 預設 All
 let currentFilter = '全部';
 let allItems = [];
 let customTypes = ['景點','小吃','咖啡廳','購物'];
 
-// --- 類型管理 ---
-onValue(typesRef, snap => {
-  if(snap.exists()) customTypes = snap.val();
-  renderTypeUI();
-});
+// --- 類型與參與者 UI ---
+onValue(typesRef, snap => { if(snap.exists()) customTypes = snap.val(); renderFormUI(); });
 
-function renderTypeUI() {
-  // 渲染表單內的類型選擇
+function renderFormUI() {
+  // 類型 Chips
   document.getElementById('type-chips').innerHTML = customTypes.map(t => 
-    `<div class="chip ${selectedType===t?'sel':''}" style="padding:4px 10px; border-radius:15px; border:1px solid var(--border); font-size:12px; cursor:pointer; background:${selectedType===t?'var(--text)':'#fff'}; color:${selectedType===t?'#fff':'var(--muted)'}" onclick="selectType('${t}')">${t}</div>`
+    `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`
   ).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
 
-  // 渲染頂部篩選 Tabs
+  // 參與者 Chips
+  const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">All</div>`];
+  PARTICIPANTS.forEach(p => whoHtml.push(`<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
+  document.getElementById('participant-chips').innerHTML = whoHtml.join('');
+
+  // 頂部 Tabs
   document.getElementById('filter-bar').innerHTML = ['全部', ...customTypes].map(t => 
     `<button class="tab ${currentFilter===t?'active':''}" onclick="setFilter('${t}')">${t}</button>`
   ).join('');
 }
 
-window.selectType = (t) => { selectedType = t; renderTypeUI(); };
+window.selectType = (t) => { selectedType = t; renderFormUI(); };
 window.addType = () => {
-  const newType = prompt("請輸入新類型名稱（例如：早午餐、酒吧）：");
-  if(newType && !customTypes.includes(newType)) {
-    customTypes.push(newType);
-    set(typesRef, customTypes);
-  }
+  const nt = prompt("請輸入新類型：");
+  if(nt && !customTypes.includes(nt)) { customTypes.push(nt); set(typesRef, customTypes); }
 };
-window.setFilter = (t) => { currentFilter = t; renderTypeUI(); renderList(); };
+window.toggleWho = (p) => {
+  if(selectedWho.includes(p)) selectedWho = selectedWho.filter(x=>x!==p);
+  else selectedWho.push(p);
+  renderFormUI();
+};
+window.toggleAllWho = () => {
+  selectedWho = selectedWho.length === PARTICIPANTS.length ? [] : [...PARTICIPANTS];
+  renderFormUI();
+};
+window.setFilter = (t) => { currentFilter = t; renderFormUI(); renderList(); };
 
-// --- 地圖生成功能 ---
+// --- 地圖與解析 ---
 window.openMultiMap = () => {
   let list = currentFilter === '全部' ? allItems : allItems.filter(i => i.type === currentFilter);
-  if(list.length === 0) return alert("清單內沒有地點可顯示");
-  
-  // 依地區排序，讓地圖上的標記順序比較合理
+  if(!list.length) return alert("清單為空");
   list.sort((a,b) => (a.area||'').localeCompare(b.area||''));
-  
-  // 組合 Google Maps 多地點網址
-  const baseUrl = "https://www.google.com/maps/dir/";
-  const names = list.map(i => encodeURIComponent(i.name)).join('/');
-  window.open(baseUrl + names, '_blank');
+  const url = "https://www.google.com/maps/dir/" + list.map(i => encodeURIComponent(i.name)).join('/');
+  window.open(url, '_blank');
 };
 
-// --- 解析 URL ---
 window.parseUrl = () => {
   const url = document.getElementById('inp-url').value.trim();
   const decoded = decodeURIComponent(url);
@@ -180,16 +202,17 @@ window.parseUrl = () => {
   areas.forEach(a => { if(decoded.includes(a)) document.getElementById('inp-area').value = a + '區'; });
 };
 
-// --- 資料庫操作 ---
+// --- CRUD ---
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
   const editKey = document.getElementById('edit-key').value;
-  if(!name) return alert("請輸入名稱");
+  if(!name) return alert("請輸入地點名稱");
 
   const data = {
-    type: selectedType, name, area: document.getElementById('inp-area').value,
-    day: document.getElementById('inp-day').value, time: document.getElementById('inp-time').value,
+    type: selectedType, name, day: document.getElementById('inp-day').value,
+    time: document.getElementById('inp-time').value, area: document.getElementById('inp-area').value,
     opTime: document.getElementById('inp-op-time').value, by: document.getElementById('inp-by').value,
+    who: selectedWho, note: document.getElementById('inp-note').value,
     url: document.getElementById('inp-url').value, ts: Date.now()
   };
 
@@ -199,9 +222,10 @@ window.submitForm = () => {
 };
 
 window.resetForm = () => {
-  ['inp-name','inp-area','inp-url','inp-op-time','edit-key'].forEach(id => document.getElementById(id).value='');
+  ['inp-name','inp-area','inp-url','inp-op-time','inp-note','edit-key'].forEach(id => document.getElementById(id).value='');
   document.getElementById('submit-btn').innerText = "加入行程清單";
   document.getElementById('cancel-btn').style.display = 'none';
+  selectedWho = [...PARTICIPANTS]; renderFormUI();
 };
 
 window.editItem = (key, item) => {
@@ -212,10 +236,12 @@ window.editItem = (key, item) => {
   document.getElementById('inp-day').value = item.day || '';
   document.getElementById('inp-time').value = item.time || '';
   document.getElementById('inp-op-time').value = item.opTime || '';
-  selectedType = item.type;
+  document.getElementById('inp-note').value = item.note || '';
+  document.getElementById('inp-by').value = item.by || '';
+  selectedType = item.type; selectedWho = item.who || [];
   document.getElementById('submit-btn').innerText = "更新地點";
   document.getElementById('cancel-btn').style.display = 'block';
-  renderTypeUI();
+  renderFormUI();
   window.scrollTo({top:0, behavior:'smooth'});
 };
 
@@ -231,7 +257,6 @@ onValue(itemsRef, snap => {
 window.renderList = () => {
   let displayData = [...allItems];
   if(currentFilter !== '全部') displayData = displayData.filter(i => i.type === currentFilter);
-  
   const sortVal = document.getElementById('sort-select').value;
   displayData.sort((a,b) => {
     if(sortVal === 'ts') return b.ts - a.ts;
@@ -244,12 +269,14 @@ window.renderList = () => {
       <div class="item-info">
         <div class="item-type">${item.type}</div>
         <div class="item-name">${item.name}</div>
-        <div class="item-meta">📅 ${item.day||'未定'} ${item.time||''} | 📍 ${item.area||'高雄'}</div>
-        ${item.opTime ? `<div style="font-size:12px; color:var(--accent)">🕒 營業：${item.opTime}</div>` : ''}
+        <div class="item-row">📅 ${item.day||'未定'} ${item.time||''} | 📍 ${item.area||'高雄'}</div>
+        <div class="item-row" style="color:var(--accent)">🕒 營業：${item.opTime||'不詳'} | 新增：${item.by}</div>
+        <div class="item-who">${(item.who||[]).map(w => `<span class="pill">${w}</span>`).join('')}</div>
+        ${item.note ? `<div class="item-note">💡 ${item.note}</div>` : ''}
       </div>
       <div class="item-actions">
-        <button class="btn-op" onclick='editItem("${item.key}", ${JSON.stringify(item)})'>✏️</button>
-        <button class="btn-op" onclick='delItem("${item.key}")'>🗑️</button>
+        <button class="btn-icon" onclick='editItem("${item.key}", ${JSON.stringify(item)})'>✏️</button>
+        <button class="btn-icon" onclick='delItem("${item.key}")'>🗑️</button>
       </div>
     </div>
   `).join('');
