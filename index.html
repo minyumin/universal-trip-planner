@@ -2,8 +2,8 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>我的旅遊萬用手冊</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Universal Trip Planner</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -12,178 +12,168 @@
   --blue:#0984e3;--r:16px;--rs:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:120px;font-size:14px;line-height:1.5;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:120px;font-size:14px;}
 
-/* 頂部導覽：切換行程 */
-.trip-nav{background:#fff; border-bottom:1px solid var(--border); padding:10px; position:sticky; top:0; z-index:200; display:flex; align-items:center; gap:10px; box-shadow:0 2px 5px rgba(0,0,0,0.02);}
-.trip-select{flex:1; padding:8px; border:1px solid var(--border); border-radius:8px; font-weight:700; font-size:15px; color:var(--blue); outline:none;}
-.btn-new-trip{background:var(--blue); color:#fff; border:none; padding:8px 12px; border-radius:8px; font-weight:700; cursor:pointer;}
+/* 頂部導覽：行程切換器 */
+.trip-nav{background:#fff; border-bottom:1px solid var(--border); padding:10px 15px; position:sticky; top:0; z-index:200; display:flex; align-items:center; gap:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.trip-select{flex:1; padding:10px; border:1px solid var(--border); border-radius:8px; font-weight:700; font-size:15px; color:var(--blue); background:#fcfdfe; outline:none;}
+.btn-new-trip{background:var(--blue); color:#fff; border:none; width:38px; height:38px; border-radius:8px; font-weight:700; cursor:pointer; font-size:20px;}
 
-.main{max-width:500px;margin:0 auto;padding:14px;}
+.main{max-width:500px; margin:0 auto; padding:15px;}
 .card{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:18px; margin-bottom:20px; box-shadow:0 4px 15px rgba(0,0,0,0.05);}
 .field{margin-bottom:14px;}
-.field label{display:block; font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:700; text-transform:uppercase;}
-.finp,.fsel{width:100%; padding:11px; border:1px solid #edf2f7; border-radius:var(--rs); font-size:14px; background:#fcfdfe; outline:none;}
-.finp:focus{border-color:var(--blue);}
+.field label{display:block; font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;}
+.finp,.fsel{width:100%; padding:12px; border:1px solid #edf2f7; border-radius:var(--rs); font-size:14px; background:#fcfdfe; outline:none; transition:0.2s;}
+.finp:focus{border-color:var(--blue); background:#fff;}
 
 .chip-row{display:flex; gap:8px; flex-wrap:wrap;}
-.chip{padding:6px 14px; border-radius:20px; border:1px solid #edf2f7; font-size:12px; cursor:pointer; background:#fff; color:var(--muted); font-weight:500;}
+.chip{padding:6px 14px; border-radius:20px; border:1px solid #edf2f7; font-size:12px; cursor:pointer; background:#fff; color:var(--muted); font-weight:500; transition:0.2s;}
 .chip.sel{background:var(--text); color:#fff; border-color:var(--text);}
+.btn-add-type{width:28px; height:28px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; color:var(--muted);}
 
-.ctrl-bar{background:#fff; padding:12px; border-radius:var(--r); border:1px solid var(--border); margin-bottom:15px;}
-.date-group-hd { margin: 25px 0 10px 5px; font-weight: 700; font-size: 15px; color: var(--blue); display: flex; align-items: center; gap: 8px; }
+.date-group-hd { margin: 25px 0 12px 5px; font-weight: 700; font-size: 15px; color: var(--blue); display: flex; align-items: center; gap: 10px; }
 .date-group-hd::after { content:''; flex:1; height:1px; background: linear-gradient(to right, var(--border), transparent); }
 
-.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:12px; display:flex; align-items:flex-start; gap:12px;}
-.item.editing { border: 2px solid var(--accent); }
-.item-check{width:20px; height:20px; margin-top:16px; cursor:pointer; accent-color: var(--blue);}
+.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; margin-bottom:12px; display:flex; align-items:flex-start; gap:12px; transition:0.2s;}
+.item.editing { border: 2px solid var(--accent); background:#fff9f5; }
+.item-check{width:22px; height:22px; margin-top:16px; cursor:pointer; accent-color: var(--blue);}
 .item-info{flex:1; min-width:0;}
 .item-name{font-size:16px; font-weight:700; color:#2d3436; margin-bottom:4px;}
+.item-addr{font-size:12px; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:4px;}
 .item-time-pill{display:inline-block; font-size:11px; padding:2px 8px; border-radius:4px; background:#e1f5fe; color:#0288d1; font-weight:700; margin-bottom:8px;}
 
-.btn-main{width:100%; padding:14px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer;}
-.map-gen-fixed{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:90%; max-width:450px; padding:16px; background:var(--blue); color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(9, 132, 227, 0.4); z-index:1000; text-align:center;}
-.btn-icon{width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; margin-bottom:6px;}
+.btn-main{width:100%; padding:15px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; font-size:15px;}
+.map-gen-fixed{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:92%; max-width:450px; padding:18px; background:var(--blue); color:#fff; border:none; border-radius:35px; font-weight:700; cursor:pointer; box-shadow:0 8px 25px rgba(9, 132, 227, 0.4); z-index:1000; text-align:center; font-size:15px;}
+.btn-icon{width:36px; height:36px; border-radius:50%; border:1px solid var(--border); background:#fff; cursor:pointer; margin-bottom:8px; display:flex; align-items:center; justify-content:center; font-size:16px;}
+
+.item-note{font-size:12px; color:#d35400; background:#fff5eb; padding:10px; border-radius:8px; margin-top:10px; border-left:4px solid var(--accent);}
+.pill{font-size:10px; background:#f1f2f6; padding:3px 8px; border-radius:6px; color:var(--muted); margin-right:4px; font-weight:500;}
 </style>
 </head>
 <body>
 
 <div class="trip-nav">
-  <select id="current-trip-select" class="trip-select" onchange="switchTrip(this.value)"></select>
-  <button class="btn-new-trip" onclick="createNewTrip()">＋</button>
+  <select id="trip-selector" class="trip-select" onchange="switchTrip(this.value)"></select>
+  <button class="btn-new-trip" onclick="createNewTrip()">+</button>
 </div>
 
 <div class="main">
   <div class="card" id="form-container">
     <div class="field"><label>分類</label><div class="chip-row" id="type-chips"></div></div>
-    <div class="field"><label>行程名稱 *</label><input id="inp-name" class="finp" placeholder="例：駁二特區、丹丹漢堡"/></div>
-    <div class="field"><label>地址 (選填)</label><input id="inp-addr" class="finp" placeholder="地點地址"/></div>
+    <div class="field"><label>行程地點 *</label><input id="inp-name" class="finp" placeholder="地點名稱"/></div>
+    <div class="field"><label>地址</label><input id="inp-addr" class="finp" placeholder="可填寫地址或地標"/></div>
     
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div class="field"><label>日期</label><select id="inp-day" class="fsel"></select></div>
       <div class="field">
         <label>時段</label>
-        <select id="inp-time-select" class="fsel"><option value="">未定</option><option value="早晨">🌅 早晨</option><option value="上午">🌤 上午</option><option value="午餐">🍴 午餐</option><option value="下午">🌇 下午</option><option value="晚餐">🥘 晚餐</option><option value="深夜">🌙 深夜</option></select>
+        <select id="inp-time" class="fsel"><option value="">未定</option><option value="早晨">🌅 早晨</option><option value="上午">🌤 上午</option><option value="午餐">🍴 午餐</option><option value="下午">🌇 下午</option><option value="晚餐">🥘 晚餐</option><option value="深夜">🌙 深夜</option></select>
       </div>
     </div>
     
     <div class="field"><label>參與者</label><div class="chip-row" id="participant-chips"></div></div>
-    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="資訊備註..."/></div>
-    <div class="field"><label>解析連結</label><input id="inp-url" class="finp" placeholder="貼上 Google Map 連結自動帶入店名" onpaste="setTimeout(parseUrl, 100)"/></div>
+    <div class="field"><label>備註</label><input id="inp-note" class="finp" placeholder="必買、必吃或重要提醒..."/></div>
+    <div class="field"><label>Maps 連結 (自動解析)</label><input id="inp-url" class="finp" placeholder="貼上連結自動帶入店名" onpaste="setTimeout(parseUrl, 100)"/></div>
     
-    <button id="submit-btn" class="btn-main" onclick="submitForm()">加入行程</button>
-    <button id="cancel-btn" style="display:none; width:100%; margin:10px 0; border:none; background:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消修改</button>
-    <button id="del-trip-btn" style="width:100%; margin-top:20px; border:none; color:#ff7675; background:none; font-size:11px; cursor:pointer;" onclick="deleteCurrentTrip()">🗑️ 刪除此整趟旅行</button>
+    <button id="submit-btn" class="btn-main" onclick="submitForm()">儲存行程</button>
+    <button id="cancel-btn" style="display:none; width:100%; margin-top:12px; border:none; background:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消編輯</button>
+    
+    <div style="margin-top:25px; border-top:1px dashed var(--border); padding-top:15px; text-align:center;">
+        <button style="border:none; color:#ff7675; background:none; font-size:11px; cursor:pointer; font-weight:700;" onclick="deleteTrip()">🗑️ 刪除整趟旅行計畫</button>
+    </div>
   </div>
 
   <div id="list-container"></div>
 </div>
 
-<button id="map-btn" class="map-gen-fixed" onclick="openSelectedMap()">🗺️ 生成地圖路徑 (已勾選)</button>
+<button id="map-btn" class="map-gen-fixed" onclick="openMultiMap()">🗺️ 生成地圖路線 (已勾選項目)</button>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, push, onValue, remove, update, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
+// --- 配置區 (請替換為你的 Firebase 資訊) ---
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDnDKwh2a9qVqDcgZtUjEjh8uCe07FHAzo",
-  authDomain: "kaohsiung-trip.firebaseapp.com",
-  databaseURL: "https://kaohsiung-trip-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "kaohsiung-trip"
+  authDomain: "universal-trip-planner.firebaseapp.com",
+  databaseURL: "https://universal-trip-planner-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "universal-trip-planner"
 };
 
 const app = initializeApp(FIREBASE_CONFIG);
 const db = getDatabase(app);
+const DB_PATH = 'universal_trip_planner';
 
+// --- 狀態區 ---
 const PARTICIPANTS = ['Pei','Lulu','Melanie','Yoyo','Min'];
 const TIME_ORDER = { "早晨":1, "上午": 2, "午餐": 3, "下午": 4, "晚餐": 5, "深夜": 6, "": 7 };
-
 let trips = {}, currentTripID = '', allItems = [], editingKey = null;
 let selectedType = '景點', selectedWho = [...PARTICIPANTS];
 let customTypes = ['景點','小吃','餐廳','咖啡廳','住宿','交通'];
 
-// 監聽所有旅行清單
-onValue(ref(db, 'all-trips-meta'), snap => {
+// 1. 初始化旅行清單 (Meta)
+onValue(ref(db, `${DB_PATH}/meta`), snap => {
   trips = snap.val() || {};
-  const select = document.getElementById('current-trip-select');
-  select.innerHTML = Object.entries(trips).map(([id, t]) => `<option value="${id}">${t.name}</option>`).join('');
+  const select = document.getElementById('trip-selector');
+  const tripEntries = Object.entries(trips);
   
-  if(!currentTripID && Object.keys(trips).length > 0) {
-    switchTrip(Object.keys(trips)[0]);
-  } else if (Object.keys(trips).length === 0) {
-    createNewTrip(); // 若無資料則提示建立
+  if(tripEntries.length === 0) {
+    select.innerHTML = '<option value="">(尚未建立旅行)</option>';
+    return;
   }
+  
+  select.innerHTML = tripEntries.map(([id, t]) => `<option value="${id}">${t.name}</option>`).join('');
+  
+  if(!currentTripID) switchTrip(tripEntries[0][0]);
 });
 
+// 2. 切換旅行
 window.switchTrip = (id) => {
+  if(!id) return;
   currentTripID = id;
-  document.getElementById('current-trip-select').value = id;
+  document.getElementById('trip-selector').value = id;
   const trip = trips[id];
   
-  // 生成日期下拉選單
-  const days = getDatesBetween(trip.start, trip.end);
-  document.getElementById('inp-day').innerHTML = '<option value="">未定</option>' + days.map(d => `<option value="${d}">${d}</option>`).join('');
+  // 動態生成日期選單
+  const dates = getDatesArray(trip.start, trip.end);
+  document.getElementById('inp-day').innerHTML = '<option value="">未定</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
   
-  // 監聽該行程的內容
-  onValue(ref(db, `all-trips-data/${id}/items`), snap => {
+  // 監聽該旅行的行程資料 (Data)
+  onValue(ref(db, `${DB_PATH}/data/${id}/items`), snap => {
     allItems = Object.entries(snap.val() || {}).map(([key, val]) => ({ key, ...val }));
     renderList();
   });
 };
 
+// 3. 建立新旅行
 window.createNewTrip = () => {
-  const name = prompt("請輸入旅行名稱（例如：2026 東京之旅）");
+  const name = prompt("旅行名稱 (如：2026 東京之旅)");
   if(!name) return;
-  const start = prompt("起始日期 (YYYY-MM-DD)", "2026-04-03");
+  const start = prompt("開始日期 (YYYY-MM-DD)", "2026-04-03");
   const end = prompt("結束日期 (YYYY-MM-DD)", "2026-04-05");
-  if(name && start && end) {
-    const newRef = push(ref(db, 'all-trips-meta'));
+  if(start && end) {
+    const newRef = push(ref(db, `${DB_PATH}/meta`));
     set(newRef, { name, start, end });
     switchTrip(newRef.key);
   }
 };
 
-window.deleteCurrentTrip = () => {
-  if(confirm(`確定刪除整趟「${trips[currentTripID].name}」？此動作無法復原。`)) {
-    remove(ref(db, `all-trips-meta/${currentTripID}`));
-    remove(ref(db, `all-trips-data/${currentTripID}`));
-    location.reload();
-  }
-};
-
-// 工具：計算日期區間
-function getDatesBetween(start, end) {
-  const dates = [];
-  let curr = new Date(start);
-  const stop = new Date(end);
-  while(curr <= stop) {
-    const m = curr.getMonth() + 1;
-    const d = curr.getDate();
-    const w = ["(日)","(一)","(二)","(三)","(四)","(五)","(六)"][curr.getDay()];
-    dates.push(`${m}/${d} ${w}`);
-    curr.setDate(curr.getDate() + 1);
-  }
-  return dates;
-}
-
-window.renderFormUI = () => {
-  document.getElementById('type-chips').innerHTML = customTypes.map(t => `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
-  const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">全員</div>`].concat(PARTICIPANTS.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
-  document.getElementById('participant-chips').innerHTML = whoHtml.join('');
-};
-
+// 4. 行程表單操作
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim();
   if(!name) return alert("地點名稱為必填");
+  
   const data = {
     type: selectedType, name, addr: document.getElementById('inp-addr').value.trim(),
     url: document.getElementById('inp-url').value || '',
     day: document.getElementById('inp-day').value || '',
-    time: document.getElementById('inp-time-select').value || '',
+    time: document.getElementById('inp-time').value || '',
     who: selectedWho, note: document.getElementById('inp-note').value || '', ts: Date.now()
   };
-  if(editingKey) update(ref(db, `all-trips-data/${currentTripID}/items/${editingKey}`), data);
-  else push(ref(db, `all-trips-data/${currentTripID}/items`), data);
+  
+  const targetPath = `${DB_PATH}/data/${currentTripID}/items`;
+  if(editingKey) update(ref(db, `${targetPath}/${editingKey}`), data);
+  else push(ref(db, targetPath), data);
   resetForm();
 };
 
@@ -196,11 +186,11 @@ window.renderList = () => {
   let html = '', lastDay = '';
   list.forEach(item => {
     if(item.day !== lastDay) {
-      html += `<div class="date-group-hd">${item.day || "日期未定"}</div>`;
+      html += `<div class="date-group-hd">📅 ${item.day || "日期未定"}</div>`;
       lastDay = item.day;
     }
-    const searchPrefix = trips[currentTripID].name.replace(/之旅|旅行/g, '');
-    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(searchPrefix + " " + item.name)}`;
+    const cleanTripName = trips[currentTripID].name.replace(/之旅|旅行/g, '');
+    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(cleanTripName + " " + item.name)}`;
     
     html += `
     <div class="item ${editingKey === item.key ? 'editing' : ''}">
@@ -210,17 +200,38 @@ window.renderList = () => {
         <div class="item-name">${item.name}</div>
         ${item.addr ? `<div class="item-addr">📍 ${item.addr}</div>` : ''}
         ${item.time ? `<div class="item-time-pill">⏰ ${item.time}</div>` : ''}
-        <div style="margin-bottom:8px;"><a href="${mapUrl}" target="_blank" style="color:var(--blue); font-size:12px; font-weight:700; text-decoration:none;">🗺️ 查看地圖 / 導航</a></div>
+        <div style="margin-bottom:8px;"><a href="${mapUrl}" target="_blank" style="color:var(--blue); font-size:12px; font-weight:700; text-decoration:none;">🗺️ 導航 / 地圖查看</a></div>
         <div>${(item.who || []).map(w => `<span class="pill">${w}</span>`).join('')}</div>
         ${item.note ? `<div class="item-note">💡 ${item.note}</div>` : ''}
       </div>
-      <div style="display:flex; flex-direction:column;">
+      <div style="display:flex; flex-direction:column; gap:5px;">
         <button class="btn-icon" onclick="editItem('${item.key}')">✏️</button>
         <button class="btn-icon" onclick="delItem('${item.key}')">🗑️</button>
       </div>
     </div>`;
   });
-  document.getElementById('list-container').innerHTML = html || '<div style="text-align:center; padding:40px; color:var(--muted);">尚無行程</div>';
+  document.getElementById('list-container').innerHTML = html || '<div style="text-align:center; padding:50px; color:var(--muted);">目前尚無行程計畫</div>';
+};
+
+// --- 工具函式 ---
+function getDatesArray(start, end) {
+  const arr = [];
+  let dt = new Date(start);
+  const endDt = new Date(end);
+  while(dt <= endDt) {
+    const w = ["(日)","(一)","(二)","(三)","(四)","(五)","(六)"][dt.getDay()];
+    arr.push(`${dt.getMonth()+1}/${dt.getDate()} ${w}`);
+    dt.setDate(dt.getDate() + 1);
+  }
+  return arr;
+}
+
+window.parseUrl = () => {
+  setTimeout(() => {
+    const input = document.getElementById('inp-url').value;
+    const match = decodeURIComponent(input).match(/\/place\/([^\/\?]+)/);
+    if(match) document.getElementById('inp-name').value = match[1].replace(/\+/g, ' ');
+  }, 100);
 };
 
 window.editItem = (key) => {
@@ -229,11 +240,11 @@ window.editItem = (key) => {
   document.getElementById('inp-name').value = item.name;
   document.getElementById('inp-addr').value = item.addr || '';
   document.getElementById('inp-day').value = item.day || '';
-  document.getElementById('inp-time-select').value = item.time || '';
+  document.getElementById('inp-time').value = item.time || '';
   document.getElementById('inp-note').value = item.note || '';
   document.getElementById('inp-url').value = item.url || '';
   selectedType = item.type; selectedWho = item.who || [];
-  document.getElementById('submit-btn').innerText = "更新行程";
+  document.getElementById('submit-btn').innerText = "儲存修改";
   document.getElementById('cancel-btn').style.display = 'block';
   renderFormUI(); window.scrollTo({top:0, behavior:'smooth'});
 };
@@ -241,33 +252,40 @@ window.editItem = (key) => {
 window.resetForm = () => {
   editingKey = null;
   ['inp-name','inp-addr','inp-url','inp-note'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('inp-day').value = ''; document.getElementById('inp-time-select').value = '';
-  document.getElementById('submit-btn').innerText = "加入行程";
+  document.getElementById('inp-day').value = ''; document.getElementById('inp-time').value = '';
+  document.getElementById('submit-btn').innerText = "儲存行程";
   document.getElementById('cancel-btn').style.display = 'none';
   selectedType = '景點'; selectedWho = [...PARTICIPANTS]; renderFormUI();
 };
 
-window.delItem = (key) => { if(confirm("刪除？")) remove(ref(db, `all-trips-data/${currentTripID}/items/${key}`)); };
+window.delItem = (key) => { if(confirm("確定刪除此項行程？")) remove(ref(db, `${DB_PATH}/data/${currentTripID}/items/${key}`)); };
 
-window.openSelectedMap = () => {
+window.deleteTrip = () => {
+  if(confirm(`警告：將刪除「${trips[currentTripID].name}」的所有行程資料，確定嗎？`)) {
+    remove(ref(db, `${DB_PATH}/meta/${currentTripID}`));
+    remove(ref(db, `${DB_PATH}/data/${currentTripID}`));
+    location.reload();
+  }
+};
+
+window.openMultiMap = () => {
   const checked = document.querySelectorAll('.item-check:checked');
-  if(!checked.length) return alert("請勾選地點");
+  if(!checked.length) return alert("請勾選要前往的地點");
   const prefix = trips[currentTripID].name.replace(/之旅|旅行/g, '');
   const names = Array.from(checked).map(cb => encodeURIComponent(prefix + " " + cb.getAttribute('data-name')));
   window.open("https://www.google.com/maps/dir/" + names.join('/'), '_blank');
+};
+
+window.renderFormUI = () => {
+  document.getElementById('type-chips').innerHTML = customTypes.map(t => `<div class="chip ${selectedType===t?'sel':''}" onclick="selectType('${t}')">${t}</div>`).join('') + `<button class="btn-add-type" onclick="addType()">+</button>`;
+  const whoHtml = [`<div class="chip ${selectedWho.length===PARTICIPANTS.length?'sel':''}" onclick="toggleAllWho()">全員</div>`].concat(PARTICIPANTS.map(p => `<div class="chip ${selectedWho.includes(p)?'sel':''}" onclick="toggleWho('${p}')">${p}</div>`));
+  document.getElementById('participant-chips').innerHTML = whoHtml.join('');
 };
 
 window.selectType = (t) => { selectedType = t; renderFormUI(); };
 window.addType = () => { const nt = prompt("新增類型："); if(nt) { customTypes.push(nt); renderFormUI(); } };
 window.toggleWho = (p) => { selectedWho = selectedWho.includes(p) ? selectedWho.filter(x=>x!==p) : [...selectedWho, p]; renderFormUI(); };
 window.toggleAllWho = () => { selectedWho = (selectedWho.length === PARTICIPANTS.length) ? [] : [...PARTICIPANTS]; renderFormUI(); };
-window.parseUrl = () => {
-  setTimeout(() => {
-    const input = document.getElementById('inp-url').value;
-    const nameMatch = decodeURIComponent(input).match(/\/place\/([^\/\?]+)/);
-    if(nameMatch) document.getElementById('inp-name').value = nameMatch[1].replace(/\+/g, ' ');
-  }, 100);
-};
 
 renderFormUI();
 </script>
