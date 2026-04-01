@@ -12,7 +12,7 @@
   --blue:#2a6cbf;--r:14px;--rs:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:80px;font-size:14px;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);padding-bottom:100px;font-size:14px;}
 .header{background:#fff;border-bottom:1px solid var(--border);padding:12px;position:sticky;top:0;z-index:200;text-align:center;}
 .main{max-width:500px;margin:0 auto;padding:14px;}
 
@@ -24,9 +24,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .finp:focus{border-color:var(--accent); background:#fff;}
 
 /* 按鈕樣式 */
-.btn-main{width:100%; padding:14px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; margin-top:10px; transition: 0.3s;}
+.btn-main{width:100%; padding:14px; background:var(--text); color:#fff; border:none; border-radius:var(--rs); font-weight:700; cursor:pointer; margin-top:10px;}
 .btn-main.update-mode { background: var(--accent); }
-.map-gen-btn{width:100%; padding:14px; background:var(--blue); color:#fff; border:none; border-radius:var(--rs); font-weight:700; margin-bottom:16px; cursor:pointer;}
+.map-gen-fixed{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:90%; max-width:450px; padding:16px; background:var(--blue); color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; box-shadow:0 10px 20px rgba(42, 108, 191, 0.3); z-index:1000;}
 
 /* Chips */
 .chip-row{display:flex; gap:6px; flex-wrap:wrap;}
@@ -35,23 +35,27 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .btn-add-type{width:26px; height:26px; border-radius:50%; border:1px dashed var(--muted); background:none; cursor:pointer; color:var(--muted); font-weight:700;}
 
 /* 清單項目 */
-.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; display:flex; align-items:flex-start; gap:10px; transition: 0.3s;}
-.item.editing { border: 2px solid var(--accent); background: #fffdfc; box-shadow: 0 0 12px rgba(200, 90, 42, 0.15); }
+.item{background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:15px; margin-bottom:10px; display:flex; align-items:flex-start; gap:12px; transition: 0.3s;}
+.item.editing { border: 2px solid var(--accent); background: #fffdfc; }
 .item-info{flex:1; min-width:0;}
 .item-name{font-size:16px; font-weight:700; margin-bottom:4px;}
 .item-type{font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase;}
 
+/* Checkbox */
+.item-check{width:20px; height:20px; margin-top:14px; cursor:pointer; accent-color: var(--blue);}
+
 .map-link-btn {
   display: inline-flex;
   align-items: center;
-  background: var(--blue);
-  color: #fff;
+  background: #eef4ff;
+  color: var(--blue);
   padding: 6px 12px;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 11px;
   text-decoration: none;
   font-weight: 700;
   margin-top: 8px;
+  border: 1px solid #d0e0ff;
 }
 
 .pill{font-size:10px; background:var(--bg); padding:1px 6px; border-radius:6px; color:var(--muted); margin-right:4px;}
@@ -74,7 +78,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div class="field">
-        <label>日期 (2026 星期修正)</label>
+        <label>日期</label>
         <select id="inp-day" class="fsel">
           <option value="">未定</option>
           <option value="4/3">4/3 (五)</option>
@@ -103,9 +107,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     <button id="cancel-btn" style="display:none; width:100%; margin-top:10px; border:none; background:none; color:var(--muted); cursor:pointer;" onclick="resetForm()">取消修改</button>
   </div>
 
-  <button id="map-btn" class="map-gen-btn" onclick="openMultiMap()">🗺️ 生成地圖行程 (全部地點)</button>
   <div id="list-container"></div>
 </div>
+
+<button id="map-btn" class="map-gen-fixed" onclick="openSelectedMap()">🗺️ 生成地圖行程 (已勾選地點)</button>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -159,9 +164,6 @@ window.editItem = (key) => {
   document.getElementById('inp-name').value = item.name || '';
   document.getElementById('inp-url').value = item.url || '';
   document.getElementById('inp-day').value = item.day || '';
-  document.getElementById('inp-op-time').value = item.opTime || '';
-  document.getElementById('inp-off-day').value = item.offDay || '';
-  document.getElementById('inp-note').value = item.note || '';
   const standardTimes = ['上午','中午','下午','晚上'];
   const timeSelect = document.getElementById('inp-time-select');
   const timeCustom = document.getElementById('inp-time-custom');
@@ -169,6 +171,9 @@ window.editItem = (key) => {
   else { timeSelect.value = item.time || ''; timeCustom.style.display = 'none'; }
   selectedType = item.type || '景點';
   selectedWho = item.who ? [...item.who] : [];
+  document.getElementById('inp-op-time').value = item.opTime || '';
+  document.getElementById('inp-off-day').value = item.offDay || '';
+  document.getElementById('inp-note').value = item.note || '';
   const sb = document.getElementById('submit-btn');
   sb.innerText = "更新行程清單"; sb.classList.add('update-mode');
   document.getElementById('cancel-btn').style.display = 'block';
@@ -204,9 +209,11 @@ window.submitForm = () => {
 
 window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
 
-window.openMultiMap = () => {
-  if(!allItems.length) return alert("清單沒有地點");
-  window.open("https://www.google.com/maps/dir/" + allItems.map(i => encodeURIComponent(i.name)).join('/'), '_blank');
+window.openSelectedMap = () => {
+  const checkedBoxes = document.querySelectorAll('.item-check:checked');
+  if(checkedBoxes.length === 0) return alert("請先勾選想去的地點");
+  const selectedNames = Array.from(checkedBoxes).map(cb => encodeURIComponent(cb.getAttribute('data-name')));
+  window.open("https://www.google.com/maps/dir/" + selectedNames.join('/'), '_blank');
 };
 
 onValue(itemsRef, snap => {
@@ -217,18 +224,17 @@ onValue(itemsRef, snap => {
 window.renderList = () => {
   const sorted = [...allItems].sort((a,b) => b.ts - a.ts);
   document.getElementById('list-container').innerHTML = sorted.map(item => {
-    // 自動生成地圖連結
-    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(item.name)}`;
-    // 日期帶星期
+    // 關鍵修正：清單顯示 4/3 (五)
     const displayDay = item.day ? (item.day + (DAY_MAP[item.day] || "")) : "未定";
+    const mapUrl = item.url || `https://www.google.com/maps/search/${encodeURIComponent(item.name)}`;
     
     return `
     <div class="item ${editingKey === item.key ? 'editing' : ''}">
-      <div style="margin-top:12px;">📍</div>
+      <input type="checkbox" class="item-check" data-name="${item.name}" checked>
       <div class="item-info">
         <div class="item-type">${item.type}</div>
         <div class="item-name">${item.name}</div>
-        <a href="${mapUrl}" target="_blank" class="map-link-btn">🗺️ 查看 Google Map</a>
+        <a href="${mapUrl}" target="_blank" class="map-link-btn">🗺️ Google Map</a>
         <div style="font-size:12px; color:var(--muted); margin: 10px 0 2px 0;">📅 ${displayDay} ${item.time || ''}</div>
         <div style="font-size:12px; color:var(--accent);">🕘 營業：${item.opTime || '未知'} | 🚫 公休：${item.offDay || '未知'}</div>
         <div style="margin-top:6px;">
