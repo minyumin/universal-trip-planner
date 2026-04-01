@@ -80,7 +80,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
       <div class="field"><label>時段</label><select id="inp-time" class="fsel"><option value="">未定</option><option value="上午">🌤 上午</option><option value="中午">☀️ 中午</option><option value="下午">🌇 下午</option><option value="晚上">🌙 晚上</option></select></div>
     </div>
 
-    <div class="field"><label>新增者</label><select id="inp-by" class="fsel"><option value="Pei">Pei</option><option value="Lulu">Lulu</option><option value="Melanie">Melanie</option><option value="Yoyo">Yoyo</option><option value="Min">Min</option></select></div>
     <div class="field"><label>參與者</label><div class="chip-row" id="participant-chips"></div></div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -158,7 +157,7 @@ function updateMapBtn() {
 
 window.openMultiMap = () => {
   let list = selectedKeys.size > 0 ? allItems.filter(i => selectedKeys.has(i.key)) : (currentFilter === '全部' ? allItems : allItems.filter(i => i.type === currentFilter));
-  if(!list.length) return alert("目前清單沒有地點可顯示");
+  if(!list.length) return alert("目前清單沒有地點");
   list.sort((a,b) => (a.area||'').localeCompare(b.area||''));
   window.open("https://www.google.com/maps/dir/" + list.map(i => encodeURIComponent(i.name)).join('/'), '_blank');
 };
@@ -172,8 +171,8 @@ window.parseUrl = () => {
 
 window.submitForm = () => {
   const name = document.getElementById('inp-name').value.trim(), editKey = document.getElementById('edit-key').value;
-  if(!name) return alert("地點名稱為必填項目");
-  const data = { type: selectedType, name, day: document.getElementById('inp-day').value, time: document.getElementById('inp-time').value, area: document.getElementById('inp-area').value, opTime: document.getElementById('inp-op-time').value, by: document.getElementById('inp-by').value, who: selectedWho, note: document.getElementById('inp-note').value, url: document.getElementById('inp-url').value, ts: Date.now() };
+  if(!name) return alert("地點名稱為必填");
+  const data = { type: selectedType, name, day: document.getElementById('inp-day').value, time: document.getElementById('inp-time').value, area: document.getElementById('inp-area').value, opTime: document.getElementById('inp-op-time').value, who: selectedWho, note: document.getElementById('inp-note').value, url: document.getElementById('inp-url').value, ts: Date.now() };
   if(editKey) update(ref(db, `kaohsiung-trip/items/${editKey}`), data);
   else push(itemsRef, data);
   resetForm();
@@ -183,13 +182,13 @@ window.resetForm = () => { ['inp-name','inp-area','inp-url','inp-op-time','inp-n
 
 window.editItem = (key, item) => {
   document.getElementById('edit-key').value = key;
-  ['name','area','url','day','time','opTime','note','by'].forEach(f => document.getElementById('inp-'+f).value = item[f] || '');
+  ['name','area','url','day','time','opTime','note'].forEach(f => document.getElementById('inp-'+f).value = item[f] || '');
   selectedType = item.type; selectedWho = item.who || [];
   document.getElementById('submit-btn').innerText = "更新地點資訊"; document.getElementById('cancel-btn').style.display = 'block';
   renderFormUI(); window.scrollTo({top:0, behavior:'smooth'});
 };
 
-window.delItem = (key) => { if(confirm("確定要刪除這個地點嗎？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
+window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `kaohsiung-trip/items/${key}`)); };
 
 onValue(itemsRef, snap => { allItems = Object.entries(snap.val()||{}).map(([key, val]) => ({ key, ...val })); renderList(); });
 
@@ -208,7 +207,7 @@ window.renderList = () => {
         <div class="item-meta">📅 ${item.day||'未定'} ${item.time||''} | 📍 ${item.area||'高雄'}</div>
         <div class="item-meta" style="color:var(--accent)">🕒 營業：${item.opTime||'不詳'}</div>
         <div class="item-who-line">
-          <span class="who-label">${item.by}：</span>
+          <span class="who-label">👥 參與者：</span>
           ${(item.who||[]).map(w => `<span class="pill">${w}</span>`).join('')}
         </div>
         ${item.note ? `<div class="item-note">💡 ${item.note}</div>` : ''}
