@@ -305,9 +305,16 @@ window.deleteTrip = () => { if(confirm("確定刪除整趟旅行？")) { remove(
 window.delItem = (key) => { if(confirm("確定刪除？")) remove(ref(db, `${DB_PATH}/data/${currentTripID}/items/${key}`)); };
 window.openMultiMap = () => {
   const checked = document.querySelectorAll('.item-check:checked');
-  const names = Array.from(checked).map(cb => encodeURIComponent(cb.getAttribute('data-name')));
-  window.open("http://googleusercontent.com/maps.google.com/8" + names.join('/'), '_blank');
-};
+  if (checked.length === 0) return alert("請先勾選想要排入路線的地點！");
+
+  // 取得當前旅行計畫名稱，作為搜尋關鍵字的前綴（增加搜尋準確度）
+  const prefix = trips[currentTripID] ? trips[currentTripID].name.replace(/之旅|旅行/g, '') : "";
+  
+  // 整理地點名稱
+  const locations = Array.from(checked).map(cb => {
+      const name = cb.getAttribute('data-name');
+      return encodeURIComponent(prefix + " " + name);
+  });
 
 function getDatesArray(s, e) {
   let a = [], d = new Date(s), ed = new Date(e);
